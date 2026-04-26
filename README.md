@@ -2,7 +2,7 @@
 
 **Building in public. One week at a time.**
 
-I'm 20. I have an RTX 4060 and 10 months until GATE. This is where I ship.
+I'm 20. This is where I ship.
 
 ---
 
