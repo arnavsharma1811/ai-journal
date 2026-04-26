@@ -1,0 +1,3076 @@
+Great topic! Let's build solid clarity on this. I'll lay it all out systematically.
+
+---
+
+## What is an Operating System?
+
+An OS is system software that manages hardware and software resources and provides services to programs. The **type** of OS is largely defined by **how it manages the CPU and processes**.
+
+---
+
+## 1. Uniprogramming OS
+
+**Only one process in memory at a time.** The CPU is dedicated entirely to that process until it finishes or does I/O.
+
+- When the process does I/O, the **CPU sits idle** — huge waste.
+- Example: Early MS-DOS
+
+**Key point:** CPU utilization is very low because I/O and CPU work can't overlap.
+
+---
+
+## 2. Multiprogramming OS
+
+**Multiple processes kept in memory simultaneously.** When one process does I/O, the CPU switches to another process.
+
+- Goal: **Keep the CPU busy at all times**
+- No concept of time-sharing — the CPU doesn't switch based on time, only when a process voluntarily gives it up (does I/O or terminates)
+- This is fundamentally about **CPU utilization**, not responsiveness
+
+**Key point:** Multiprogramming solves CPU idle time. It is **not** the same as multitasking.
+
+---
+
+## 3. Multitasking OS (Time-Sharing)
+
+An **extension of multiprogramming** where the CPU switches between processes so rapidly (using a time quantum/slice) that each user feels the system is dedicated to them.
+
+- Switching is **time-based**, not just I/O-based
+- Enables **interactive computing** — users get quick responses
+- Example: UNIX, modern Linux/Windows
+
+**Key point:** All multitasking systems are multiprogramming, but not vice versa.
+
+---
+
+## 4. Preemptive vs Non-Preemptive Scheduling
+
+This is about **who controls the CPU** — the OS or the process.
+
+### Non-Preemptive (Cooperative)
+- Once a process gets the CPU, it **keeps it** until it voluntarily releases it (finishes, does I/O, or calls yield)
+- OS cannot forcibly take the CPU away
+- Examples of non-preemptive algorithms: **FCFS, SJF (non-preemptive), Priority (non-preemptive)**
+- Problem: One greedy process can hog the CPU forever
+
+### Preemptive
+- The OS **can forcibly take the CPU** from a running process (e.g., when a higher-priority process arrives or the time quantum expires)
+- Examples: **Round Robin, SRTF, Priority (preemptive)**
+- Modern OSes are preemptive
+
+**Key distinction for PYQs:** SJF is non-preemptive; its preemptive version is called **SRTF (Shortest Remaining Time First)**.
+
+---
+
+## The Hierarchy to Remember
+
+```
+Uniprogramming
+    ↓ (add multiple processes in memory)
+Multiprogramming
+    ↓ (add time-based switching)
+Multitasking / Time-Sharing
+    ↓ (add force-switching by OS)
+Preemptive Multitasking
+```
+
+---
+
+## Quick Comparison Table
+
+| Feature | Uniprogramming | Multiprogramming | Multitasking |
+|---|---|---|---|
+| Processes in memory | 1 | Many | Many |
+| CPU switches on | — | I/O only | I/O + time quantum |
+| CPU utilization | Low | High | High |
+| User interaction | Poor | Poor | Good |
+| Response time | N/A | Poor | Good |
+
+---
+
+## Other OS Types (for completeness in PYQs)
+
+- **Batch OS** — jobs collected and processed in batches, no user interaction. Early systems. Closely related to uniprogramming/multiprogramming.
+- **Real-Time OS (RTOS)** — guarantees response within a strict deadline. Hard RTOS (miss deadline = failure, e.g., pacemaker), Soft RTOS (miss is tolerable, e.g., video streaming).
+- **Distributed OS** — multiple computers appear as one system to the user.
+- **Network OS** — computers are networked but remain independent (e.g., file sharing over a network).
+- **Embedded OS** — designed for specific hardware with limited resources (e.g., washing machine controller).
+
+---
+
+Want me to now go through **actual PYQs** on this topic so you can see how these concepts get tested? Or is there any specific area you want to go deeper on first?
+
+
+Great, let's build this up cleanly.
+
+---
+
+## Why Do System Calls Exist?
+
+When a program runs, it sometimes needs to do things that require **privileged access** — like reading a file, allocating memory, or sending data over a network. It can't do these directly because that would be unsafe. So it asks the OS to do it on its behalf.
+
+That request mechanism is called a **system call**.
+
+---
+
+## Dual Mode Operation
+
+This is the *foundation* you need before understanding system calls properly.
+
+The CPU operates in **two modes:**
+
+### User Mode
+- Where normal applications run
+- **Restricted** — cannot execute privileged instructions
+- Cannot directly access hardware or memory of other processes
+
+### Kernel Mode (Supervisor / Privileged Mode)
+- Where the OS runs
+- **Unrestricted** — can execute any instruction, access any memory, control hardware
+
+### The Mode Bit
+The CPU has a hardware register called the **mode bit:**
+- **1 = User mode**
+- **0 = Kernel mode**
+
+The hardware checks this bit before executing any privileged instruction. If user mode tries to run a privileged instruction → **trap** is generated → OS handles it (usually kills the process).
+
+---
+
+## How a System Call Works (Step by Step)
+
+This is frequently asked in PYQs as "trace the execution of a system call."
+
+```
+1. User program needs OS service (e.g., read a file)
+2. Executes a special instruction (trap / software interrupt)
+3. Mode bit switches: 1 → 0 (User → Kernel mode)
+4. Control transfers to OS at a fixed address (trap handler)
+5. OS performs the requested service
+6. Mode bit switches back: 0 → 1 (Kernel → User mode)
+7. Control returns to user program, just after the system call
+```
+
+**Key point:** The mode switch happens via hardware automatically when a trap is executed. The user program cannot fake this.
+
+---
+
+## Types of System Calls
+
+| Type | Examples |
+|---|---|
+| **Process control** | fork(), exit(), wait(), exec() |
+| **File management** | open(), read(), write(), close() |
+| **Device management** | ioctl(), read(), write() |
+| **Information maintenance** | getpid(), alarm(), sleep() |
+| **Communication** | pipe(), socket(), send(), recv() |
+
+---
+
+## Important Terms
+
+**Trap** — a software-generated interrupt that switches to kernel mode. System calls use traps deliberately. Errors (divide by zero) also cause traps.
+
+**Interrupt** — hardware-generated signal (e.g., keyboard press, timer). Also causes a switch to kernel mode but triggered by hardware, not software.
+
+**Interrupt vs Trap for PYQs:**
+- Interrupt = hardware → kernel mode
+- Trap = software → kernel mode (system calls use this)
+
+---
+
+## The Big Picture
+
+```
+User Program
+    │
+    │  (needs OS service)
+    ▼
+  TRAP instruction
+    │
+    │  (mode bit: 1→0)
+    ▼
+Kernel Mode → OS handles request
+    │
+    │  (mode bit: 0→1)
+    ▼
+Back to User Program
+```
+
+---
+
+## One Classic PYQ Concept — Privileged Instructions
+
+These can **only** run in kernel mode. Examples:
+- I/O instructions
+- Modifying the mode bit itself
+- Accessing memory protection registers
+- Halting the CPU
+
+A user program attempting these causes a **trap → OS typically terminates the program.**
+
+---
+
+That covers the core of dual mode + system calls. Before you move to processes, tell me — do you want me to quiz you on this the same way, or do you feel solid and want to jump straight to processes?
+
+Let's dive in! This is foundational — you'll use this in scheduling, synchronization, deadlocks, everything.
+
+---
+
+## What is a Process?
+
+**A process is a program in execution.** 
+
+Key difference:
+- **Program** = passive entity (code sitting on disk)
+- **Process** = active entity (program loaded into memory and running)
+
+---
+
+## Process Representation in Memory
+
+When a program becomes a process, it gets loaded into memory in **4 sections:**
+
+```
+┌─────────────────┐  ← High Address
+│     Stack       │  (grows downward)
+├─────────────────┤
+│       ↓         │
+│                 │
+│       ↑         │
+├─────────────────┤
+│     Heap        │  (grows upward)
+├─────────────────┤
+│     Data        │  (global/static variables)
+├─────────────────┤
+│     Text        │  (code/instructions)
+└─────────────────┘  ← Low Address
+```
+
+### 1. **Text Section (Code)**
+- The actual **program instructions**
+- Read-only (you can't modify your own code while running)
+- Shared if multiple instances of the same program run
+
+### 2. **Data Section**
+- **Global variables** and **static variables**
+- Initialized data (e.g., `int x = 10;`)
+- BSS (Block Started by Symbol) — uninitialized data (e.g., `int y;`)
+
+### 3. **Heap**
+- **Dynamically allocated memory** (malloc, new)
+- Grows **upward** (toward higher addresses)
+- Managed by programmer
+
+### 4. **Stack**
+- **Function calls, local variables, return addresses**
+- Grows **downward** (toward lower addresses)
+- Automatically managed (LIFO structure)
+
+**PYQ Alert:** "Why are heap and stack placed at opposite ends?" → So they can grow toward each other and maximize memory usage before collision.
+
+---
+
+## Process Control Block (PCB)
+
+The OS maintains a **data structure** for each process called the PCB. It's the process's "identity card."
+
+The PCB contains:
+
+### 1. **Process ID (PID)**
+- Unique identifier for the process
+
+### 2. **Process State**
+- Current state: New, Ready, Running, Waiting, Terminated
+
+### 3. **Program Counter (PC)**
+- Address of the **next instruction** to execute
+- Critical for context switching
+
+### 4. **CPU Registers**
+- Values of all CPU registers (accumulators, index registers, stack pointers, etc.)
+- Saved during context switch
+
+### 5. **CPU Scheduling Information**
+- Priority, scheduling queue pointers, time quantum used
+
+### 6. **Memory Management Information**
+- Base and limit registers, page tables, segment tables
+
+### 7. **Accounting Information**
+- CPU time used, time limits, process numbers
+
+### 8. **I/O Status Information**
+- List of open files, I/O devices allocated, pending I/O requests
+
+---
+
+## Process Attributes (Key Ones for PYQs)
+
+| Attribute | What it is |
+|---|---|
+| **PID** | Unique process identifier |
+| **PPID** | Parent Process ID (who created this process) |
+| **State** | New/Ready/Running/Waiting/Terminated |
+| **Priority** | Scheduling priority (higher = more important) |
+| **Program Counter** | Next instruction address |
+| **CPU Registers** | Current register values |
+| **Memory Pointers** | Base, limit, page table pointer |
+| **Open File List** | Files currently opened by process |
+| **Accounting Info** | CPU time used, start time |
+
+---
+
+## Process States (The Classic Diagram)
+
+```
+    ┌─────┐
+    │ New │
+    └──┬──┘
+       │ (admitted)
+       ▼
+    ┌───────┐   interrupt    ┌─────────┐
+    │ Ready │◄───────────────┤ Running │
+    └───┬───┘   (timeout)    └────┬────┘
+        │                         │
+        │ (scheduler dispatch)    │ (I/O or event wait)
+        └────────────►            ▼
+                           ┌─────────┐
+                           │ Waiting │
+                           └────┬────┘
+                                │ (I/O complete)
+                                ▼
+                             ┌──────────┐
+                             │Terminated│
+                             └──────────┘
+```
+
+### State Transitions:
+
+1. **New → Ready**: Process created, waiting for CPU
+2. **Ready → Running**: Scheduler selects it (dispatch)
+3. **Running → Ready**: Time quantum expired or higher priority process arrived (preemption)
+4. **Running → Waiting**: Process does I/O or waits for event
+5. **Waiting → Ready**: I/O completes or event occurs
+6. **Running → Terminated**: Process finishes execution
+
+**PYQ Trap:** A process **NEVER** goes directly from Waiting → Running. It must pass through Ready.
+
+---
+
+## Context Switching
+
+When the CPU switches from one process to another:
+
+**Steps:**
+1. **Save state** of current process (PC, registers) into its PCB
+2. **Load state** of new process from its PCB
+3. Resume execution of new process
+
+**Cost:** Context switch is **pure overhead** — the system does no useful work during the switch. That's why you minimize switching.
+
+**Time depends on:** Hardware support (some CPUs have multiple register sets), memory speed, number of registers.
+
+---
+
+## Quick Summary for Revision
+
+**Process = Program + Current State**
+
+**Memory:** Text | Data | Heap ↑ | ↓ Stack
+
+**PCB holds:** PID, State, PC, Registers, Memory info, I/O info
+
+**States:** New → Ready ↔ Running ↔ Waiting → Terminated
+
+**Context switch = saving/loading PCB**
+
+---
+
+Want a quiz on this, or should we move to **process creation (fork, exec)** next?
+
+
+Perfect plan! Let's cover process states in more depth, queues, and related concepts.
+
+---
+
+## Process States (Deep Dive)
+
+We saw the 5-state model earlier. Let's understand each state clearly:
+
+### 1. **New**
+- Process is being **created**
+- OS is setting up PCB, allocating memory
+- Not yet in the ready queue
+
+### 2. **Ready**
+- Process has **all resources except CPU**
+- Waiting in the ready queue for its turn
+- Can start executing immediately if given CPU
+
+### 3. **Running**
+- Process is currently **executing on CPU**
+- In a single-CPU system, only **one process** can be in running state at a time
+- In multi-core, multiple processes can run simultaneously
+
+### 4. **Waiting (Blocked)**
+- Process is waiting for some **event** to occur:
+  - I/O completion
+  - Signal from another process
+  - Resource to become available
+- **Cannot** use CPU even if it's free
+- Also called **Blocked** state
+
+### 5. **Terminated (Exit)**
+- Process has finished execution
+- OS is cleaning up (deallocating memory, closing files)
+- PCB may still exist briefly for parent to read exit status
+
+---
+
+## Extended Process States (7-State Model)
+
+Some systems add two more states for better memory management:
+
+### 6. **Suspended Ready**
+- Process is ready to run but **swapped out to disk** (not in main memory)
+- Happens when memory is full
+- When brought back to memory → goes to Ready state
+
+### 7. **Suspended Waiting**
+- Process is waiting for I/O **and** swapped out to disk
+- When I/O completes → goes to Suspended Ready (not directly to Ready)
+
+**State diagram with suspension:**
+```
+Ready ←→ Suspended Ready
+  ↕              
+Running          
+  ↕              
+Waiting ←→ Suspended Waiting
+```
+
+**PYQ Question:** "Why suspend a waiting process?" → To free up memory for processes that can actually use the CPU.
+
+---
+
+## Process Queues
+
+The OS maintains several queues to manage processes:
+
+### 1. **Job Queue**
+- Contains **all processes** in the system
+- Processes in any state (new, ready, waiting, running)
+- Essentially a list of all PCBs
+
+### 2. **Ready Queue**
+- Contains processes in **Ready state**
+- Waiting for CPU allocation
+- Scheduler picks from here
+- Usually implemented as a **linked list** of PCBs
+
+### 3. **Device Queues (Wait Queues)**
+- One queue for **each I/O device**
+- Contains processes waiting for that specific device
+- Example: disk queue, printer queue, network queue
+
+---
+
+## Queueing Diagram
+
+```
+┌──────────┐
+│ Job Queue│ (all processes)
+└────┬─────┘
+     │
+     ▼
+┌────────────┐    dispatch    ┌─────┐
+│Ready Queue │──────────────► │ CPU │
+└─────┬──────┘                └──┬──┘
+      ▲                          │
+      │                          │ I/O request
+      │                          ▼
+      │                    ┌──────────────┐
+      │                    │Device Queue 1│
+      │                    └──────┬───────┘
+      │                           │ I/O complete
+      │                           │
+      │                    ┌──────────────┐
+      └────────────────────┤Device Queue 2│
+         (I/O complete)    └──────────────┘
+```
+
+---
+
+## Process Scheduling Queues - Movement
+
+**Example flow:**
+
+1. **New process** → enters **Job Queue**
+2. **Admitted** → enters **Ready Queue**
+3. **Scheduler picks it** → **Running** on CPU
+4. **Time expires** → back to **Ready Queue**
+5. **Requests I/O** → enters **Device Queue** (Waiting state)
+6. **I/O completes** → back to **Ready Queue**
+7. **Finishes** → **Terminated**, removed from all queues
+
+---
+
+## Types of Schedulers
+
+These manage process movement between queues:
+
+### 1. **Long-Term Scheduler (Job Scheduler)**
+- Selects which processes move from **New → Ready**
+- Controls **degree of multiprogramming** (how many processes in memory)
+- Runs **infrequently** (seconds or minutes)
+- Aims for a good mix of I/O-bound and CPU-bound processes
+
+### 2. **Short-Term Scheduler (CPU Scheduler)**
+- Selects which process from **Ready → Running**
+- Runs **very frequently** (milliseconds)
+- Must be **extremely fast** (overhead concern)
+- This is what you'll study in CPU scheduling algorithms
+
+### 3. **Medium-Term Scheduler (Swapper)**
+- Handles **swapping** (moving processes between memory and disk)
+- Removes processes from memory (suspend) and brings them back (resume)
+- Controls degree of multiprogramming indirectly
+
+---
+
+## CPU-Bound vs I/O-Bound Processes
+
+Important for understanding scheduling:
+
+### **CPU-Bound Process**
+- Spends most time doing **computation**
+- Example: scientific calculations, video encoding
+- Long CPU bursts, rare I/O
+
+### **I/O-Bound Process**
+- Spends most time doing **I/O**
+- Example: text editor, database server
+- Short CPU bursts, frequent I/O
+
+**PYQ Concept:** A good long-term scheduler maintains a **mix** of both types for optimal CPU and I/O device utilization.
+
+---
+
+## Degree of Multiprogramming
+
+**Definition:** Number of processes currently in memory (in ready + running + waiting states).
+
+- **Too low** → CPU sits idle, poor utilization
+- **Too high** → thrashing (too much swapping, no actual work done)
+- **Long-term scheduler** controls this
+
+---
+
+## Context Switch (More Details)
+
+**When does context switch happen?**
+1. Time quantum expires (in time-sharing systems)
+2. Process makes system call (may block)
+3. Interrupt occurs
+4. Higher priority process becomes ready (preemptive scheduling)
+
+**What gets saved/restored?**
+- Program Counter (PC)
+- All CPU registers
+- Stack pointer
+- Status registers
+- Memory management registers
+
+**Typical time:** 1-10 microseconds (highly hardware dependent)
+
+**Switching time is pure overhead** — that's why Round Robin with a very small time quantum is inefficient (too much switching, too little work).
+
+---
+
+## Process State Transitions - Common PYQ Traps
+
+❌ **Waiting → Running** — NEVER happens directly. Must go Waiting → Ready → Running.
+
+❌ **New → Running** — NEVER happens. Must go New → Ready → Running.
+
+✅ **Running → Ready** — Yes, when time quantum expires or preemption occurs.
+
+✅ **Running → Waiting** — Yes, when process does I/O or waits for event.
+
+✅ **Waiting → Ready** — Yes, when I/O completes.
+
+---
+
+## Quick Summary
+
+**5 States:** New, Ready, Running, Waiting, Terminated
+
+**7 States:** Add Suspended Ready, Suspended Waiting
+
+**3 Queues:** Job Queue (all), Ready Queue (ready), Device Queues (waiting)
+
+**3 Schedulers:** 
+- Long-term (New→Ready, infrequent)
+- Short-term (Ready→Running, frequent)
+- Medium-term (Swapping, as needed)
+
+**Process Types:** CPU-bound (compute heavy), I/O-bound (I/O heavy)
+
+**Context Switch:** Save PCB₁, Load PCB₂ — pure overhead
+
+---
+
+Ready for the quiz on the entire process section (memory layout, PCB, states, queues, schedulers)?
+
+
+Perfect! Let's finish these last bits in detail, then we'll do a comprehensive revision + quiz before you hit the PYQs.
+
+---
+
+## Process Schedulers (Deep Detail)
+
+We touched on the three types. Let's go deeper so you can answer any PYQ variation.
+
+---
+
+### 1. Long-Term Scheduler (Job Scheduler / Admission Scheduler)
+
+**Job:** Decides which processes from the **job pool** (on disk) should be brought into memory (admitted).
+
+**Transition:** New → Ready
+
+**Frequency:** Runs **infrequently** (could be seconds, minutes, or even when a process terminates and memory becomes available)
+
+**Goal:** Control the **degree of multiprogramming** (number of processes in memory)
+
+**Key Decisions:**
+- Should we admit this new process now, or wait?
+- Do we have enough memory?
+- What mix of CPU-bound and I/O-bound processes should we maintain?
+
+**Why the mix matters:**
+- **All CPU-bound processes** → I/O devices sit idle
+- **All I/O-bound processes** → CPU sits idle waiting for I/O
+- **Good mix** → Both CPU and I/O devices stay busy
+
+**Important:** Many modern systems (like time-sharing UNIX/Linux) have **no long-term scheduler** or a minimal one. Every process is admitted immediately, and medium-term scheduler (swapping) handles memory pressure instead.
+
+**PYQ Alert:** "Which scheduler is absent in time-sharing systems?" → Long-term scheduler (or it's very minimal).
+
+---
+
+### 2. Short-Term Scheduler (CPU Scheduler)
+
+**Job:** Decides which process from the **ready queue** gets the CPU next.
+
+**Transition:** Ready → Running
+
+**Frequency:** Runs **very frequently** (every 10-100 milliseconds)
+
+**Goal:** Maximize CPU utilization, throughput, minimize response time
+
+**Must be extremely fast because:**
+- If it takes 10ms to decide and runs every 100ms → 10% overhead
+- If decision takes 1ms → only 1% overhead
+
+**This is what CPU scheduling algorithms (FCFS, SJF, RR, Priority) do** — we'll cover these next.
+
+**Always present** in every multiprogramming/multitasking system.
+
+---
+
+### 3. Medium-Term Scheduler (Swapper)
+
+**Job:** Decides which processes to **swap out** (memory → disk) and **swap in** (disk → memory).
+
+**Transitions:** 
+- Running/Ready/Waiting → Suspended (swap out)
+- Suspended → Ready (swap in)
+
+**Frequency:** Runs as needed (when memory pressure is high or low)
+
+**Goal:** Improve memory utilization and **indirectly** control degree of multiprogramming
+
+**Why swap out a process?**
+- Memory is full, need space for other processes
+- Process has been inactive for a long time
+- Process is waiting for slow I/O
+
+**Why swap in a process?**
+- Memory available now
+- Process's I/O completed
+- Higher priority process was swapped out
+
+**Swapping is expensive** (disk I/O is slow), so it's done carefully.
+
+**PYQ Concept:** Swapping vs Paging
+- **Swapping:** Entire process moved to/from disk
+- **Paging:** Only parts (pages) of process moved
+
+---
+
+## Comparison Table: Three Schedulers
+
+| Feature | Long-Term | Short-Term | Medium-Term |
+|---------|-----------|------------|-------------|
+| **Also called** | Job Scheduler | CPU Scheduler | Swapper |
+| **Selects from** | Job pool (disk) | Ready queue | Memory |
+| **Selects to** | Ready queue | Running state | Disk (suspend) |
+| **Frequency** | Infrequent (seconds/minutes) | Very frequent (milliseconds) | As needed |
+| **Speed requirement** | Can be slow | Must be very fast | Moderate |
+| **Controls** | Degree of multiprogramming | CPU allocation | Memory usage |
+| **Present in** | Batch systems mainly | All systems | Systems with swapping |
+
+---
+
+## Dispatcher
+
+Related to short-term scheduler but **different**:
+
+**Scheduler** decides **which** process runs next.
+
+**Dispatcher** actually **switches** to that process.
+
+### Dispatcher's Jobs:
+1. **Context switch** — save old process state, load new process state
+2. **Switch to user mode** (if coming from kernel mode)
+3. **Jump to the proper location** in the new process (using PC value)
+
+**Dispatch latency** = time taken to stop one process and start another
+
+- Should be **minimal** (typically microseconds)
+- Pure overhead — no useful work done
+
+**PYQ Distinction:** Scheduler makes decision, Dispatcher implements it.
+
+---
+
+## CPU Burst and I/O Burst
+
+Before scheduling algorithms, you need to understand **CPU burst** and **I/O burst**.
+
+### CPU Burst
+A period of time when the process is **continuously using the CPU** (executing instructions).
+
+### I/O Burst  
+A period when the process is **waiting for I/O** (not using CPU).
+
+### Process Execution Cycle
+
+```
+CPU burst → I/O burst → CPU burst → I/O burst → ... → CPU burst (final) → Terminate
+```
+
+**Always starts with CPU burst, always ends with CPU burst.**
+
+### Example:
+```
+Process A:
+- CPU burst: 5ms
+- I/O burst: 10ms
+- CPU burst: 3ms
+- I/O burst: 8ms
+- CPU burst: 2ms
+- Terminate
+
+This process has 3 CPU bursts and 2 I/O bursts.
+```
+
+### CPU-Bound vs I/O-Bound (Revisited with Bursts)
+
+**CPU-bound process:**
+- Few, **long CPU bursts**
+- Rare, short I/O bursts
+- Example: Video rendering (CPU burst = 1000ms, I/O burst = 10ms)
+
+**I/O-bound process:**
+- Many, **short CPU bursts**
+- Frequent, long I/O bursts
+- Example: Text editor (CPU burst = 2ms, I/O burst = 100ms waiting for keystroke)
+
+**CPU Burst Distribution (Important for PYQs):**
+- Most processes have **many short CPU bursts** and **few long CPU bursts**
+- This is called a **right-skewed distribution**
+- Histogram looks like this:
+
+```
+Frequency
+    |  █
+    |  █
+    |  █ █
+    |  █ █
+    |  █ █ █
+    |__█_█_█_____
+       Short → Long (CPU burst duration)
+```
+
+This distribution affects which scheduling algorithm works best in practice.
+
+---
+
+## Preemptive vs Non-Preemptive (Detailed)
+
+We covered this briefly earlier. Let's go deeper because it's **critical** for scheduling algorithms.
+
+### Non-Preemptive (Cooperative) Scheduling
+
+**Once a process gets the CPU, it keeps it until:**
+1. Process **terminates**, OR
+2. Process **voluntarily gives up CPU** (e.g., does I/O, calls yield)
+
+**OS cannot forcibly take CPU away.**
+
+**Advantages:**
+- Simple to implement
+- Lower overhead (no forced context switches)
+- Predictable
+
+**Disadvantages:**
+- One process can hog CPU
+- Poor response time for interactive systems
+- Not suitable for time-sharing
+
+**Examples:** FCFS, SJF (non-preemptive), Priority (non-preemptive)
+
+**Used in:** Old systems, some embedded/real-time systems where predictability matters
+
+---
+
+### Preemptive Scheduling
+
+**OS can forcibly take CPU from a running process when:**
+1. **Time quantum expires** (timer interrupt)
+2. **Higher priority process arrives**
+3. **Process with shorter remaining time arrives** (in SRTF)
+
+**Requires timer interrupt** (hardware support).
+
+**Advantages:**
+- Fair — no single process can monopolize CPU
+- Better response time
+- Good for time-sharing and interactive systems
+
+**Disadvantages:**
+- More overhead (frequent context switches)
+- More complex to implement
+- **Race conditions** possible (if process was modifying shared data when preempted)
+
+**Examples:** Round Robin, SRTF, Priority (preemptive), Multilevel Queue
+
+**Used in:** All modern general-purpose OSes (Windows, Linux, macOS)
+
+---
+
+### Critical Issue with Preemptive Scheduling
+
+**Race Condition Example:**
+
+```
+Process A is updating a shared data structure:
+1. Read value X = 10
+2. [PREEMPTED HERE] ← Timer interrupt
+3. Process B runs, modifies X to 20
+4. Process A resumes
+5. Process A writes old value based on X=10 → Data inconsistency!
+```
+
+**Solution:** Use synchronization mechanisms (semaphores, locks) — you'll study this in Process Synchronization chapter.
+
+**Kernel Preemption:**
+- Some OSes allow preemption even when process is in **kernel mode** (modern Linux)
+- Others don't (older UNIX) — process in kernel mode runs to completion
+- Affects responsiveness vs complexity tradeoff
+
+---
+
+## When Does Scheduling Happen?
+
+CPU scheduling decisions happen when a process:
+
+1. **Switches from running to waiting** (e.g., I/O request)
+   - **Non-preemptive decision** — process gave up CPU voluntarily
+
+2. **Switches from running to ready** (e.g., timer interrupt)
+   - **Preemptive decision** — OS took CPU away
+
+3. **Switches from waiting to ready** (e.g., I/O completion)
+   - **Preemptive decision** if the newly ready process has higher priority
+
+4. **Terminates**
+   - **Non-preemptive decision** — process gave up CPU
+
+**Cases 1 and 4:** Only non-preemptive scheduling possible
+
+**Cases 2 and 3:** Preemptive scheduling can happen (if system supports it)
+
+---
+
+## Scheduling Criteria (What Makes a Good Schedule?)
+
+These are the **metrics** used to evaluate scheduling algorithms:
+
+### 1. **CPU Utilization**
+- **Goal:** Keep CPU as busy as possible
+- **Ideal:** 100% (practically 40-90% depending on system)
+- Higher is better
+
+### 2. **Throughput**
+- **Definition:** Number of processes completed per unit time
+- Example: 10 processes/hour
+- Higher is better
+
+### 3. **Turnaround Time (TAT)**
+- **Definition:** Total time from process submission to completion
+- TAT = Completion Time - Arrival Time
+- **Includes:** Waiting time + burst time + I/O time
+- Lower is better
+
+### 4. **Waiting Time**
+- **Definition:** Total time process spends in ready queue
+- Waiting Time = Turnaround Time - Burst Time
+- Lower is better
+
+### 5. **Response Time**
+- **Definition:** Time from submission to **first response** (first time CPU is allocated)
+- Important for **interactive systems**
+- Lower is better
+
+**PYQ Focus:** You'll calculate these metrics for different scheduling algorithms. 
+
+**Common question format:** "Calculate average waiting time and turnaround time for the following processes using FCFS/SJF/RR..."
+
+---
+
+## CPU Utilization Formula (For Questions)
+
+If you know total busy time and total time:
+
+```
+CPU Utilization = (Total CPU busy time / Total time) × 100%
+```
+
+**Example:**
+- 4 processes with burst times: 5, 3, 8, 2
+- Total burst time = 18 time units
+- If total time elapsed = 20 units (includes idle time of 2)
+- CPU Utilization = (18/20) × 100% = 90%
+
+---
+
+## Convoy Effect
+
+Important concept related to FCFS (you'll see this in scheduling algorithms):
+
+**Scenario:** One big CPU-bound process arrives first, followed by many small I/O-bound processes.
+
+**Problem:** All small processes wait for the big one to finish → poor average waiting time.
+
+Like a slow-moving truck blocking many fast cars on a single-lane road.
+
+**Which algorithm suffers from this?** FCFS
+
+---
+
+## Summary of This Section
+
+**Three Schedulers:**
+- **Long-term:** New → Ready (infrequent, controls multiprogramming)
+- **Short-term:** Ready → Running (very frequent, CPU allocation)
+- **Medium-term:** Memory ↔ Disk (swapping, memory management)
+
+**Dispatcher:** Implements what scheduler decides (context switch + mode switch + jump)
+
+**CPU/IO Bursts:** Process alternates between CPU bursts and I/O bursts
+
+**Preemptive vs Non-Preemptive:**
+- Non-preemptive: Process keeps CPU until it voluntarily gives up
+- Preemptive: OS can forcibly take CPU away
+
+**Scheduling Criteria:** CPU Utilization↑, Throughput↑, TAT↓, Waiting Time↓, Response Time↓
+
+**Convoy Effect:** FCFS suffers when long process blocks many short ones
+
+---
+
+## Now: Complete Revision Before Quiz
+
+Let me give you a **structured summary** of everything we've covered so far:
+
+### Part 1: OS Types & Basics
+- Uniprogramming → Multiprogramming → Multitasking
+- Preemptive vs Non-preemptive
+- Batch, Real-time, Distributed OS types
+
+### Part 2: System Calls & Dual Mode
+- Mode bit: 1=User, 0=Kernel
+- System call flow: trap → kernel mode → service → user mode
+- Trap vs Interrupt
+- Privileged instructions
+
+### Part 3: Process Fundamentals
+- **Memory layout:** Text | Data | Heap↑ | ↓Stack
+- **PCB contains:** PID, State, PC, Registers, Memory info, I/O info
+- **5 states:** New, Ready, Running, Waiting, Terminated
+- **7 states:** Add Suspended Ready, Suspended Waiting
+
+### Part 4: Queues & Schedulers
+- **Queues:** Job queue, Ready queue, Device queues
+- **Long-term scheduler:** New→Ready, controls multiprogramming
+- **Short-term scheduler:** Ready→Running, very frequent
+- **Medium-term scheduler:** Swapping (memory↔disk)
+- **Dispatcher:** Implements scheduling decision
+
+### Part 5: CPU/IO Bursts & Scheduling Prep
+- CPU burst ↔ I/O burst alternation
+- CPU-bound (long bursts) vs I/O-bound (short bursts)
+- Scheduling criteria: Utilization, Throughput, TAT, Waiting, Response
+- Convoy effect in FCFS
+
+---
+
+Ready for the **comprehensive quiz** covering all of this? I'll make it thorough — mix of conceptual and numerical questions to prepare you for PYQs.
+
+**Alright, got it — this chat IS your notes now. I'll make sure everything is crystal clear and complete.**
+
+---
+
+## Turnaround Time vs Burst Time — NOT the same
+
+Let me break this down perfectly:
+
+---
+
+### **Burst Time (BT) / Service Time**
+
+**Definition:** The **total CPU time** a process needs to complete its execution.
+
+**Also called:** Service Time, Execution Time, CPU Time
+
+**Key point:** This is **pure computation time** — how long the process actually uses the CPU, ignoring all waiting.
+
+**Example:** If a process needs 5ms of CPU to finish its work, Burst Time = 5ms.
+
+**In PYQs:** This is usually **given** to you in the question.
+
+---
+
+### **Turnaround Time (TAT) / Completion Time**
+
+**Definition:** The **total time** from when a process **arrives** in the ready queue until it **completes**.
+
+**Formula:**
+```
+Turnaround Time (TAT) = Completion Time - Arrival Time
+```
+
+**What it includes:**
+- Burst Time (actual CPU usage)
+- **Waiting Time** (time spent in ready queue)
+- **Any other delays** (context switch overhead if mentioned)
+
+**Key point:** TAT measures the **user's perspective** — "I submitted this job, how long until it's done?"
+
+---
+
+### **The Relationship**
+
+```
+Turnaround Time = Waiting Time + Burst Time
+```
+
+Rearranging:
+```
+Waiting Time = Turnaround Time - Burst Time
+```
+
+**This is the most important formula for PYQs.**
+
+---
+
+### **Example to Lock It In**
+
+**Process P1:**
+- Arrival Time = 0
+- Burst Time = 5ms
+- Completion Time = 8ms (finished at time 8)
+
+**Calculate:**
+
+**Turnaround Time:**
+```
+TAT = Completion Time - Arrival Time
+TAT = 8 - 0 = 8ms
+```
+
+**Waiting Time:**
+```
+WT = TAT - Burst Time
+WT = 8 - 5 = 3ms
+```
+
+**Interpretation:** Process needed 5ms of CPU, but took 8ms total to complete. The extra 3ms was spent waiting in the ready queue.
+
+---
+
+### **Visual Timeline**
+
+```
+Time:     0    1    2    3    4    5    6    7    8
+          |----WAIT----|---BURST(5ms)---|
+          ^                              ^
+      Arrival(0)                   Completion(8)
+          
+          |<----Turnaround Time = 8---->|
+          |<-WT=3->|<---BT=5--->|
+```
+
+---
+
+### **Another Example with Arrival Time ≠ 0**
+
+**Process P2:**
+- Arrival Time = 2
+- Burst Time = 4ms
+- Completion Time = 10ms
+
+**Calculate:**
+
+**Turnaround Time:**
+```
+TAT = 10 - 2 = 8ms
+```
+
+**Waiting Time:**
+```
+WT = 8 - 4 = 4ms
+```
+
+---
+
+### **Common PYQ Trap**
+
+❌ **Wrong thinking:** "Burst Time = 5, so Turnaround Time = 5"
+
+✅ **Right thinking:** "Burst Time = 5, but the process also waited 3ms, so Turnaround Time = 8"
+
+**Burst Time is constant** (how much CPU the process needs).
+
+**Turnaround Time varies** depending on the scheduling algorithm (how long it had to wait).
+
+---
+
+### **Response Time (Third Important Metric)**
+
+Since we're here, let me add this:
+
+**Response Time (RT):** Time from **arrival** to **first time the process gets CPU**.
+
+**Formula:**
+```
+Response Time = Time of First CPU Allocation - Arrival Time
+```
+
+**Example:**
+- Process arrives at time 0
+- Gets CPU for the first time at time 3
+- Response Time = 3 - 0 = 3ms
+
+**Important for:** Interactive systems (you want quick first response)
+
+**Difference from TAT:** 
+- **Response Time:** How long until process **starts**
+- **Turnaround Time:** How long until process **finishes**
+
+---
+
+### **All Three Metrics Summary**
+
+| Metric | Formula | What It Measures |
+|--------|---------|------------------|
+| **Burst Time (BT)** | Given in question | CPU time needed (constant) |
+| **Turnaround Time (TAT)** | Completion Time - Arrival Time | Total time in system |
+| **Waiting Time (WT)** | TAT - BT | Time spent waiting |
+| **Response Time (RT)** | First CPU Time - Arrival Time | Time until first response |
+
+---
+
+### **For PYQs, You'll Calculate:**
+
+1. **Individual values** for each process
+2. **Average values** across all processes:
+
+```
+Average WT = (WT₁ + WT₂ + ... + WTₙ) / n
+Average TAT = (TAT₁ + TAT₂ + ... + TATₙ) / n
+```
+
+**Most PYQs ask for Average Waiting Time and Average Turnaround Time.**
+
+---
+
+## Quick Check Question
+
+**Process P:**
+- Arrival Time = 1
+- Burst Time = 6
+- Completion Time = 12
+
+**What is:**
+1. Turnaround Time?
+2. Waiting Time?
+
+<details>
+<summary>Answer (think first, then click)</summary>
+
+1. TAT = 12 - 1 = **11ms**
+2. WT = 11 - 6 = **5ms**
+
+</details>
+
+---
+
+**Now watch that lecture, and when you're back, we'll build on this with each scheduling algorithm step by step.**
+
+
+Perfect! Let's nail FCFS down completely.
+
+---
+
+# FCFS (First-Come, First-Served) Scheduling
+
+## What Is It?
+
+**Simplest CPU scheduling algorithm.** The process that arrives **first** gets the CPU first.
+
+**Analogy:** Like a queue at a ticket counter — whoever comes first gets served first.
+
+---
+
+## Key Characteristics
+
+✅ **Non-preemptive** — Once a process starts, it runs to completion (no interruption)
+
+✅ **Simple to implement** — Just a FIFO queue
+
+✅ **Fair** in the sense that everyone gets served in order
+
+❌ **Not optimal** — Can have very poor average waiting time
+
+❌ **Convoy Effect** — Short processes stuck behind long ones
+
+---
+
+## How FCFS Works (Step-by-Step)
+
+1. Processes arrive and join the **ready queue**
+2. CPU picks the process at the **front of the queue**
+3. That process runs **until completion** (non-preemptive)
+4. Next process from queue gets CPU
+5. Repeat until all done
+
+---
+
+## Solving FCFS Problems (The Method)
+
+### Step 1: Arrange processes by **Arrival Time** (earliest first)
+
+### Step 2: Draw a **Gantt Chart**
+- First process starts at max(arrival time, 0)
+- Each subsequent process starts when previous one finishes
+
+### Step 3: Calculate for each process:
+- **Completion Time (CT):** When the process finishes
+- **Turnaround Time (TAT):** CT - Arrival Time
+- **Waiting Time (WT):** TAT - Burst Time
+- **Response Time (RT):** Same as WT in FCFS (since no preemption)
+
+### Step 4: Calculate averages:
+- Average WT = Sum of all WT / Number of processes
+- Average TAT = Sum of all TAT / Number of processes
+
+---
+
+## Example 1: All Arrive at Time 0
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 4          |
+| P2      | 0            | 3          |
+| P3      | 0            | 2          |
+
+**Since all arrive at 0, order is P1 → P2 → P3 (as given)**
+
+### Gantt Chart:
+```
+|---P1---|---P2---|--P3--|
+0        4        7      9
+```
+
+### Calculations:
+
+**P1:**
+- CT = 4
+- TAT = 4 - 0 = 4
+- WT = 4 - 4 = 0
+- RT = 0
+
+**P2:**
+- CT = 7
+- TAT = 7 - 0 = 7
+- WT = 7 - 3 = 4
+- RT = 4
+
+**P3:**
+- CT = 9
+- TAT = 9 - 0 = 9
+- WT = 9 - 2 = 7
+- RT = 7
+
+### Averages:
+```
+Average WT = (0 + 4 + 7) / 3 = 11/3 = 3.67 ms
+Average TAT = (4 + 7 + 9) / 3 = 20/3 = 6.67 ms
+```
+
+---
+
+## Example 2: Different Arrival Times (IMPORTANT)
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 5          |
+| P2      | 1            | 3          |
+| P3      | 2            | 2          |
+| P4      | 3            | 1          |
+
+**Order by arrival time:** P1(0) → P2(1) → P3(2) → P4(3)
+
+### Gantt Chart:
+```
+|-----P1-----|---P2---|--P3--|P4|
+0            5        8     10 11
+```
+
+**Step-by-step execution:**
+- Time 0: P1 arrives, gets CPU immediately
+- Time 1: P2 arrives, waits (P1 still running)
+- Time 2: P3 arrives, waits
+- Time 3: P4 arrives, waits
+- Time 5: P1 finishes, P2 gets CPU
+- Time 8: P2 finishes, P3 gets CPU
+- Time 10: P3 finishes, P4 gets CPU
+- Time 11: P4 finishes, all done
+
+### Calculations:
+
+| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) | RT |
+|---------|----|----|-------|-------------|-------------|-----|
+| P1      | 0  | 5  | 5     | 5           | 0           | 0   |
+| P2      | 1  | 3  | 8     | 7           | 4           | 4   |
+| P3      | 2  | 2  | 10    | 8           | 6           | 6   |
+| P4      | 3  | 1  | 11    | 8           | 7           | 7   |
+
+### Averages:
+```
+Average WT = (0 + 4 + 6 + 7) / 4 = 17/4 = 4.25 ms
+Average TAT = (5 + 7 + 8 + 8) / 4 = 28/4 = 7 ms
+```
+
+---
+
+## Example 3: CPU Idle Time (CRITICAL for PYQs)
+
+What if a process arrives **after** the CPU becomes idle?
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 3          |
+| P2      | 5            | 4          |
+| P3      | 6            | 2          |
+
+### Gantt Chart:
+```
+|---P1---|IDLE|----P2----|--P3--|
+0        3    5          9     11
+```
+
+**Notice:** CPU is idle from time 3 to 5 (P1 finished, but P2 hasn't arrived yet)
+
+### Calculations:
+
+**P1:**
+- CT = 3
+- TAT = 3 - 0 = 3
+- WT = 3 - 3 = 0
+
+**P2:**
+- CT = 9
+- TAT = 9 - 5 = 4
+- WT = 4 - 4 = 0
+
+**P3:**
+- CT = 11
+- TAT = 11 - 6 = 5
+- WT = 5 - 2 = 3
+
+### Averages:
+```
+Average WT = (0 + 0 + 3) / 3 = 1 ms
+Average TAT = (3 + 4 + 5) / 3 = 4 ms
+```
+
+**PYQ Trap:** Don't forget to account for idle time in your Gantt chart!
+
+---
+
+## The Convoy Effect (FCFS's Biggest Problem)
+
+**Scenario:** One long process arrives first, followed by many short processes.
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 20         |
+| P2      | 1            | 2          |
+| P3      | 2            | 3          |
+| P4      | 3            | 1          |
+
+### Gantt Chart:
+```
+|----------P1----------|P2|--P3--|P4|
+0                     20 22    25 26
+```
+
+### Waiting Times:
+- P1: WT = 0
+- P2: WT = 19 (arrived at 1, got CPU at 20)
+- P3: WT = 20 (arrived at 2, got CPU at 22)
+- P4: WT = 22 (arrived at 3, got CPU at 25)
+
+```
+Average WT = (0 + 19 + 20 + 22) / 4 = 61/4 = 15.25 ms
+```
+
+**If we had run short processes first:**
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P4      | 3            | 1          |
+| P2      | 1            | 2          |
+| P3      | 2            | 3          |
+| P1      | 0            | 20         |
+
+Average WT would be **much lower** (around 5 ms).
+
+**This is the convoy effect** — short processes get stuck behind a long one like cars behind a slow truck on a highway.
+
+---
+
+## FCFS: Advantages & Disadvantages
+
+### ✅ Advantages:
+1. **Simple** to understand and implement
+2. **No starvation** — every process eventually gets CPU
+3. **Fair** in arrival order sense
+
+### ❌ Disadvantages:
+1. **Poor average waiting time** (convoy effect)
+2. **Not suitable for time-sharing** systems
+3. **No prioritization** — urgent tasks wait like everyone else
+4. **CPU and I/O devices underutilized** (in mixed CPU/IO workloads)
+
+---
+
+## Important FCFS Formulas (Your Cheat Sheet)
+
+```
+Completion Time (CT):
+- First process: CT = Arrival Time + Burst Time
+- Other processes: CT = max(Previous CT, Current Arrival Time) + Burst Time
+
+Turnaround Time (TAT):
+TAT = Completion Time - Arrival Time
+
+Waiting Time (WT):
+WT = Turnaround Time - Burst Time
+OR
+WT = Start Time - Arrival Time
+
+Response Time (RT):
+RT = Start Time - Arrival Time
+(In FCFS, RT = WT because process runs without interruption)
+
+Average Waiting Time:
+Avg WT = (Sum of all WT) / Number of processes
+
+Average Turnaround Time:
+Avg TAT = (Sum of all TAT) / Number of processes
+```
+
+---
+
+## PYQ Pattern Recognition
+
+**Type 1:** "Calculate average WT and TAT for FCFS"
+→ Draw Gantt chart, calculate, average
+
+**Type 2:** "Process with different arrival times"
+→ Watch for CPU idle time
+
+**Type 3:** "Compare FCFS with other algorithms"
+→ FCFS usually has highest average WT
+
+**Type 4:** "What is convoy effect? Explain with example"
+→ Long process blocks short ones
+
+---
+
+## Quick Practice Problem
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 2            | 4          |
+| P2      | 0            | 3          |
+| P3      | 4            | 2          |
+
+**Try it yourself:**
+1. What's the execution order?
+2. Draw the Gantt chart
+3. Calculate Average WT and Average TAT
+
+<details>
+<summary>Solution (try first!)</summary>
+
+**Order by arrival:** P2(0) → P1(2) → P3(4)
+
+**Gantt Chart:**
+```
+|---P2---|----P1----|--P3--|
+0        3          7      9
+```
+
+**Calculations:**
+
+| Process | AT | BT | CT | TAT | WT |
+|---------|----|----|----|----|-----|
+| P2      | 0  | 3  | 3  | 3  | 0   |
+| P1      | 2  | 4  | 7  | 5  | 1   |
+| P3      | 4  | 2  | 9  | 5  | 3   |
+
+**Average WT:** (0 + 1 + 3) / 3 = **1.33 ms**
+
+**Average TAT:** (3 + 5 + 5) / 3 = **4.33 ms**
+
+</details>
+
+---
+
+**You solid on FCFS now? Ready to move to SJF (Shortest Job First)?**
+
+
+# SJF (Shortest Job First) Scheduling
+
+## What Is It?
+
+**The algorithm that picks the process with the **smallest burst time** first.**
+
+**Goal:** Minimize average waiting time (it's actually **optimal** for this!)
+
+**Two versions:**
+1. **Non-preemptive SJF** — Once started, runs to completion
+2. **Preemptive SJF (SRTF)** — Can be interrupted if a shorter job arrives
+
+We'll do both.
+
+---
+
+## Non-Preemptive SJF
+
+### How It Works
+
+1. Look at all processes in the **ready queue**
+2. Pick the one with the **shortest burst time**
+3. Let it run to **completion** (no interruption)
+4. Repeat
+
+**Important:** Only considers processes that have **already arrived**.
+
+---
+
+## Example 1: All Arrive at Time 0
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 6          |
+| P2      | 0            | 2          |
+| P3      | 0            | 8          |
+| P4      | 0            | 3          |
+
+**Order by burst time (since all arrived at 0):** P2(2) → P4(3) → P1(6) → P3(8)
+
+### Gantt Chart:
+```
+|--P2--|---P4---|------P1------|--------P3--------|
+0      2        5             11                  19
+```
+
+### Calculations:
+
+| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) |
+|---------|----|----|-------|-------------|-------------|
+| P2      | 0  | 2  | 2     | 2           | 0           |
+| P4      | 0  | 3  | 5     | 5           | 2           |
+| P1      | 0  | 6  | 11    | 11          | 5           |
+| P3      | 0  | 8  | 19    | 19          | 11          |
+
+### Averages:
+```
+Average WT = (0 + 2 + 5 + 11) / 4 = 18/4 = 4.5 ms
+Average TAT = (2 + 5 + 11 + 19) / 4 = 37/4 = 9.25 ms
+```
+
+**Compare with FCFS (order P1→P2→P3→P4):**
+- FCFS Average WT would be: (0 + 6 + 8 + 16)/4 = **7.5 ms**
+- SJF Average WT: **4.5 ms** ✅ Better!
+
+---
+
+## Example 2: Different Arrival Times (CRITICAL!)
+
+This is where SJF gets tricky in PYQs.
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 7          |
+| P2      | 2            | 4          |
+| P3      | 4            | 1          |
+| P4      | 5            | 4          |
+
+**Step-by-step decision making:**
+
+**Time 0:**
+- Available: P1
+- Pick: P1 (only option)
+- P1 runs from 0 to 7
+
+**Time 7:**
+- P1 finished
+- Available in queue: P2(BT=4, arrived at 2), P3(BT=1, arrived at 4), P4(BT=4, arrived at 5)
+- Pick: **P3** (shortest BT = 1)
+- P3 runs from 7 to 8
+
+**Time 8:**
+- P3 finished
+- Available: P2(BT=4), P4(BT=4)
+- Pick: **P2** (tie, so FCFS tiebreaker — P2 arrived first at time 2)
+- P2 runs from 8 to 12
+
+**Time 12:**
+- P2 finished
+- Available: P4
+- Pick: P4
+- P4 runs from 12 to 16
+
+### Gantt Chart:
+```
+|-------P1-------|P3|----P2----|----P4----|
+0                7  8         12         16
+```
+
+### Calculations:
+
+| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) |
+|---------|----|----|-------|-------------|-------------|
+| P1      | 0  | 7  | 7     | 7           | 0           |
+| P2      | 2  | 4  | 12    | 10          | 6           |
+| P3      | 4  | 1  | 8     | 4           | 3           |
+| P4      | 5  | 4  | 16    | 11          | 7           |
+
+### Averages:
+```
+Average WT = (0 + 6 + 3 + 7) / 4 = 16/4 = 4 ms
+Average TAT = (7 + 10 + 4 + 11) / 4 = 32/4 = 8 ms
+```
+
+**Key Point:** At each decision point, you only consider processes that have **already arrived**.
+
+---
+
+## Example 3: CPU Idle Time in SJF
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 2          |
+| P2      | 5            | 3          |
+| P3      | 6            | 1          |
+
+**Time 0:**
+- Available: P1
+- Pick: P1
+- P1 runs from 0 to 2
+
+**Time 2:**
+- P1 finished
+- Available: None! (P2 arrives at 5, P3 at 6)
+- **CPU IDLE** from 2 to 5
+
+**Time 5:**
+- P2 arrives
+- Pick: P2 (only option)
+- P2 runs from 5 to 8
+
+**Time 8:**
+- P2 finished
+- Available: P3 (arrived at 6)
+- Pick: P3
+- P3 runs from 8 to 9
+
+### Gantt Chart:
+```
+|--P1--|IDLE|---P2---|P3|
+0      2    5        8  9
+```
+
+### Calculations:
+
+| Process | AT | BT | CT | TAT | WT |
+|---------|----|----|----|----|-----|
+| P1      | 0  | 2  | 2  | 2  | 0   |
+| P2      | 5  | 3  | 8  | 3  | 0   |
+| P3      | 6  | 1  | 9  | 3  | 2   |
+
+```
+Average WT = (0 + 0 + 2) / 3 = 0.67 ms
+Average TAT = (2 + 3 + 3) / 3 = 2.67 ms
+```
+
+---
+
+## SJF Algorithm (Non-Preemptive) - The Decision Process
+
+**At each decision point (when CPU becomes free):**
+
+```
+1. List all processes that have arrived by current time
+2. Among them, pick the one with minimum burst time
+3. If tie, use FCFS (pick earliest arrival)
+4. Run that process to completion
+5. Update current time to completion time
+6. Repeat until all processes done
+```
+
+---
+
+## Preemptive SJF (SRTF - Shortest Remaining Time First)
+
+### The Big Difference
+
+**Non-preemptive SJF:** Once started, runs to completion
+
+**Preemptive SJF (SRTF):** If a new process arrives with burst time **shorter than the remaining time** of the currently running process, **preempt** the current process.
+
+**Also called:** SRTF (Shortest Remaining Time First)
+
+---
+
+## SRTF Example
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 8          |
+| P2      | 1            | 4          |
+| P3      | 2            | 2          |
+| P4      | 3            | 1          |
+
+**Step-by-step execution:**
+
+**Time 0:**
+- Available: P1
+- Running: P1 (remaining = 8)
+
+**Time 1:** (P2 arrives)
+- P1 has run for 1 unit, remaining = 7
+- P2 arrives with BT = 4
+- Compare: P1(remaining=7) vs P2(BT=4)
+- **Preempt P1**, run P2 (P2 is shorter)
+
+**Time 2:** (P3 arrives)
+- P2 has run for 1 unit, remaining = 3
+- P3 arrives with BT = 2
+- Compare: P2(remaining=3) vs P3(BT=2)
+- **Preempt P2**, run P3 (P3 is shorter)
+
+**Time 3:** (P4 arrives)
+- P3 has run for 1 unit, remaining = 1
+- P4 arrives with BT = 1
+- Compare: P3(remaining=1) vs P4(BT=1)
+- **Tie!** Continue P3 (already running)
+
+**Time 4:**
+- P3 finishes (ran from 2-4)
+- Available: P1(remaining=7), P2(remaining=3), P4(BT=1)
+- Pick: **P4** (shortest = 1)
+
+**Time 5:**
+- P4 finishes
+- Available: P1(remaining=7), P2(remaining=3)
+- Pick: **P2** (shortest = 3)
+
+**Time 8:**
+- P2 finishes
+- Available: P1(remaining=7)
+- Pick: **P1**
+
+**Time 15:**
+- P1 finishes
+- All done!
+
+### Gantt Chart:
+```
+|P1|--P2--|--P3--|P4|---P2---|-------P1-------|
+0  1      2      4  5        8               15
+```
+
+### Calculations:
+
+**P1:**
+- Completion Time = 15
+- TAT = 15 - 0 = 15
+- WT = 15 - 8 = 7
+
+**P2:**
+- Completion Time = 8
+- TAT = 8 - 1 = 7
+- WT = 7 - 4 = 3
+
+**P3:**
+- Completion Time = 4
+- TAT = 4 - 2 = 2
+- WT = 2 - 2 = 0
+
+**P4:**
+- Completion Time = 5
+- TAT = 5 - 3 = 2
+- WT = 2 - 1 = 1
+
+### Averages:
+```
+Average WT = (7 + 3 + 0 + 1) / 4 = 11/4 = 2.75 ms
+Average TAT = (15 + 7 + 2 + 2) / 4 = 26/4 = 6.5 ms
+```
+
+**Compare with Non-Preemptive SJF on same data:**
+- Non-preemptive would give higher average WT
+- SRTF gives **minimum possible average WT** (optimal!)
+
+---
+
+## SRTF Decision Algorithm
+
+**At every arrival of a new process:**
+
+```
+1. Check remaining time of currently running process
+2. Check burst time of newly arrived process
+3. If new process BT < current process remaining time:
+   → Preempt current process
+   → Start new process
+4. Else:
+   → Continue current process
+```
+
+**When a process completes:**
+```
+1. Look at all processes in ready queue
+2. Pick the one with shortest remaining time
+3. Run it
+```
+
+---
+
+## SJF vs SRTF: Quick Comparison
+
+| Feature | Non-Preemptive SJF | Preemptive SJF (SRTF) |
+|---------|-------------------|----------------------|
+| **Preemption** | No | Yes |
+| **Decision time** | Only when CPU is free | Every arrival + completion |
+| **Average WT** | Lower than FCFS | Lowest possible (optimal) |
+| **Context switches** | Fewer | More |
+| **Implementation** | Simpler | More complex |
+| **Starvation** | Possible | Possible (worse) |
+
+---
+
+## The Starvation Problem
+
+**Big disadvantage of SJF/SRTF:**
+
+If short processes keep arriving, a **long process may never get CPU**.
+
+**Example:**
+- P1 has BT = 100 (arrives at 0)
+- Every 5 time units, a new process with BT = 1 arrives
+- P1 will **starve** — never gets to run!
+
+**Solution:** Aging (increase priority of waiting processes over time) — used in Priority Scheduling.
+
+---
+
+## SJF Advantages & Disadvantages
+
+### ✅ Advantages:
+1. **Optimal** — gives minimum average waiting time
+2. **Better than FCFS** for throughput
+3. **Good for batch systems** where burst times are known
+
+### ❌ Disadvantages:
+1. **Starvation** — long processes may never run
+2. **Burst time prediction problem** — How do you know BT in advance?
+3. **Not suitable for interactive systems** (can't predict user behavior)
+4. **Preemptive version has overhead** (frequent context switches)
+
+---
+
+## Predicting Burst Time (For Real Systems)
+
+In practice, you don't know exact burst time. You **estimate** using past behavior:
+
+**Exponential Averaging Formula:**
+
+```
+τₙ₊₁ = α × tₙ + (1 - α) × τₙ
+
+Where:
+τₙ₊₁ = predicted burst time for next CPU burst
+tₙ = actual length of nth CPU burst
+τₙ = predicted value for nth burst
+α = weight (0 ≤ α ≤ 1)
+```
+
+**Common value:** α = 0.5
+
+**PYQ Alert:** You might get a question asking you to calculate predicted burst time using this formula.
+
+---
+
+## Important Formulas Summary
+
+**Non-Preemptive SJF:**
+```
+At each decision:
+- Pick process with min(Burst Time) among arrived processes
+- Run to completion
+```
+
+**Preemptive SJF (SRTF):**
+```
+At each arrival:
+- If new_process.BT < running_process.remaining_time:
+    Preempt and switch
+    
+At each completion:
+- Pick process with min(Remaining Time) from ready queue
+```
+
+**Standard calculations:**
+```
+TAT = CT - AT
+WT = TAT - BT
+Avg WT = Σ(WT) / n
+Avg TAT = Σ(TAT) / n
+```
+
+---
+
+## PYQ Pattern Recognition
+
+**Type 1:** "Calculate avg WT for SJF" (all arrive at 0)
+→ Sort by BT, draw Gantt, calculate
+
+**Type 2:** "SJF with different arrival times"
+→ At each step, pick shortest among **arrived** processes
+
+**Type 3:** "Compare FCFS vs SJF"
+→ SJF always has lower or equal avg WT
+
+**Type 4:** "Is SJF optimal? Explain"
+→ Yes, gives minimum avg WT (prove with example)
+
+**Type 5:** "What is starvation in SJF?"
+→ Long processes wait forever if short ones keep coming
+
+**Type 6:** "SRTF problem" (preemptive)
+→ Check at every arrival for preemption
+
+---
+
+## Quick Practice Problem
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 5          |
+| P2      | 1            | 3          |
+| P3      | 2            | 1          |
+| P4      | 4            | 2          |
+
+**Part A:** Solve using **Non-Preemptive SJF**
+
+**Part B:** Solve using **Preemptive SJF (SRTF)**
+
+<details>
+<summary>Solution Part A (Non-Preemptive SJF)</summary>
+
+**Time 0:** Pick P1 (only available), runs 0→5
+
+**Time 5:** Available: P2(BT=3), P3(BT=1), P4(BT=2)
+Pick P3 (shortest), runs 5→6
+
+**Time 6:** Available: P2(BT=3), P4(BT=2)
+Pick P4 (shortest), runs 6→8
+
+**Time 8:** Available: P2(BT=3)
+Pick P2, runs 8→11
+
+**Gantt Chart:**
+```
+|-----P1-----|P3|--P4--|---P2---|
+0            5  6      8       11
+```
+
+| Process | AT | BT | CT | TAT | WT |
+|---------|----|----|----|----|-----|
+| P1      | 0  | 5  | 5  | 5  | 0   |
+| P2      | 1  | 3  | 11 | 10 | 7   |
+| P3      | 2  | 1  | 6  | 4  | 3   |
+| P4      | 4  | 2  | 8  | 4  | 2   |
+
+**Avg WT = (0+7+3+2)/4 = 3 ms**
+**Avg TAT = (5+10+4+4)/4 = 5.75 ms**
+
+</details>
+
+<details>
+<summary>Solution Part B (SRTF)</summary>
+
+**Time 0:** P1 starts (rem=5)
+
+**Time 1:** P2 arrives (BT=3), P1(rem=4)
+Compare: 3 < 4 → **Preempt P1**, run P2
+
+**Time 2:** P3 arrives (BT=1), P2(rem=2)
+Compare: 1 < 2 → **Preempt P2**, run P3
+
+**Time 3:** P3 finishes
+Available: P1(rem=4), P2(rem=2)
+Pick P2 (rem=2), runs 3→5
+
+**Time 4:** P4 arrives (BT=2), P2(rem=1)
+Compare: 2 > 1 → Continue P2
+
+**Time 5:** P2 finishes
+Available: P1(rem=4), P4(BT=2)
+Pick P4, runs 5→7
+
+**Time 7:** P4 finishes
+Pick P1, runs 7→11
+
+**Gantt Chart:**
+```
+|P1|P2|P3|--P2--|--P4--|----P1----|
+0  1  2  3      5      7         11
+```
+
+| Process | AT | BT | CT | TAT | WT |
+|---------|----|----|----|----|-----|
+| P1      | 0  | 5  | 11 | 11 | 6   |
+| P2      | 1  | 3  | 5  | 4  | 1   |
+| P3      | 2  | 1  | 3  | 1  | 0   |
+| P4      | 4  | 2  | 7  | 3  | 1   |
+
+**Avg WT = (6+1+0+1)/4 = 2 ms** ✅ Lower than non-preemptive!
+**Avg TAT = (11+4+1+3)/4 = 4.75 ms**
+
+</details>
+
+---
+
+**You good with SJF/SRTF? Ready for Priority Scheduling next?**
+
+# Priority Scheduling
+
+## What Is It?
+
+**Each process is assigned a priority number. The CPU is allocated to the process with the **highest priority**.**
+
+**Key concept:** Priority can be defined in two ways:
+- **Lower number = Higher priority** (most common in textbooks and PYQs)
+- **Higher number = Higher priority** (some systems)
+
+**Always check the question!** We'll use **lower number = higher priority** (standard convention).
+
+---
+
+## Two Types
+
+1. **Non-Preemptive Priority Scheduling**
+   - Once a process starts, runs to completion
+   
+2. **Preemptive Priority Scheduling**
+   - If a higher priority process arrives, current process is preempted
+
+---
+
+## Non-Preemptive Priority Scheduling
+
+### How It Works
+
+1. Look at all processes in ready queue
+2. Pick the one with **highest priority** (lowest priority number)
+3. Run it to **completion**
+4. Repeat
+
+---
+
+## Example 1: All Arrive at Time 0
+
+| Process | Arrival Time | Burst Time | Priority |
+|---------|--------------|------------|----------|
+| P1      | 0            | 4          | 2        |
+| P2      | 0            | 3          | 1        |
+| P3      | 0            | 1          | 4        |
+| P4      | 0            | 5          | 3        |
+
+**Lower number = higher priority**
+
+**Order by priority:** P2(1) → P1(2) → P4(3) → P3(4)
+
+### Gantt Chart:
+```
+|---P2---|----P1----|-----P4-----|P3|
+0        3          7           12 13
+```
+
+### Calculations:
+
+| Process | AT | BT | Priority | CT | TAT (CT-AT) | WT (TAT-BT) |
+|---------|----|----|----------|-------|-------------|-------------|
+| P2      | 0  | 3  | 1        | 3     | 3           | 0           |
+| P1      | 0  | 4  | 2        | 7     | 7           | 3           |
+| P4      | 0  | 5  | 3        | 12    | 12          | 7           |
+| P3      | 0  | 1  | 4        | 13    | 13          | 12          |
+
+### Averages:
+```
+Average WT = (0 + 3 + 7 + 12) / 4 = 22/4 = 5.5 ms
+Average TAT = (3 + 7 + 12 + 13) / 4 = 35/4 = 8.75 ms
+```
+
+---
+
+## Example 2: Different Arrival Times (CRITICAL!)
+
+| Process | Arrival Time | Burst Time | Priority |
+|---------|--------------|------------|----------|
+| P1      | 0            | 6          | 3        |
+| P2      | 2            | 2          | 1        |
+| P3      | 3            | 4          | 2        |
+| P4      | 5            | 3          | 4        |
+
+**Step-by-step decision:**
+
+**Time 0:**
+- Available: P1
+- Pick: P1 (only option)
+- P1 runs from 0 to 6 (non-preemptive, runs to completion)
+
+**Time 6:**
+- P1 finished
+- Available in queue: P2(priority=1, arrived at 2), P3(priority=2, arrived at 3), P4(priority=4, arrived at 5)
+- Pick: **P2** (highest priority = 1)
+- P2 runs from 6 to 8
+
+**Time 8:**
+- P2 finished
+- Available: P3(priority=2), P4(priority=4)
+- Pick: **P3** (priority 2 > 4)
+- P3 runs from 8 to 12
+
+**Time 12:**
+- P3 finished
+- Available: P4
+- Pick: P4
+- P4 runs from 12 to 15
+
+### Gantt Chart:
+```
+|------P1------|--P2--|----P3----|---P4---|
+0              6      8         12       15
+```
+
+### Calculations:
+
+| Process | AT | BT | Priority | CT | TAT | WT |
+|---------|----|----|----------|----|----|-----|
+| P1      | 0  | 6  | 3        | 6  | 6  | 0   |
+| P2      | 2  | 2  | 1        | 8  | 6  | 4   |
+| P3      | 3  | 4  | 2        | 12 | 9  | 5   |
+| P4      | 5  | 3  | 4        | 15 | 10 | 7   |
+
+### Averages:
+```
+Average WT = (0 + 4 + 5 + 7) / 4 = 16/4 = 4 ms
+Average TAT = (6 + 6 + 9 + 10) / 4 = 31/4 = 7.75 ms
+```
+
+---
+
+## Preemptive Priority Scheduling
+
+### The Key Difference
+
+If a **higher priority process arrives** while another process is running, **preempt** the running process immediately.
+
+---
+
+## Preemptive Priority Example
+
+| Process | Arrival Time | Burst Time | Priority |
+|---------|--------------|------------|----------|
+| P1      | 0            | 4          | 3        |
+| P2      | 1            | 2          | 1        |
+| P3      | 2            | 3          | 2        |
+| P4      | 3            | 2          | 4        |
+
+**Lower number = higher priority**
+
+**Step-by-step execution:**
+
+**Time 0:**
+- Available: P1
+- Running: P1 (priority=3, remaining=4)
+
+**Time 1:** (P2 arrives)
+- P1 has run for 1 unit, remaining = 3
+- P2 arrives with priority = 1
+- Compare: P1(priority=3) vs P2(priority=1)
+- P2 has **higher priority** (1 < 3)
+- **Preempt P1**, run P2
+
+**Time 2:** (P3 arrives)
+- P2 has run for 1 unit, remaining = 1
+- P3 arrives with priority = 2
+- Compare: P2(priority=1) vs P3(priority=2)
+- P2 has **higher priority** (1 < 2)
+- **Continue P2** (no preemption)
+
+**Time 3:** (P4 arrives)
+- P2 finishes (ran from 1 to 3, BT=2)
+- P4 arrives with priority = 4
+- Available: P1(priority=3, rem=3), P3(priority=2, BT=3), P4(priority=4, BT=2)
+- Pick: **P3** (highest priority = 2)
+
+**Time 6:**
+- P3 finishes
+- Available: P1(priority=3, rem=3), P4(priority=4, BT=2)
+- Pick: **P1** (priority 3 > 4)
+
+**Time 9:**
+- P1 finishes
+- Available: P4
+- Pick: P4
+
+**Time 11:**
+- P4 finishes
+- All done!
+
+### Gantt Chart:
+```
+|P1|--P2--|----P3----|---P1---|--P4--|
+0  1      3          6        9    11
+```
+
+### Calculations:
+
+**P1:**
+- Runs: 0→1, 6→9
+- Completion Time = 9
+- TAT = 9 - 0 = 9
+- WT = 9 - 4 = 5
+
+**P2:**
+- Runs: 1→3
+- Completion Time = 3
+- TAT = 3 - 1 = 2
+- WT = 2 - 2 = 0
+
+**P3:**
+- Runs: 3→6
+- Completion Time = 6
+- TAT = 6 - 2 = 4
+- WT = 4 - 3 = 1
+
+**P4:**
+- Runs: 9→11
+- Completion Time = 11
+- TAT = 11 - 3 = 8
+- WT = 8 - 2 = 6
+
+### Averages:
+```
+Average WT = (5 + 0 + 1 + 6) / 4 = 12/4 = 3 ms
+Average TAT = (9 + 2 + 4 + 8) / 4 = 23/4 = 5.75 ms
+```
+
+---
+
+## Preemptive Priority Algorithm
+
+**At every arrival of a new process:**
+
+```
+1. Compare priority of newly arrived process with running process
+2. If new_process.priority < running_process.priority:
+   → Preempt running process
+   → Start new process
+3. Else:
+   → Continue running process
+```
+
+**When a process completes:**
+```
+1. Look at all processes in ready queue
+2. Pick the one with highest priority (lowest number)
+3. Run it
+```
+
+---
+
+## The Starvation Problem (MAJOR Issue)
+
+**Biggest problem with Priority Scheduling: Low priority processes may **never** execute.**
+
+**Example:**
+
+- P1 has priority = 10 (very low)
+- High priority processes (priority 1, 2, 3) keep arriving
+- P1 will **starve** — waits forever in ready queue
+
+**This is worse than SJF starvation!**
+
+---
+
+## Solution to Starvation: Aging
+
+**Aging:** Gradually **increase the priority** of processes that wait in the queue for a long time.
+
+**How it works:**
+
+```
+Every T time units a process waits:
+    Decrease priority number by 1 (increase priority)
+    
+Example:
+- P1 arrives with priority = 10
+- After waiting 5 minutes, priority becomes 9
+- After waiting 10 minutes, priority becomes 8
+- Eventually, priority becomes high enough to execute
+```
+
+**Result:** No process starves indefinitely.
+
+**PYQ Alert:** "How to prevent starvation in Priority Scheduling?" → **Aging**
+
+---
+
+## Internal vs External Priority
+
+### External Priority
+- Assigned **externally** (by user, OS policy, payment, etc.)
+- Examples:
+  - Paid users get higher priority
+  - System processes > user processes
+  - Admin tasks > regular tasks
+
+### Internal Priority  
+- Assigned **internally by OS** based on measurable criteria
+- Examples:
+  - Time limits
+  - Memory requirements
+  - Number of open files
+  - Ratio of I/O to CPU burst (I/O-bound processes get higher priority)
+
+**Most systems use a combination of both.**
+
+---
+
+## Priority Assignment Strategies
+
+Common ways to determine priority:
+
+1. **Static Priority**
+   - Priority assigned at process creation
+   - Never changes during execution
+   - Simple but can cause starvation
+
+2. **Dynamic Priority**
+   - Priority changes during execution
+   - Based on behavior (aging, waiting time, CPU usage)
+   - More complex but fairer
+
+---
+
+## Combining Priority with Other Algorithms
+
+### Priority + Round Robin
+- Processes with **same priority** are scheduled using **Round Robin**
+- Called **Multilevel Queue Scheduling** (we'll cover this next)
+
+**Example:**
+- P1, P2, P3 all have priority = 1
+- They get CPU in round-robin fashion with time quantum
+
+---
+
+## Priority Scheduling: Advantages & Disadvantages
+
+### ✅ Advantages:
+1. **Flexible** — can implement any policy by adjusting priorities
+2. **Good for real-time systems** — urgent tasks get immediate attention
+3. **Simple concept** — easy to understand
+4. **Can optimize for specific goals** (throughput, response time, etc.)
+
+### ❌ Disadvantages:
+1. **Starvation** — low priority processes may never run
+2. **Priority inversion** — low priority process holding resource needed by high priority
+3. **Overhead** — maintaining and updating priorities (if dynamic)
+4. **Difficult to choose priorities** — what's the "right" priority?
+
+---
+
+## Priority Inversion Problem (Advanced Concept)
+
+**Scenario:**
+
+1. Low priority process P3 holds a **lock** on resource R
+2. High priority process P1 needs resource R
+3. P1 must **wait** for P3 to release R
+4. Medium priority process P2 preempts P3
+5. Result: **High priority P1 waits** while **medium priority P2 runs**!
+
+**This is priority inversion** — effective priority is inverted.
+
+**Solution:** Priority Inheritance Protocol
+- Temporarily boost P3's priority to P1's level
+- P3 finishes, releases R
+- P1 can now proceed
+
+**Famous Example:** Mars Pathfinder mission failure (1997) was caused by priority inversion!
+
+**PYQ possibility:** Explain priority inversion with example.
+
+---
+
+## Non-Preemptive vs Preemptive Priority: Comparison
+
+| Feature | Non-Preemptive | Preemptive |
+|---------|---------------|------------|
+| **Preemption** | No | Yes |
+| **When to check** | Only at completion | Every arrival |
+| **Context switches** | Fewer | More |
+| **Response time** | Higher | Lower |
+| **Starvation** | Possible | More possible |
+| **Implementation** | Simpler | More complex |
+| **Best for** | Batch systems | Real-time systems |
+
+---
+
+## Important Formulas Summary
+
+**Non-Preemptive Priority:**
+```
+At each decision:
+- Pick process with highest priority (lowest number) among arrived processes
+- Run to completion
+```
+
+**Preemptive Priority:**
+```
+At each arrival:
+- If new_process.priority < running_process.priority:
+    Preempt and switch
+    
+At each completion:
+- Pick process with highest priority from ready queue
+```
+
+**Standard calculations (same as always):**
+```
+TAT = CT - AT
+WT = TAT - BT
+Avg WT = Σ(WT) / n
+Avg TAT = Σ(TAT) / n
+```
+
+---
+
+## PYQ Pattern Recognition
+
+**Type 1:** "Calculate avg WT for Priority Scheduling"
+→ Check if preemptive or non-preemptive
+→ Apply appropriate algorithm
+
+**Type 2:** "What is starvation? How to prevent it?"
+→ Low priority processes wait forever
+→ Solution: Aging
+
+**Type 3:** "Explain priority inversion"
+→ High priority waits for low priority due to resource lock
+→ Solution: Priority inheritance
+
+**Type 4:** "Compare priority scheduling variants"
+→ Preemptive vs non-preemptive trade-offs
+
+**Type 5:** "Higher number = higher priority or lower?"
+→ **READ THE QUESTION CAREFULLY!** Convention varies.
+
+---
+
+## Quick Practice Problem
+
+| Process | Arrival Time | Burst Time | Priority |
+|---------|--------------|------------|----------|
+| P1      | 0            | 3          | 2        |
+| P2      | 1            | 5          | 1        |
+| P3      | 2            | 2          | 3        |
+| P4      | 3            | 4          | 2        |
+
+**Lower number = higher priority**
+
+**Part A:** Solve using **Non-Preemptive Priority Scheduling**
+
+**Part B:** Solve using **Preemptive Priority Scheduling**
+
+<details>
+<summary>Solution Part A (Non-Preemptive)</summary>
+
+**Time 0:** P1 starts (only available), runs 0→3
+
+**Time 3:** P1 finishes
+Available: P2(pri=1, arr=1), P3(pri=3, arr=2), P4(pri=2, arr=3)
+Pick P2 (highest priority = 1), runs 3→8
+
+**Time 8:** P2 finishes
+Available: P3(pri=3), P4(pri=2)
+Pick P4 (priority 2 > 3), runs 8→12
+
+**Time 12:** P4 finishes
+Pick P3, runs 12→14
+
+**Gantt Chart:**
+```
+|---P1---|-----P2-----|----P4----|--P3--|
+0        3           8         12     14
+```
+
+| Process | AT | BT | Pri | CT | TAT | WT |
+|---------|----|----|----|----|----|-----|
+| P1      | 0  | 3  | 2  | 3  | 3  | 0   |
+| P2      | 1  | 5  | 1  | 8  | 7  | 2   |
+| P3      | 2  | 2  | 3  | 14 | 12 | 10  |
+| P4      | 3  | 4  | 2  | 12 | 9  | 5   |
+
+**Avg WT = (0+2+10+5)/4 = 4.25 ms**
+**Avg TAT = (3+7+12+9)/4 = 7.75 ms**
+
+</details>
+
+<details>
+<summary>Solution Part B (Preemptive)</summary>
+
+**Time 0:** P1 starts (pri=2, rem=3)
+
+**Time 1:** P2 arrives (pri=1)
+Compare: 1 < 2 → **Preempt P1**, run P2
+
+**Time 2:** P3 arrives (pri=3), P2 running (pri=1, rem=4)
+Compare: 3 > 1 → Continue P2
+
+**Time 3:** P4 arrives (pri=2), P2 running (pri=1, rem=3)
+Compare: 2 > 1 → Continue P2
+
+**Time 6:** P2 finishes
+Available: P1(pri=2, rem=2), P3(pri=3, rem=2), P4(pri=2, rem=4)
+Tie between P1 and P4 (both pri=2) → Pick P1 (arrived first)
+
+**Time 8:** P1 finishes
+Available: P3(pri=3), P4(pri=2)
+Pick P4
+
+**Time 12:** P4 finishes
+Pick P3
+
+**Time 14:** All done
+
+**Gantt Chart:**
+```
+|P1|-----P2-----|--P1--|----P4----|--P3--|
+0  1           6       8         12    14
+```
+
+| Process | AT | BT | Pri | CT | TAT | WT |
+|---------|----|----|----|----|----|-----|
+| P1      | 0  | 3  | 2  | 8  | 8  | 5   |
+| P2      | 1  | 5  | 1  | 6  | 5  | 0   |
+| P3      | 2  | 2  | 3  | 14 | 12 | 10  |
+| P4      | 3  | 4  | 2  | 12 | 9  | 5   |
+
+**Avg WT = (5+0+10+5)/4 = 5 ms**
+**Avg TAT = (8+5+12+9)/4 = 8.5 ms**
+
+</details>
+
+---
+
+**You good with Priority Scheduling? Ready for Round Robin?**
+
+
+# Round Robin (RR) Scheduling
+
+## What Is It?
+
+**The fairest scheduling algorithm.** Each process gets a **small unit of CPU time** (time quantum/time slice), then CPU moves to the next process in the queue.
+
+**Key concept:** **Preemptive** + **Circular queue** (FIFO with wraparound)
+
+**Also called:** Time-slicing
+
+---
+
+## Core Concept: Time Quantum
+
+**Time Quantum (q):** Fixed time slice allocated to each process.
+
+**What happens:**
+- Process gets CPU for **at most q time units**
+- If process finishes before q expires → moves to terminated state
+- If process still needs CPU after q expires → **preempted**, goes to back of ready queue
+
+**PYQ Alert:** The value of time quantum is **critical** — too small or too large both cause problems.
+
+---
+
+## How Round Robin Works
+
+1. Ready queue is a **circular FIFO queue**
+2. Scheduler picks first process from queue
+3. Process runs for **min(remaining time, time quantum)**
+4. If process finishes → remove from queue
+5. If time quantum expires → process goes to **end of queue**
+6. Pick next process from queue
+7. Repeat
+
+**It's like a circular conveyor belt** — everyone gets their turn repeatedly.
+
+---
+
+## Example 1: Basic Round Robin (All arrive at 0)
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 5          |
+| P2      | 0            | 3          |
+| P3      | 0            | 1          |
+| P4      | 0            | 2          |
+
+**Time Quantum (q) = 2**
+
+**Execution:**
+
+**Round 1:**
+- **P1:** runs for 2 (quantum expires), remaining = 3, goes to back
+- **P2:** runs for 2 (quantum expires), remaining = 1, goes to back
+- **P3:** runs for 1 (finishes before quantum), removed from queue ✓
+- **P4:** runs for 2 (finishes), removed from queue ✓
+
+**Round 2:**
+- **P1:** runs for 2 (quantum expires), remaining = 1, goes to back
+- **P2:** runs for 1 (finishes), removed from queue ✓
+
+**Round 3:**
+- **P1:** runs for 1 (finishes), removed from queue ✓
+
+### Gantt Chart:
+```
+|--P1--|--P2--|P3|--P4--|--P1--|P2|P1|
+0      2      4  5      7      9 10 11
+```
+
+### Detailed Timeline:
+
+**Time 0-2:** P1 runs (5→3 remaining)
+**Time 2-4:** P2 runs (3→1 remaining)
+**Time 4-5:** P3 runs (1→0, finishes)
+**Time 5-7:** P4 runs (2→0, finishes)
+**Time 7-9:** P1 runs (3→1 remaining)
+**Time 9-10:** P2 runs (1→0, finishes)
+**Time 10-11:** P1 runs (1→0, finishes)
+
+### Calculations:
+
+| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) | RT (First CPU - AT) |
+|---------|----|----|-------|-------------|-------------|---------------------|
+| P1      | 0  | 5  | 11    | 11          | 6           | 0                   |
+| P2      | 0  | 3  | 10    | 10          | 7           | 2                   |
+| P3      | 0  | 1  | 5     | 5           | 4           | 4                   |
+| P4      | 0  | 2  | 7     | 7           | 5           | 5                   |
+
+### Averages:
+```
+Average WT = (6 + 7 + 4 + 5) / 4 = 22/4 = 5.5 ms
+Average TAT = (11 + 10 + 5 + 7) / 4 = 33/4 = 8.25 ms
+Average RT = (0 + 2 + 4 + 5) / 4 = 11/4 = 2.75 ms
+```
+
+**Notice:** Response time is much better than FCFS/SJF — everyone gets CPU quickly!
+
+---
+
+## Example 2: Different Arrival Times (IMPORTANT!)
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 4          |
+| P2      | 1            | 5          |
+| P3      | 2            | 2          |
+| P4      | 3            | 1          |
+
+**Time Quantum (q) = 2**
+
+**Ready Queue evolves like this:**
+
+**Time 0:** Queue = [P1]
+- P1 runs 0→2 (4→2 remaining)
+
+**Time 2:** Queue = [P2, P1] (P2 arrived at 1, P1 re-queued)
+- P2 runs 2→4 (5→3 remaining)
+
+**Time 4:** Queue = [P1, P3, P2] (P3 arrived at 2, P2 re-queued, P4 will arrive at 3)
+- P1 runs 4→6 (2→0, finishes) ✓
+
+**Time 6:** Queue = [P3, P4, P2] (P4 arrived at 3)
+- P3 runs 6→8 (2→0, finishes) ✓
+
+**Time 8:** Queue = [P4, P2]
+- P4 runs 8→9 (1→0, finishes) ✓
+
+**Time 9:** Queue = [P2]
+- P2 runs 9→11 (3→1 remaining)
+
+**Time 11:** Queue = [P2]
+- P2 runs 11→12 (1→0, finishes) ✓
+
+### Gantt Chart:
+```
+|--P1--|--P2--|--P1--|--P3--|P4|--P2--|P2|
+0      2      4      6      8  9     11 12
+```
+
+### Calculations:
+
+| Process | AT | BT | CT | TAT | WT | RT |
+|---------|----|----|----|----|-----|-----|
+| P1      | 0  | 4  | 6  | 6  | 2   | 0   |
+| P2      | 1  | 5  | 12 | 11 | 6   | 1   |
+| P3      | 2  | 2  | 8  | 6  | 4   | 4   |
+| P4      | 3  | 1  | 9  | 6  | 5   | 5   |
+
+### Averages:
+```
+Average WT = (2 + 6 + 4 + 5) / 4 = 17/4 = 4.25 ms
+Average TAT = (6 + 11 + 6 + 6) / 4 = 29/4 = 7.25 ms
+Average RT = (0 + 1 + 4 + 5) / 4 = 10/4 = 2.5 ms
+```
+
+---
+
+## The Ready Queue Evolution (Critical Understanding)
+
+**When does a process enter/re-enter the ready queue?**
+
+1. **At arrival time** (initially)
+2. **After time quantum expires** (goes to back of queue)
+3. **After I/O completion** (in systems with I/O, not in basic PYQs)
+
+**Order in queue matters!** FIFO within each round.
+
+---
+
+## Effect of Time Quantum (q)
+
+This is **extremely important** for PYQs and conceptual understanding.
+
+### Case 1: q → ∞ (Very Large)
+- Each process runs to completion before next gets CPU
+- **Round Robin becomes FCFS**
+- Poor response time
+
+### Case 2: q → 0 (Very Small)
+- Too many context switches
+- **Pure overhead**, no useful work
+- System spends all time switching, not executing
+- Called **processor sharing** (theoretical limit)
+
+### Case 3: q = Optimal (Sweet Spot)
+- Balance between:
+  - **Good response time** (small q)
+  - **Low context switch overhead** (large q)
+
+**Rule of Thumb:** 
+- q should be **larger than 80% of CPU bursts**
+- Typical values: **10-100 milliseconds**
+
+---
+
+## Context Switch Overhead in Round Robin
+
+**Important formula:**
+
+```
+Context Switch Overhead % = (Context Switch Time / Time Quantum) × 100
+```
+
+**Example:**
+- Context switch time = 1 ms
+- Time quantum = 10 ms
+- Overhead = (1/10) × 100 = **10%**
+
+**If q = 2 ms:**
+- Overhead = (1/2) × 100 = **50%** ⚠️ Too high!
+
+**PYQ Question Type:** "If context switch time is 0.5ms and we want overhead < 5%, what should minimum time quantum be?"
+
+**Solution:**
+```
+0.5 / q < 0.05
+q > 0.5 / 0.05
+q > 10 ms
+```
+
+---
+
+## Round Robin vs Other Algorithms
+
+### vs FCFS:
+- **RR:** Better response time, fairer
+- **FCFS:** Lower overhead (fewer context switches)
+
+### vs SJF:
+- **RR:** Fairer, no starvation
+- **SJF:** Lower average waiting time
+
+### vs Priority:
+- **RR:** No starvation, simpler
+- **Priority:** Can prioritize important tasks
+
+---
+
+## Characteristics of Round Robin
+
+### ✅ Advantages:
+1. **Fair** — every process gets equal CPU share
+2. **No starvation** — everyone gets turn eventually
+3. **Good response time** — quick first response
+4. **Best for time-sharing** systems
+5. **Simple to implement**
+
+### ❌ Disadvantages:
+1. **Higher average waiting time** than SJF
+2. **Context switch overhead** (if q too small)
+3. **Not optimal** for average WT or TAT
+4. **Choosing q is tricky** — system-dependent
+
+---
+
+## Special Cases in Round Robin
+
+### Case 1: All processes have same burst time
+
+| Process | Burst Time |
+|---------|------------|
+| P1      | 5          |
+| P2      | 5          |
+| P3      | 5          |
+
+**With q = 2:**
+- All finish at similar times
+- Very fair distribution
+
+### Case 2: One process much longer than others
+
+| Process | Burst Time |
+|---------|------------|
+| P1      | 20         |
+| P2      | 2          |
+| P3      | 2          |
+
+- Short processes (P2, P3) finish quickly
+- Long process (P1) takes many rounds
+- Still fair — P1 doesn't block others
+
+---
+
+## Round Robin Algorithm (Step-by-Step)
+
+```
+Initialize:
+    ready_queue = []
+    current_time = 0
+    
+While processes remain:
+    
+    1. Add all processes that arrived by current_time to ready_queue
+    
+    2. If ready_queue is empty:
+        current_time = next arrival time
+        continue
+    
+    3. Pick first process P from ready_queue
+    
+    4. Execute P for min(P.remaining_time, time_quantum)
+    
+    5. Update:
+        current_time += execution_time
+        P.remaining_time -= execution_time
+    
+    6. Add any processes that arrived during execution to ready_queue
+    
+    7. If P.remaining_time > 0:
+        Add P to back of ready_queue
+       Else:
+        P is finished
+```
+
+---
+
+## Important Formulas
+
+**Standard calculations (same as all algorithms):**
+```
+TAT = Completion Time - Arrival Time
+WT = TAT - Burst Time
+RT = First CPU Time - Arrival Time
+
+Average WT = Σ(WT) / n
+Average TAT = Σ(TAT) / n
+Average RT = Σ(RT) / n
+```
+
+**Context Switch Overhead:**
+```
+Overhead % = (CS Time / Time Quantum) × 100
+```
+
+**Number of Context Switches:**
+```
+Approximately = Total Burst Time / Time Quantum
+(depends on process burst times and arrival patterns)
+```
+
+---
+
+## PYQ Pattern Recognition
+
+**Type 1:** "Calculate avg WT/TAT for RR with q = X"
+→ Draw Gantt chart carefully, track queue evolution
+
+**Type 2:** "What happens if q → ∞ in RR?"
+→ Becomes FCFS
+
+**Type 3:** "What happens if q → 0 in RR?"
+→ Processor sharing, pure overhead
+
+**Type 4:** "Calculate minimum q for overhead < X%"
+→ Use: CS_time / q < overhead%
+
+**Type 5:** "Compare RR with FCFS/SJF"
+→ Response time vs waiting time tradeoff
+
+**Type 6:** "Why is RR good for time-sharing?"
+→ Fair, good response time, no starvation
+
+---
+
+## Quick Practice Problem
+
+| Process | Arrival Time | Burst Time |
+|---------|--------------|------------|
+| P1      | 0            | 6          |
+| P2      | 1            | 4          |
+| P3      | 2            | 3          |
+
+**Time Quantum = 3**
+
+**Calculate:**
+1. Draw Gantt chart
+2. Completion time for each process
+3. Average WT and Average TAT
+
+<details>
+<summary>Solution (try first!)</summary>
+
+**Queue evolution:**
+
+**Time 0:** Queue = [P1]
+P1 runs 0→3 (6→3 remaining)
+
+**Time 3:** Queue = [P2, P3, P1] (P2 arrived at 1, P3 at 2, P1 re-queued)
+P2 runs 3→6 (4→1 remaining)
+
+**Time 6:** Queue = [P3, P1, P2]
+P3 runs 6→9 (3→0, finishes) ✓
+
+**Time 9:** Queue = [P1, P2]
+P1 runs 9→12 (3→0, finishes) ✓
+
+**Time 12:** Queue = [P2]
+P2 runs 12→13 (1→0, finishes) ✓
+
+**Gantt Chart:**
+```
+|---P1---|---P2---|---P3---|---P1---|P2|
+0        3        6        9       12 13
+```
+
+**Calculations:**
+
+| Process | AT | BT | CT | TAT | WT | RT |
+|---------|----|----|----|----|-----|-----|
+| P1      | 0  | 6  | 12 | 12 | 6   | 0   |
+| P2      | 1  | 4  | 13 | 12 | 8   | 2   |
+| P3      | 2  | 3  | 9  | 7  | 4   | 4   |
+
+**Average WT = (6+8+4)/3 = 6 ms**
+**Average TAT = (12+12+7)/3 = 10.33 ms**
+
+</details>
+
+---
+
+## Summary: All Scheduling Algorithms So Far
+
+| Algorithm | Type | Avg WT | Starvation | Best For |
+|-----------|------|--------|-----------|----------|
+| **FCFS** | Non-preemptive | High (convoy effect) | No | Simple batch systems |
+| **SJF** | Non-preemptive | **Optimal (lowest)** | Yes | Batch with known burst times |
+| **SRTF** | Preemptive | **Optimal (lowest)** | Yes | Minimize avg WT |
+| **Priority (NP)** | Non-preemptive | Medium | Yes | Prioritized tasks |
+| **Priority (P)** | Preemptive | Medium | Yes (worse) | Real-time systems |
+| **Round Robin** | Preemptive | Higher | **No** | **Time-sharing systems** |
+
+---
+
+**You solid on Round Robin? Want to do a comprehensive quiz on all CPU scheduling algorithms before moving to the next topic (Multilevel Queue)?**
+
+
+
+these are the things i have studied till now i wanna use this
