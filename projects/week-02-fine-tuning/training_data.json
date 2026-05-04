@@ -1,0 +1,1762 @@
+[
+  {
+    "instruction": "Explain What is an Operating System?",
+    "output": "\nAn OS is system software that manages hardware and software resources and provides services to programs. The **type** of OS is largely defined by **how it manages the CPU and processes**.\n\n---"
+  },
+  {
+    "instruction": "What is What is an Operating System??",
+    "output": "\nAn OS is system software that manages hardware and software resources and provides services to programs. The **type** of OS is largely defined by **how it manages the CPU and processes**.\n\n---"
+  },
+  {
+    "instruction": "Explain 1. Uniprogramming OS",
+    "output": "\n**Only one process in memory at a time.** The CPU is dedicated entirely to that process until it finishes or does I/O.\n\n- When the process does I/O, the **CPU sits idle** \u2014 huge waste.\n- Example: Early MS-DOS\n\n**Key point:** CPU utilization is very low because I/O and CPU work can't overlap.\n\n---"
+  },
+  {
+    "instruction": "What is 1. Uniprogramming OS?",
+    "output": "\n**Only one process in memory at a time.** The CPU is dedicated entirely to that process until it finishes or does I/O.\n\n- When the process does I/O, the **CPU sits idle** \u2014 huge waste.\n- Example: Early MS-DOS\n\n**Key point:** CPU utilization is very low because I/O and CPU work can't overlap.\n\n---"
+  },
+  {
+    "instruction": "Explain 2. Multiprogramming OS",
+    "output": "\n**Multiple processes kept in memory simultaneously.** When one process does I/O, the CPU switches to another process.\n\n- Goal: **Keep the CPU busy at all times**\n- No concept of time-sharing \u2014 the CPU doesn't switch based on time, only when a process voluntarily gives it up (does I/O or terminates)\n- This is fundamentally about **CPU utilization**, not responsiveness\n\n**Key point:** Multiprogramming solves CPU idle time. It is **not** the same as multitasking.\n\n---"
+  },
+  {
+    "instruction": "What is 2. Multiprogramming OS?",
+    "output": "\n**Multiple processes kept in memory simultaneously.** When one process does I/O, the CPU switches to another process.\n\n- Goal: **Keep the CPU busy at all times**\n- No concept of time-sharing \u2014 the CPU doesn't switch based on time, only when a process voluntarily gives it up (does I/O or terminates)\n- This is fundamentally about **CPU utilization**, not responsiveness\n\n**Key point:** Multiprogramming solves CPU idle time. It is **not** the same as multitasking.\n\n---"
+  },
+  {
+    "instruction": "Explain 3. Multitasking OS (Time-Sharing)",
+    "output": "\nAn **extension of multiprogramming** where the CPU switches between processes so rapidly (using a time quantum/slice) that each user feels the system is dedicated to them.\n\n- Switching is **time-based**, not just I/O-based\n- Enables **interactive computing** \u2014 users get quick responses\n- Example: UNIX, modern Linux/Windows\n\n**Key point:** All multitasking systems are multiprogramming, but not vice versa.\n\n---"
+  },
+  {
+    "instruction": "What is 3. Multitasking OS (Time-Sharing)?",
+    "output": "\nAn **extension of multiprogramming** where the CPU switches between processes so rapidly (using a time quantum/slice) that each user feels the system is dedicated to them.\n\n- Switching is **time-based**, not just I/O-based\n- Enables **interactive computing** \u2014 users get quick responses\n- Example: UNIX, modern Linux/Windows\n\n**Key point:** All multitasking systems are multiprogramming, but not vice versa.\n\n---"
+  },
+  {
+    "instruction": "Explain 4. Preemptive vs Non-Preemptive Scheduling",
+    "output": "\nThis is about **who controls the CPU** \u2014 the OS or the process."
+  },
+  {
+    "instruction": "What is 4. Preemptive vs Non-Preemptive Scheduling?",
+    "output": "\nThis is about **who controls the CPU** \u2014 the OS or the process."
+  },
+  {
+    "instruction": "Explain Non-Preemptive (Cooperative)",
+    "output": "- Once a process gets the CPU, it **keeps it** until it voluntarily releases it (finishes, does I/O, or calls yield)\n- OS cannot forcibly take the CPU away\n- Examples of non-preemptive algorithms: **FCFS, SJF (non-preemptive), Priority (non-preemptive)**\n- Problem: One greedy process can hog the CPU forever"
+  },
+  {
+    "instruction": "What is Non-Preemptive (Cooperative)?",
+    "output": "- Once a process gets the CPU, it **keeps it** until it voluntarily releases it (finishes, does I/O, or calls yield)\n- OS cannot forcibly take the CPU away\n- Examples of non-preemptive algorithms: **FCFS, SJF (non-preemptive), Priority (non-preemptive)**\n- Problem: One greedy process can hog the CPU forever"
+  },
+  {
+    "instruction": "Explain Preemptive",
+    "output": "- The OS **can forcibly take the CPU** from a running process (e.g., when a higher-priority process arrives or the time quantum expires)\n- Examples: **Round Robin, SRTF, Priority (preemptive)**\n- Modern OSes are preemptive\n\n**Key distinction for PYQs:** SJF is non-preemptive; its preemptive version is called **SRTF (Shortest Remaining Time First)**.\n\n---"
+  },
+  {
+    "instruction": "What is Preemptive?",
+    "output": "- The OS **can forcibly take the CPU** from a running process (e.g., when a higher-priority process arrives or the time quantum expires)\n- Examples: **Round Robin, SRTF, Priority (preemptive)**\n- Modern OSes are preemptive\n\n**Key distinction for PYQs:** SJF is non-preemptive; its preemptive version is called **SRTF (Shortest Remaining Time First)**.\n\n---"
+  },
+  {
+    "instruction": "Explain The Hierarchy to Remember",
+    "output": "\n```\nUniprogramming\n    \u2193 (add multiple processes in memory)\nMultiprogramming\n    \u2193 (add time-based switching)\nMultitasking / Time-Sharing\n    \u2193 (add force-switching by OS)\nPreemptive Multitasking\n```\n\n---"
+  },
+  {
+    "instruction": "What is The Hierarchy to Remember?",
+    "output": "\n```\nUniprogramming\n    \u2193 (add multiple processes in memory)\nMultiprogramming\n    \u2193 (add time-based switching)\nMultitasking / Time-Sharing\n    \u2193 (add force-switching by OS)\nPreemptive Multitasking\n```\n\n---"
+  },
+  {
+    "instruction": "Explain Quick Comparison Table",
+    "output": "\n| Feature | Uniprogramming | Multiprogramming | Multitasking |\n|---|---|---|---|\n| Processes in memory | 1 | Many | Many |\n| CPU switches on | \u2014 | I/O only | I/O + time quantum |\n| CPU utilization | Low | High | High |\n| User interaction | Poor | Poor | Good |\n| Response time | N/A | Poor | Good |\n\n---"
+  },
+  {
+    "instruction": "What is Quick Comparison Table?",
+    "output": "\n| Feature | Uniprogramming | Multiprogramming | Multitasking |\n|---|---|---|---|\n| Processes in memory | 1 | Many | Many |\n| CPU switches on | \u2014 | I/O only | I/O + time quantum |\n| CPU utilization | Low | High | High |\n| User interaction | Poor | Poor | Good |\n| Response time | N/A | Poor | Good |\n\n---"
+  },
+  {
+    "instruction": "Explain Other OS Types (for completeness in PYQs)",
+    "output": "\n- **Batch OS** \u2014 jobs collected and processed in batches, no user interaction. Early systems. Closely related to uniprogramming/multiprogramming.\n- **Real-Time OS (RTOS)** \u2014 guarantees response within a strict deadline. Hard RTOS (miss deadline = failure, e.g., pacemaker), Soft RTOS (miss is tolerable, e.g., video streaming).\n- **Distributed OS** \u2014 multiple computers appear as one system to the user.\n- **Network OS** \u2014 computers are networked but remain independent (e.g., file sharing over a network).\n- **Embedded OS** \u2014 designed for specific hardware with limited resources (e.g., washing machine controller).\n\n---\n\nWant me to now go through **actual PYQs** on this topic so you can see how these concepts get tested? Or is there any specific area you want to go deeper on first?\n\n\nGreat, let's build this up cleanly.\n\n---"
+  },
+  {
+    "instruction": "What is Other OS Types (for completeness in PYQs)?",
+    "output": "\n- **Batch OS** \u2014 jobs collected and processed in batches, no user interaction. Early systems. Closely related to uniprogramming/multiprogramming.\n- **Real-Time OS (RTOS)** \u2014 guarantees response within a strict deadline. Hard RTOS (miss deadline = failure, e.g., pacemaker), Soft RTOS (miss is tolerable, e.g., video streaming).\n- **Distributed OS** \u2014 multiple computers appear as one system to the user.\n- **Network OS** \u2014 computers are networked but remain independent (e.g., file sharing over a network).\n- **Embedded OS** \u2014 designed for specific hardware with limited resources (e.g., washing machine controller).\n\n---\n\nWant me to now go through **actual PYQs** on this topic so you can see how these concepts get tested? Or is there any specific area you want to go deeper on first?\n\n\nGreat, let's build this up cleanly.\n\n---"
+  },
+  {
+    "instruction": "Explain Why Do System Calls Exist?",
+    "output": "\nWhen a program runs, it sometimes needs to do things that require **privileged access** \u2014 like reading a file, allocating memory, or sending data over a network. It can't do these directly because that would be unsafe. So it asks the OS to do it on its behalf.\n\nThat request mechanism is called a **system call**.\n\n---"
+  },
+  {
+    "instruction": "What is Why Do System Calls Exist??",
+    "output": "\nWhen a program runs, it sometimes needs to do things that require **privileged access** \u2014 like reading a file, allocating memory, or sending data over a network. It can't do these directly because that would be unsafe. So it asks the OS to do it on its behalf.\n\nThat request mechanism is called a **system call**.\n\n---"
+  },
+  {
+    "instruction": "Explain Dual Mode Operation",
+    "output": "\nThis is the *foundation* you need before understanding system calls properly.\n\nThe CPU operates in **two modes:**"
+  },
+  {
+    "instruction": "What is Dual Mode Operation?",
+    "output": "\nThis is the *foundation* you need before understanding system calls properly.\n\nThe CPU operates in **two modes:**"
+  },
+  {
+    "instruction": "Explain User Mode",
+    "output": "- Where normal applications run\n- **Restricted** \u2014 cannot execute privileged instructions\n- Cannot directly access hardware or memory of other processes"
+  },
+  {
+    "instruction": "What is User Mode?",
+    "output": "- Where normal applications run\n- **Restricted** \u2014 cannot execute privileged instructions\n- Cannot directly access hardware or memory of other processes"
+  },
+  {
+    "instruction": "Explain Kernel Mode (Supervisor / Privileged Mode)",
+    "output": "- Where the OS runs\n- **Unrestricted** \u2014 can execute any instruction, access any memory, control hardware"
+  },
+  {
+    "instruction": "What is Kernel Mode (Supervisor / Privileged Mode)?",
+    "output": "- Where the OS runs\n- **Unrestricted** \u2014 can execute any instruction, access any memory, control hardware"
+  },
+  {
+    "instruction": "Explain The Mode Bit",
+    "output": "The CPU has a hardware register called the **mode bit:**\n- **1 = User mode**\n- **0 = Kernel mode**\n\nThe hardware checks this bit before executing any privileged instruction. If user mode tries to run a privileged instruction \u2192 **trap** is generated \u2192 OS handles it (usually kills the process).\n\n---"
+  },
+  {
+    "instruction": "What is The Mode Bit?",
+    "output": "The CPU has a hardware register called the **mode bit:**\n- **1 = User mode**\n- **0 = Kernel mode**\n\nThe hardware checks this bit before executing any privileged instruction. If user mode tries to run a privileged instruction \u2192 **trap** is generated \u2192 OS handles it (usually kills the process).\n\n---"
+  },
+  {
+    "instruction": "Explain How a System Call Works (Step by Step)",
+    "output": "\nThis is frequently asked in PYQs as \"trace the execution of a system call.\"\n\n```\n1. User program needs OS service (e.g., read a file)\n2. Executes a special instruction (trap / software interrupt)\n3. Mode bit switches: 1 \u2192 0 (User \u2192 Kernel mode)\n4. Control transfers to OS at a fixed address (trap handler)\n5. OS performs the requested service\n6. Mode bit switches back: 0 \u2192 1 (Kernel \u2192 User mode)\n7. Control returns to user program, just after the system call\n```\n\n**Key point:** The mode switch happens via hardware automatically when a trap is executed. The user program cannot fake this.\n\n---"
+  },
+  {
+    "instruction": "What is How a System Call Works (Step by Step)?",
+    "output": "\nThis is frequently asked in PYQs as \"trace the execution of a system call.\"\n\n```\n1. User program needs OS service (e.g., read a file)\n2. Executes a special instruction (trap / software interrupt)\n3. Mode bit switches: 1 \u2192 0 (User \u2192 Kernel mode)\n4. Control transfers to OS at a fixed address (trap handler)\n5. OS performs the requested service\n6. Mode bit switches back: 0 \u2192 1 (Kernel \u2192 User mode)\n7. Control returns to user program, just after the system call\n```\n\n**Key point:** The mode switch happens via hardware automatically when a trap is executed. The user program cannot fake this.\n\n---"
+  },
+  {
+    "instruction": "Explain Types of System Calls",
+    "output": "\n| Type | Examples |\n|---|---|\n| **Process control** | fork(), exit(), wait(), exec() |\n| **File management** | open(), read(), write(), close() |\n| **Device management** | ioctl(), read(), write() |\n| **Information maintenance** | getpid(), alarm(), sleep() |\n| **Communication** | pipe(), socket(), send(), recv() |\n\n---"
+  },
+  {
+    "instruction": "What is Types of System Calls?",
+    "output": "\n| Type | Examples |\n|---|---|\n| **Process control** | fork(), exit(), wait(), exec() |\n| **File management** | open(), read(), write(), close() |\n| **Device management** | ioctl(), read(), write() |\n| **Information maintenance** | getpid(), alarm(), sleep() |\n| **Communication** | pipe(), socket(), send(), recv() |\n\n---"
+  },
+  {
+    "instruction": "Explain Important Terms",
+    "output": "\n**Trap** \u2014 a software-generated interrupt that switches to kernel mode. System calls use traps deliberately. Errors (divide by zero) also cause traps.\n\n**Interrupt** \u2014 hardware-generated signal (e.g., keyboard press, timer). Also causes a switch to kernel mode but triggered by hardware, not software.\n\n**Interrupt vs Trap for PYQs:**\n- Interrupt = hardware \u2192 kernel mode\n- Trap = software \u2192 kernel mode (system calls use this)\n\n---"
+  },
+  {
+    "instruction": "What is Important Terms?",
+    "output": "\n**Trap** \u2014 a software-generated interrupt that switches to kernel mode. System calls use traps deliberately. Errors (divide by zero) also cause traps.\n\n**Interrupt** \u2014 hardware-generated signal (e.g., keyboard press, timer). Also causes a switch to kernel mode but triggered by hardware, not software.\n\n**Interrupt vs Trap for PYQs:**\n- Interrupt = hardware \u2192 kernel mode\n- Trap = software \u2192 kernel mode (system calls use this)\n\n---"
+  },
+  {
+    "instruction": "Explain The Big Picture",
+    "output": "\n```\nUser Program\n    \u2502\n    \u2502  (needs OS service)\n    \u25bc\n  TRAP instruction\n    \u2502\n    \u2502  (mode bit: 1\u21920)\n    \u25bc\nKernel Mode \u2192 OS handles request\n    \u2502\n    \u2502  (mode bit: 0\u21921)\n    \u25bc\nBack to User Program\n```\n\n---"
+  },
+  {
+    "instruction": "What is The Big Picture?",
+    "output": "\n```\nUser Program\n    \u2502\n    \u2502  (needs OS service)\n    \u25bc\n  TRAP instruction\n    \u2502\n    \u2502  (mode bit: 1\u21920)\n    \u25bc\nKernel Mode \u2192 OS handles request\n    \u2502\n    \u2502  (mode bit: 0\u21921)\n    \u25bc\nBack to User Program\n```\n\n---"
+  },
+  {
+    "instruction": "Explain One Classic PYQ Concept \u2014 Privileged Instructions",
+    "output": "\nThese can **only** run in kernel mode. Examples:\n- I/O instructions\n- Modifying the mode bit itself\n- Accessing memory protection registers\n- Halting the CPU\n\nA user program attempting these causes a **trap \u2192 OS typically terminates the program.**\n\n---\n\nThat covers the core of dual mode + system calls. Before you move to processes, tell me \u2014 do you want me to quiz you on this the same way, or do you feel solid and want to jump straight to processes?\n\nLet's dive in! This is foundational \u2014 you'll use this in scheduling, synchronization, deadlocks, everything.\n\n---"
+  },
+  {
+    "instruction": "What is One Classic PYQ Concept \u2014 Privileged Instructions?",
+    "output": "\nThese can **only** run in kernel mode. Examples:\n- I/O instructions\n- Modifying the mode bit itself\n- Accessing memory protection registers\n- Halting the CPU\n\nA user program attempting these causes a **trap \u2192 OS typically terminates the program.**\n\n---\n\nThat covers the core of dual mode + system calls. Before you move to processes, tell me \u2014 do you want me to quiz you on this the same way, or do you feel solid and want to jump straight to processes?\n\nLet's dive in! This is foundational \u2014 you'll use this in scheduling, synchronization, deadlocks, everything.\n\n---"
+  },
+  {
+    "instruction": "Explain What is a Process?",
+    "output": "\n**A process is a program in execution.** \n\nKey difference:\n- **Program** = passive entity (code sitting on disk)\n- **Process** = active entity (program loaded into memory and running)\n\n---"
+  },
+  {
+    "instruction": "What is What is a Process??",
+    "output": "\n**A process is a program in execution.** \n\nKey difference:\n- **Program** = passive entity (code sitting on disk)\n- **Process** = active entity (program loaded into memory and running)\n\n---"
+  },
+  {
+    "instruction": "Explain Process Representation in Memory",
+    "output": "\nWhen a program becomes a process, it gets loaded into memory in **4 sections:**\n\n```\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u2190 High Address\n\u2502     Stack       \u2502  (grows downward)\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502       \u2193         \u2502\n\u2502                 \u2502\n\u2502       \u2191         \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502     Heap        \u2502  (grows upward)\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502     Data        \u2502  (global/static variables)\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502     Text        \u2502  (code/instructions)\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2190 Low Address\n```"
+  },
+  {
+    "instruction": "What is Process Representation in Memory?",
+    "output": "\nWhen a program becomes a process, it gets loaded into memory in **4 sections:**\n\n```\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510  \u2190 High Address\n\u2502     Stack       \u2502  (grows downward)\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502       \u2193         \u2502\n\u2502                 \u2502\n\u2502       \u2191         \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502     Heap        \u2502  (grows upward)\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502     Data        \u2502  (global/static variables)\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502     Text        \u2502  (code/instructions)\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518  \u2190 Low Address\n```"
+  },
+  {
+    "instruction": "Explain 1. **Text Section (Code)**",
+    "output": "- The actual **program instructions**\n- Read-only (you can't modify your own code while running)\n- Shared if multiple instances of the same program run"
+  },
+  {
+    "instruction": "What is 1. **Text Section (Code)**?",
+    "output": "- The actual **program instructions**\n- Read-only (you can't modify your own code while running)\n- Shared if multiple instances of the same program run"
+  },
+  {
+    "instruction": "Explain 2. **Data Section**",
+    "output": "- **Global variables** and **static variables**\n- Initialized data (e.g., `int x = 10;`)\n- BSS (Block Started by Symbol) \u2014 uninitialized data (e.g., `int y;`)"
+  },
+  {
+    "instruction": "What is 2. **Data Section**?",
+    "output": "- **Global variables** and **static variables**\n- Initialized data (e.g., `int x = 10;`)\n- BSS (Block Started by Symbol) \u2014 uninitialized data (e.g., `int y;`)"
+  },
+  {
+    "instruction": "Explain 3. **Heap**",
+    "output": "- **Dynamically allocated memory** (malloc, new)\n- Grows **upward** (toward higher addresses)\n- Managed by programmer"
+  },
+  {
+    "instruction": "What is 3. **Heap**?",
+    "output": "- **Dynamically allocated memory** (malloc, new)\n- Grows **upward** (toward higher addresses)\n- Managed by programmer"
+  },
+  {
+    "instruction": "Explain 4. **Stack**",
+    "output": "- **Function calls, local variables, return addresses**\n- Grows **downward** (toward lower addresses)\n- Automatically managed (LIFO structure)\n\n**PYQ Alert:** \"Why are heap and stack placed at opposite ends?\" \u2192 So they can grow toward each other and maximize memory usage before collision.\n\n---"
+  },
+  {
+    "instruction": "What is 4. **Stack**?",
+    "output": "- **Function calls, local variables, return addresses**\n- Grows **downward** (toward lower addresses)\n- Automatically managed (LIFO structure)\n\n**PYQ Alert:** \"Why are heap and stack placed at opposite ends?\" \u2192 So they can grow toward each other and maximize memory usage before collision.\n\n---"
+  },
+  {
+    "instruction": "Explain Process Control Block (PCB)",
+    "output": "\nThe OS maintains a **data structure** for each process called the PCB. It's the process's \"identity card.\"\n\nThe PCB contains:"
+  },
+  {
+    "instruction": "What is Process Control Block (PCB)?",
+    "output": "\nThe OS maintains a **data structure** for each process called the PCB. It's the process's \"identity card.\"\n\nThe PCB contains:"
+  },
+  {
+    "instruction": "Explain 2. **Process State**",
+    "output": "- Current state: New, Ready, Running, Waiting, Terminated"
+  },
+  {
+    "instruction": "What is 2. **Process State**?",
+    "output": "- Current state: New, Ready, Running, Waiting, Terminated"
+  },
+  {
+    "instruction": "Explain 3. **Program Counter (PC)**",
+    "output": "- Address of the **next instruction** to execute\n- Critical for context switching"
+  },
+  {
+    "instruction": "What is 3. **Program Counter (PC)**?",
+    "output": "- Address of the **next instruction** to execute\n- Critical for context switching"
+  },
+  {
+    "instruction": "Explain 4. **CPU Registers**",
+    "output": "- Values of all CPU registers (accumulators, index registers, stack pointers, etc.)\n- Saved during context switch"
+  },
+  {
+    "instruction": "What is 4. **CPU Registers**?",
+    "output": "- Values of all CPU registers (accumulators, index registers, stack pointers, etc.)\n- Saved during context switch"
+  },
+  {
+    "instruction": "Explain 5. **CPU Scheduling Information**",
+    "output": "- Priority, scheduling queue pointers, time quantum used"
+  },
+  {
+    "instruction": "What is 5. **CPU Scheduling Information**?",
+    "output": "- Priority, scheduling queue pointers, time quantum used"
+  },
+  {
+    "instruction": "Explain 6. **Memory Management Information**",
+    "output": "- Base and limit registers, page tables, segment tables"
+  },
+  {
+    "instruction": "What is 6. **Memory Management Information**?",
+    "output": "- Base and limit registers, page tables, segment tables"
+  },
+  {
+    "instruction": "Explain 8. **I/O Status Information**",
+    "output": "- List of open files, I/O devices allocated, pending I/O requests\n\n---"
+  },
+  {
+    "instruction": "What is 8. **I/O Status Information**?",
+    "output": "- List of open files, I/O devices allocated, pending I/O requests\n\n---"
+  },
+  {
+    "instruction": "Explain Process Attributes (Key Ones for PYQs)",
+    "output": "\n| Attribute | What it is |\n|---|---|\n| **PID** | Unique process identifier |\n| **PPID** | Parent Process ID (who created this process) |\n| **State** | New/Ready/Running/Waiting/Terminated |\n| **Priority** | Scheduling priority (higher = more important) |\n| **Program Counter** | Next instruction address |\n| **CPU Registers** | Current register values |\n| **Memory Pointers** | Base, limit, page table pointer |\n| **Open File List** | Files currently opened by process |\n| **Accounting Info** | CPU time used, start time |\n\n---"
+  },
+  {
+    "instruction": "What is Process Attributes (Key Ones for PYQs)?",
+    "output": "\n| Attribute | What it is |\n|---|---|\n| **PID** | Unique process identifier |\n| **PPID** | Parent Process ID (who created this process) |\n| **State** | New/Ready/Running/Waiting/Terminated |\n| **Priority** | Scheduling priority (higher = more important) |\n| **Program Counter** | Next instruction address |\n| **CPU Registers** | Current register values |\n| **Memory Pointers** | Base, limit, page table pointer |\n| **Open File List** | Files currently opened by process |\n| **Accounting Info** | CPU time used, start time |\n\n---"
+  },
+  {
+    "instruction": "Explain Process States (The Classic Diagram)",
+    "output": "\n```\n    \u250c\u2500\u2500\u2500\u2500\u2500\u2510\n    \u2502 New \u2502\n    \u2514\u2500\u2500\u252c\u2500\u2500\u2518\n       \u2502 (admitted)\n       \u25bc\n    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510   interrupt    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n    \u2502 Ready \u2502\u25c4\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524 Running \u2502\n    \u2514\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2518   (timeout)    \u2514\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2518\n        \u2502                         \u2502\n        \u2502 (scheduler dispatch)    \u2502 (I/O or event wait)\n        \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25ba            \u25bc\n                           \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                           \u2502 Waiting \u2502\n                           \u2514\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2518\n                                \u2502 (I/O complete)\n                                \u25bc\n                             \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                             \u2502Terminated\u2502\n                             \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n```"
+  },
+  {
+    "instruction": "What is Process States (The Classic Diagram)?",
+    "output": "\n```\n    \u250c\u2500\u2500\u2500\u2500\u2500\u2510\n    \u2502 New \u2502\n    \u2514\u2500\u2500\u252c\u2500\u2500\u2518\n       \u2502 (admitted)\n       \u25bc\n    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510   interrupt    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n    \u2502 Ready \u2502\u25c4\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524 Running \u2502\n    \u2514\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2518   (timeout)    \u2514\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2518\n        \u2502                         \u2502\n        \u2502 (scheduler dispatch)    \u2502 (I/O or event wait)\n        \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25ba            \u25bc\n                           \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                           \u2502 Waiting \u2502\n                           \u2514\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2518\n                                \u2502 (I/O complete)\n                                \u25bc\n                             \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                             \u2502Terminated\u2502\n                             \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n```"
+  },
+  {
+    "instruction": "Explain State Transitions:",
+    "output": "\n1. **New \u2192 Ready**: Process created, waiting for CPU\n2. **Ready \u2192 Running**: Scheduler selects it (dispatch)\n3. **Running \u2192 Ready**: Time quantum expired or higher priority process arrived (preemption)\n4. **Running \u2192 Waiting**: Process does I/O or waits for event\n5. **Waiting \u2192 Ready**: I/O completes or event occurs\n6. **Running \u2192 Terminated**: Process finishes execution\n\n**PYQ Trap:** A process **NEVER** goes directly from Waiting \u2192 Running. It must pass through Ready.\n\n---"
+  },
+  {
+    "instruction": "What is State Transitions:?",
+    "output": "\n1. **New \u2192 Ready**: Process created, waiting for CPU\n2. **Ready \u2192 Running**: Scheduler selects it (dispatch)\n3. **Running \u2192 Ready**: Time quantum expired or higher priority process arrived (preemption)\n4. **Running \u2192 Waiting**: Process does I/O or waits for event\n5. **Waiting \u2192 Ready**: I/O completes or event occurs\n6. **Running \u2192 Terminated**: Process finishes execution\n\n**PYQ Trap:** A process **NEVER** goes directly from Waiting \u2192 Running. It must pass through Ready.\n\n---"
+  },
+  {
+    "instruction": "Explain Context Switching",
+    "output": "\nWhen the CPU switches from one process to another:\n\n**Steps:**\n1. **Save state** of current process (PC, registers) into its PCB\n2. **Load state** of new process from its PCB\n3. Resume execution of new process\n\n**Cost:** Context switch is **pure overhead** \u2014 the system does no useful work during the switch. That's why you minimize switching.\n\n**Time depends on:** Hardware support (some CPUs have multiple register sets), memory speed, number of registers.\n\n---"
+  },
+  {
+    "instruction": "What is Context Switching?",
+    "output": "\nWhen the CPU switches from one process to another:\n\n**Steps:**\n1. **Save state** of current process (PC, registers) into its PCB\n2. **Load state** of new process from its PCB\n3. Resume execution of new process\n\n**Cost:** Context switch is **pure overhead** \u2014 the system does no useful work during the switch. That's why you minimize switching.\n\n**Time depends on:** Hardware support (some CPUs have multiple register sets), memory speed, number of registers.\n\n---"
+  },
+  {
+    "instruction": "Explain Quick Summary for Revision",
+    "output": "\n**Process = Program + Current State**\n\n**Memory:** Text | Data | Heap \u2191 | \u2193 Stack\n\n**PCB holds:** PID, State, PC, Registers, Memory info, I/O info\n\n**States:** New \u2192 Ready \u2194 Running \u2194 Waiting \u2192 Terminated\n\n**Context switch = saving/loading PCB**\n\n---\n\nWant a quiz on this, or should we move to **process creation (fork, exec)** next?\n\n\nPerfect plan! Let's cover process states in more depth, queues, and related concepts.\n\n---"
+  },
+  {
+    "instruction": "What is Quick Summary for Revision?",
+    "output": "\n**Process = Program + Current State**\n\n**Memory:** Text | Data | Heap \u2191 | \u2193 Stack\n\n**PCB holds:** PID, State, PC, Registers, Memory info, I/O info\n\n**States:** New \u2192 Ready \u2194 Running \u2194 Waiting \u2192 Terminated\n\n**Context switch = saving/loading PCB**\n\n---\n\nWant a quiz on this, or should we move to **process creation (fork, exec)** next?\n\n\nPerfect plan! Let's cover process states in more depth, queues, and related concepts.\n\n---"
+  },
+  {
+    "instruction": "Explain Process States (Deep Dive)",
+    "output": "\nWe saw the 5-state model earlier. Let's understand each state clearly:"
+  },
+  {
+    "instruction": "What is Process States (Deep Dive)?",
+    "output": "\nWe saw the 5-state model earlier. Let's understand each state clearly:"
+  },
+  {
+    "instruction": "Explain 1. **New**",
+    "output": "- Process is being **created**\n- OS is setting up PCB, allocating memory\n- Not yet in the ready queue"
+  },
+  {
+    "instruction": "What is 1. **New**?",
+    "output": "- Process is being **created**\n- OS is setting up PCB, allocating memory\n- Not yet in the ready queue"
+  },
+  {
+    "instruction": "Explain 2. **Ready**",
+    "output": "- Process has **all resources except CPU**\n- Waiting in the ready queue for its turn\n- Can start executing immediately if given CPU"
+  },
+  {
+    "instruction": "What is 2. **Ready**?",
+    "output": "- Process has **all resources except CPU**\n- Waiting in the ready queue for its turn\n- Can start executing immediately if given CPU"
+  },
+  {
+    "instruction": "Explain 3. **Running**",
+    "output": "- Process is currently **executing on CPU**\n- In a single-CPU system, only **one process** can be in running state at a time\n- In multi-core, multiple processes can run simultaneously"
+  },
+  {
+    "instruction": "What is 3. **Running**?",
+    "output": "- Process is currently **executing on CPU**\n- In a single-CPU system, only **one process** can be in running state at a time\n- In multi-core, multiple processes can run simultaneously"
+  },
+  {
+    "instruction": "Explain 4. **Waiting (Blocked)**",
+    "output": "- Process is waiting for some **event** to occur:\n  - I/O completion\n  - Signal from another process\n  - Resource to become available\n- **Cannot** use CPU even if it's free\n- Also called **Blocked** state"
+  },
+  {
+    "instruction": "What is 4. **Waiting (Blocked)**?",
+    "output": "- Process is waiting for some **event** to occur:\n  - I/O completion\n  - Signal from another process\n  - Resource to become available\n- **Cannot** use CPU even if it's free\n- Also called **Blocked** state"
+  },
+  {
+    "instruction": "Explain 5. **Terminated (Exit)**",
+    "output": "- Process has finished execution\n- OS is cleaning up (deallocating memory, closing files)\n- PCB may still exist briefly for parent to read exit status\n\n---"
+  },
+  {
+    "instruction": "What is 5. **Terminated (Exit)**?",
+    "output": "- Process has finished execution\n- OS is cleaning up (deallocating memory, closing files)\n- PCB may still exist briefly for parent to read exit status\n\n---"
+  },
+  {
+    "instruction": "Explain Extended Process States (7-State Model)",
+    "output": "\nSome systems add two more states for better memory management:"
+  },
+  {
+    "instruction": "What is Extended Process States (7-State Model)?",
+    "output": "\nSome systems add two more states for better memory management:"
+  },
+  {
+    "instruction": "Explain 6. **Suspended Ready**",
+    "output": "- Process is ready to run but **swapped out to disk** (not in main memory)\n- Happens when memory is full\n- When brought back to memory \u2192 goes to Ready state"
+  },
+  {
+    "instruction": "What is 6. **Suspended Ready**?",
+    "output": "- Process is ready to run but **swapped out to disk** (not in main memory)\n- Happens when memory is full\n- When brought back to memory \u2192 goes to Ready state"
+  },
+  {
+    "instruction": "Explain 7. **Suspended Waiting**",
+    "output": "- Process is waiting for I/O **and** swapped out to disk\n- When I/O completes \u2192 goes to Suspended Ready (not directly to Ready)\n\n**State diagram with suspension:**\n```\nReady \u2190\u2192 Suspended Ready\n  \u2195              \nRunning          \n  \u2195              \nWaiting \u2190\u2192 Suspended Waiting\n```\n\n**PYQ Question:** \"Why suspend a waiting process?\" \u2192 To free up memory for processes that can actually use the CPU.\n\n---"
+  },
+  {
+    "instruction": "What is 7. **Suspended Waiting**?",
+    "output": "- Process is waiting for I/O **and** swapped out to disk\n- When I/O completes \u2192 goes to Suspended Ready (not directly to Ready)\n\n**State diagram with suspension:**\n```\nReady \u2190\u2192 Suspended Ready\n  \u2195              \nRunning          \n  \u2195              \nWaiting \u2190\u2192 Suspended Waiting\n```\n\n**PYQ Question:** \"Why suspend a waiting process?\" \u2192 To free up memory for processes that can actually use the CPU.\n\n---"
+  },
+  {
+    "instruction": "Explain Process Queues",
+    "output": "\nThe OS maintains several queues to manage processes:"
+  },
+  {
+    "instruction": "What is Process Queues?",
+    "output": "\nThe OS maintains several queues to manage processes:"
+  },
+  {
+    "instruction": "Explain 1. **Job Queue**",
+    "output": "- Contains **all processes** in the system\n- Processes in any state (new, ready, waiting, running)\n- Essentially a list of all PCBs"
+  },
+  {
+    "instruction": "What is 1. **Job Queue**?",
+    "output": "- Contains **all processes** in the system\n- Processes in any state (new, ready, waiting, running)\n- Essentially a list of all PCBs"
+  },
+  {
+    "instruction": "Explain 2. **Ready Queue**",
+    "output": "- Contains processes in **Ready state**\n- Waiting for CPU allocation\n- Scheduler picks from here\n- Usually implemented as a **linked list** of PCBs"
+  },
+  {
+    "instruction": "What is 2. **Ready Queue**?",
+    "output": "- Contains processes in **Ready state**\n- Waiting for CPU allocation\n- Scheduler picks from here\n- Usually implemented as a **linked list** of PCBs"
+  },
+  {
+    "instruction": "Explain 3. **Device Queues (Wait Queues)**",
+    "output": "- One queue for **each I/O device**\n- Contains processes waiting for that specific device\n- Example: disk queue, printer queue, network queue\n\n---"
+  },
+  {
+    "instruction": "What is 3. **Device Queues (Wait Queues)**?",
+    "output": "- One queue for **each I/O device**\n- Contains processes waiting for that specific device\n- Example: disk queue, printer queue, network queue\n\n---"
+  },
+  {
+    "instruction": "Explain Queueing Diagram",
+    "output": "\n```\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 Job Queue\u2502 (all processes)\n\u2514\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2518\n     \u2502\n     \u25bc\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510    dispatch    \u250c\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502Ready Queue \u2502\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25ba \u2502 CPU \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2518                \u2514\u2500\u2500\u252c\u2500\u2500\u2518\n      \u25b2                          \u2502\n      \u2502                          \u2502 I/O request\n      \u2502                          \u25bc\n      \u2502                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n      \u2502                    \u2502Device Queue 1\u2502\n      \u2502                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n      \u2502                           \u2502 I/O complete\n      \u2502                           \u2502\n      \u2502                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n      \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524Device Queue 2\u2502\n         (I/O complete)    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n```\n\n---"
+  },
+  {
+    "instruction": "What is Queueing Diagram?",
+    "output": "\n```\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 Job Queue\u2502 (all processes)\n\u2514\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2518\n     \u2502\n     \u25bc\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510    dispatch    \u250c\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502Ready Queue \u2502\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25ba \u2502 CPU \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2518                \u2514\u2500\u2500\u252c\u2500\u2500\u2518\n      \u25b2                          \u2502\n      \u2502                          \u2502 I/O request\n      \u2502                          \u25bc\n      \u2502                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n      \u2502                    \u2502Device Queue 1\u2502\n      \u2502                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n      \u2502                           \u2502 I/O complete\n      \u2502                           \u2502\n      \u2502                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n      \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524Device Queue 2\u2502\n         (I/O complete)    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n```\n\n---"
+  },
+  {
+    "instruction": "Explain Process Scheduling Queues - Movement",
+    "output": "\n**Example flow:**\n\n1. **New process** \u2192 enters **Job Queue**\n2. **Admitted** \u2192 enters **Ready Queue**\n3. **Scheduler picks it** \u2192 **Running** on CPU\n4. **Time expires** \u2192 back to **Ready Queue**\n5. **Requests I/O** \u2192 enters **Device Queue** (Waiting state)\n6. **I/O completes** \u2192 back to **Ready Queue**\n7. **Finishes** \u2192 **Terminated**, removed from all queues\n\n---"
+  },
+  {
+    "instruction": "What is Process Scheduling Queues - Movement?",
+    "output": "\n**Example flow:**\n\n1. **New process** \u2192 enters **Job Queue**\n2. **Admitted** \u2192 enters **Ready Queue**\n3. **Scheduler picks it** \u2192 **Running** on CPU\n4. **Time expires** \u2192 back to **Ready Queue**\n5. **Requests I/O** \u2192 enters **Device Queue** (Waiting state)\n6. **I/O completes** \u2192 back to **Ready Queue**\n7. **Finishes** \u2192 **Terminated**, removed from all queues\n\n---"
+  },
+  {
+    "instruction": "Explain 1. **Long-Term Scheduler (Job Scheduler)**",
+    "output": "- Selects which processes move from **New \u2192 Ready**\n- Controls **degree of multiprogramming** (how many processes in memory)\n- Runs **infrequently** (seconds or minutes)\n- Aims for a good mix of I/O-bound and CPU-bound processes"
+  },
+  {
+    "instruction": "What is 1. **Long-Term Scheduler (Job Scheduler)**?",
+    "output": "- Selects which processes move from **New \u2192 Ready**\n- Controls **degree of multiprogramming** (how many processes in memory)\n- Runs **infrequently** (seconds or minutes)\n- Aims for a good mix of I/O-bound and CPU-bound processes"
+  },
+  {
+    "instruction": "Explain 2. **Short-Term Scheduler (CPU Scheduler)**",
+    "output": "- Selects which process from **Ready \u2192 Running**\n- Runs **very frequently** (milliseconds)\n- Must be **extremely fast** (overhead concern)\n- This is what you'll study in CPU scheduling algorithms"
+  },
+  {
+    "instruction": "What is 2. **Short-Term Scheduler (CPU Scheduler)**?",
+    "output": "- Selects which process from **Ready \u2192 Running**\n- Runs **very frequently** (milliseconds)\n- Must be **extremely fast** (overhead concern)\n- This is what you'll study in CPU scheduling algorithms"
+  },
+  {
+    "instruction": "Explain 3. **Medium-Term Scheduler (Swapper)**",
+    "output": "- Handles **swapping** (moving processes between memory and disk)\n- Removes processes from memory (suspend) and brings them back (resume)\n- Controls degree of multiprogramming indirectly\n\n---"
+  },
+  {
+    "instruction": "What is 3. **Medium-Term Scheduler (Swapper)**?",
+    "output": "- Handles **swapping** (moving processes between memory and disk)\n- Removes processes from memory (suspend) and brings them back (resume)\n- Controls degree of multiprogramming indirectly\n\n---"
+  },
+  {
+    "instruction": "Explain **CPU-Bound Process**",
+    "output": "- Spends most time doing **computation**\n- Example: scientific calculations, video encoding\n- Long CPU bursts, rare I/O"
+  },
+  {
+    "instruction": "What is **CPU-Bound Process**?",
+    "output": "- Spends most time doing **computation**\n- Example: scientific calculations, video encoding\n- Long CPU bursts, rare I/O"
+  },
+  {
+    "instruction": "Explain **I/O-Bound Process**",
+    "output": "- Spends most time doing **I/O**\n- Example: text editor, database server\n- Short CPU bursts, frequent I/O\n\n**PYQ Concept:** A good long-term scheduler maintains a **mix** of both types for optimal CPU and I/O device utilization.\n\n---"
+  },
+  {
+    "instruction": "What is **I/O-Bound Process**?",
+    "output": "- Spends most time doing **I/O**\n- Example: text editor, database server\n- Short CPU bursts, frequent I/O\n\n**PYQ Concept:** A good long-term scheduler maintains a **mix** of both types for optimal CPU and I/O device utilization.\n\n---"
+  },
+  {
+    "instruction": "Explain Degree of Multiprogramming",
+    "output": "\n**Definition:** Number of processes currently in memory (in ready + running + waiting states).\n\n- **Too low** \u2192 CPU sits idle, poor utilization\n- **Too high** \u2192 thrashing (too much swapping, no actual work done)\n- **Long-term scheduler** controls this\n\n---"
+  },
+  {
+    "instruction": "What is Degree of Multiprogramming?",
+    "output": "\n**Definition:** Number of processes currently in memory (in ready + running + waiting states).\n\n- **Too low** \u2192 CPU sits idle, poor utilization\n- **Too high** \u2192 thrashing (too much swapping, no actual work done)\n- **Long-term scheduler** controls this\n\n---"
+  },
+  {
+    "instruction": "Explain Context Switch (More Details)",
+    "output": "\n**When does context switch happen?**\n1. Time quantum expires (in time-sharing systems)\n2. Process makes system call (may block)\n3. Interrupt occurs\n4. Higher priority process becomes ready (preemptive scheduling)\n\n**What gets saved/restored?**\n- Program Counter (PC)\n- All CPU registers\n- Stack pointer\n- Status registers\n- Memory management registers\n\n**Typical time:** 1-10 microseconds (highly hardware dependent)\n\n**Switching time is pure overhead** \u2014 that's why Round Robin with a very small time quantum is inefficient (too much switching, too little work).\n\n---"
+  },
+  {
+    "instruction": "What is Context Switch (More Details)?",
+    "output": "\n**When does context switch happen?**\n1. Time quantum expires (in time-sharing systems)\n2. Process makes system call (may block)\n3. Interrupt occurs\n4. Higher priority process becomes ready (preemptive scheduling)\n\n**What gets saved/restored?**\n- Program Counter (PC)\n- All CPU registers\n- Stack pointer\n- Status registers\n- Memory management registers\n\n**Typical time:** 1-10 microseconds (highly hardware dependent)\n\n**Switching time is pure overhead** \u2014 that's why Round Robin with a very small time quantum is inefficient (too much switching, too little work).\n\n---"
+  },
+  {
+    "instruction": "Explain Process State Transitions - Common PYQ Traps",
+    "output": "\n\u274c **Waiting \u2192 Running** \u2014 NEVER happens directly. Must go Waiting \u2192 Ready \u2192 Running.\n\n\u274c **New \u2192 Running** \u2014 NEVER happens. Must go New \u2192 Ready \u2192 Running.\n\n\u2705 **Running \u2192 Ready** \u2014 Yes, when time quantum expires or preemption occurs.\n\n\u2705 **Running \u2192 Waiting** \u2014 Yes, when process does I/O or waits for event.\n\n\u2705 **Waiting \u2192 Ready** \u2014 Yes, when I/O completes.\n\n---"
+  },
+  {
+    "instruction": "What is Process State Transitions - Common PYQ Traps?",
+    "output": "\n\u274c **Waiting \u2192 Running** \u2014 NEVER happens directly. Must go Waiting \u2192 Ready \u2192 Running.\n\n\u274c **New \u2192 Running** \u2014 NEVER happens. Must go New \u2192 Ready \u2192 Running.\n\n\u2705 **Running \u2192 Ready** \u2014 Yes, when time quantum expires or preemption occurs.\n\n\u2705 **Running \u2192 Waiting** \u2014 Yes, when process does I/O or waits for event.\n\n\u2705 **Waiting \u2192 Ready** \u2014 Yes, when I/O completes.\n\n---"
+  },
+  {
+    "instruction": "Explain Quick Summary",
+    "output": "\n**5 States:** New, Ready, Running, Waiting, Terminated\n\n**7 States:** Add Suspended Ready, Suspended Waiting\n\n**3 Queues:** Job Queue (all), Ready Queue (ready), Device Queues (waiting)\n\n**3 Schedulers:** \n- Long-term (New\u2192Ready, infrequent)\n- Short-term (Ready\u2192Running, frequent)\n- Medium-term (Swapping, as needed)\n\n**Process Types:** CPU-bound (compute heavy), I/O-bound (I/O heavy)\n\n**Context Switch:** Save PCB\u2081, Load PCB\u2082 \u2014 pure overhead\n\n---\n\nReady for the quiz on the entire process section (memory layout, PCB, states, queues, schedulers)?\n\n\nPerfect! Let's finish these last bits in detail, then we'll do a comprehensive revision + quiz before you hit the PYQs.\n\n---"
+  },
+  {
+    "instruction": "What is Quick Summary?",
+    "output": "\n**5 States:** New, Ready, Running, Waiting, Terminated\n\n**7 States:** Add Suspended Ready, Suspended Waiting\n\n**3 Queues:** Job Queue (all), Ready Queue (ready), Device Queues (waiting)\n\n**3 Schedulers:** \n- Long-term (New\u2192Ready, infrequent)\n- Short-term (Ready\u2192Running, frequent)\n- Medium-term (Swapping, as needed)\n\n**Process Types:** CPU-bound (compute heavy), I/O-bound (I/O heavy)\n\n**Context Switch:** Save PCB\u2081, Load PCB\u2082 \u2014 pure overhead\n\n---\n\nReady for the quiz on the entire process section (memory layout, PCB, states, queues, schedulers)?\n\n\nPerfect! Let's finish these last bits in detail, then we'll do a comprehensive revision + quiz before you hit the PYQs.\n\n---"
+  },
+  {
+    "instruction": "Explain Process Schedulers (Deep Detail)",
+    "output": "\nWe touched on the three types. Let's go deeper so you can answer any PYQ variation.\n\n---"
+  },
+  {
+    "instruction": "What is Process Schedulers (Deep Detail)?",
+    "output": "\nWe touched on the three types. Let's go deeper so you can answer any PYQ variation.\n\n---"
+  },
+  {
+    "instruction": "Explain 1. Long-Term Scheduler (Job Scheduler / Admission Scheduler)",
+    "output": "\n**Job:** Decides which processes from the **job pool** (on disk) should be brought into memory (admitted).\n\n**Transition:** New \u2192 Ready\n\n**Frequency:** Runs **infrequently** (could be seconds, minutes, or even when a process terminates and memory becomes available)\n\n**Goal:** Control the **degree of multiprogramming** (number of processes in memory)\n\n**Key Decisions:**\n- Should we admit this new process now, or wait?\n- Do we have enough memory?\n- What mix of CPU-bound and I/O-bound processes should we maintain?\n\n**Why the mix matters:**\n- **All CPU-bound processes** \u2192 I/O devices sit idle\n- **All I/O-bound processes** \u2192 CPU sits idle waiting for I/O\n- **Good mix** \u2192 Both CPU and I/O devices stay busy\n\n**Important:** Many modern systems (like time-sharing UNIX/Linux) have **no long-term scheduler** or a minimal one. Every process is admitted immediately, and medium-term scheduler (swapping) handles memory pressure instead.\n\n**PYQ Alert:** \"Which scheduler is absent in time-sharing syst"
+  },
+  {
+    "instruction": "What is 1. Long-Term Scheduler (Job Scheduler / Admission Scheduler)?",
+    "output": "\n**Job:** Decides which processes from the **job pool** (on disk) should be brought into memory (admitted).\n\n**Transition:** New \u2192 Ready\n\n**Frequency:** Runs **infrequently** (could be seconds, minutes, or even when a process terminates and memory becomes available)\n\n**Goal:** Control the **degree of multiprogramming** (number of processes in memory)\n\n**Key Decisions:**\n- Should we admit this new process now, or wait?\n- Do we have enough memory?\n- What mix of CPU-bound and I/O-bound processes should we maintain?\n\n**Why the mix matters:**\n- **All CPU-bound processes** \u2192 I/O devices sit idle\n- **All I/O-bound processes** \u2192 CPU sits idle waiting for I/O\n- **Good mix** \u2192 Both CPU and I/O devices stay busy\n\n**Important:** Many modern systems (like time-sharing UNIX/Linux) have **no long-term scheduler** or a minimal one. Every process is admitted immediately, and medium-term scheduler (swapping) handles memory pressure instead.\n\n**PYQ Alert:** \"Which scheduler is absent in time-sharing syst"
+  },
+  {
+    "instruction": "Explain 2. Short-Term Scheduler (CPU Scheduler)",
+    "output": "\n**Job:** Decides which process from the **ready queue** gets the CPU next.\n\n**Transition:** Ready \u2192 Running\n\n**Frequency:** Runs **very frequently** (every 10-100 milliseconds)\n\n**Goal:** Maximize CPU utilization, throughput, minimize response time\n\n**Must be extremely fast because:**\n- If it takes 10ms to decide and runs every 100ms \u2192 10% overhead\n- If decision takes 1ms \u2192 only 1% overhead\n\n**This is what CPU scheduling algorithms (FCFS, SJF, RR, Priority) do** \u2014 we'll cover these next.\n\n**Always present** in every multiprogramming/multitasking system.\n\n---"
+  },
+  {
+    "instruction": "What is 2. Short-Term Scheduler (CPU Scheduler)?",
+    "output": "\n**Job:** Decides which process from the **ready queue** gets the CPU next.\n\n**Transition:** Ready \u2192 Running\n\n**Frequency:** Runs **very frequently** (every 10-100 milliseconds)\n\n**Goal:** Maximize CPU utilization, throughput, minimize response time\n\n**Must be extremely fast because:**\n- If it takes 10ms to decide and runs every 100ms \u2192 10% overhead\n- If decision takes 1ms \u2192 only 1% overhead\n\n**This is what CPU scheduling algorithms (FCFS, SJF, RR, Priority) do** \u2014 we'll cover these next.\n\n**Always present** in every multiprogramming/multitasking system.\n\n---"
+  },
+  {
+    "instruction": "Explain 3. Medium-Term Scheduler (Swapper)",
+    "output": "\n**Job:** Decides which processes to **swap out** (memory \u2192 disk) and **swap in** (disk \u2192 memory).\n\n**Transitions:** \n- Running/Ready/Waiting \u2192 Suspended (swap out)\n- Suspended \u2192 Ready (swap in)\n\n**Frequency:** Runs as needed (when memory pressure is high or low)\n\n**Goal:** Improve memory utilization and **indirectly** control degree of multiprogramming\n\n**Why swap out a process?**\n- Memory is full, need space for other processes\n- Process has been inactive for a long time\n- Process is waiting for slow I/O\n\n**Why swap in a process?**\n- Memory available now\n- Process's I/O completed\n- Higher priority process was swapped out\n\n**Swapping is expensive** (disk I/O is slow), so it's done carefully.\n\n**PYQ Concept:** Swapping vs Paging\n- **Swapping:** Entire process moved to/from disk\n- **Paging:** Only parts (pages) of process moved\n\n---"
+  },
+  {
+    "instruction": "What is 3. Medium-Term Scheduler (Swapper)?",
+    "output": "\n**Job:** Decides which processes to **swap out** (memory \u2192 disk) and **swap in** (disk \u2192 memory).\n\n**Transitions:** \n- Running/Ready/Waiting \u2192 Suspended (swap out)\n- Suspended \u2192 Ready (swap in)\n\n**Frequency:** Runs as needed (when memory pressure is high or low)\n\n**Goal:** Improve memory utilization and **indirectly** control degree of multiprogramming\n\n**Why swap out a process?**\n- Memory is full, need space for other processes\n- Process has been inactive for a long time\n- Process is waiting for slow I/O\n\n**Why swap in a process?**\n- Memory available now\n- Process's I/O completed\n- Higher priority process was swapped out\n\n**Swapping is expensive** (disk I/O is slow), so it's done carefully.\n\n**PYQ Concept:** Swapping vs Paging\n- **Swapping:** Entire process moved to/from disk\n- **Paging:** Only parts (pages) of process moved\n\n---"
+  },
+  {
+    "instruction": "Explain Comparison Table: Three Schedulers",
+    "output": "\n| Feature | Long-Term | Short-Term | Medium-Term |\n|---------|-----------|------------|-------------|\n| **Also called** | Job Scheduler | CPU Scheduler | Swapper |\n| **Selects from** | Job pool (disk) | Ready queue | Memory |\n| **Selects to** | Ready queue | Running state | Disk (suspend) |\n| **Frequency** | Infrequent (seconds/minutes) | Very frequent (milliseconds) | As needed |\n| **Speed requirement** | Can be slow | Must be very fast | Moderate |\n| **Controls** | Degree of multiprogramming | CPU allocation | Memory usage |\n| **Present in** | Batch systems mainly | All systems | Systems with swapping |\n\n---"
+  },
+  {
+    "instruction": "What is Comparison Table: Three Schedulers?",
+    "output": "\n| Feature | Long-Term | Short-Term | Medium-Term |\n|---------|-----------|------------|-------------|\n| **Also called** | Job Scheduler | CPU Scheduler | Swapper |\n| **Selects from** | Job pool (disk) | Ready queue | Memory |\n| **Selects to** | Ready queue | Running state | Disk (suspend) |\n| **Frequency** | Infrequent (seconds/minutes) | Very frequent (milliseconds) | As needed |\n| **Speed requirement** | Can be slow | Must be very fast | Moderate |\n| **Controls** | Degree of multiprogramming | CPU allocation | Memory usage |\n| **Present in** | Batch systems mainly | All systems | Systems with swapping |\n\n---"
+  },
+  {
+    "instruction": "Explain Dispatcher",
+    "output": "\nRelated to short-term scheduler but **different**:\n\n**Scheduler** decides **which** process runs next.\n\n**Dispatcher** actually **switches** to that process."
+  },
+  {
+    "instruction": "What is Dispatcher?",
+    "output": "\nRelated to short-term scheduler but **different**:\n\n**Scheduler** decides **which** process runs next.\n\n**Dispatcher** actually **switches** to that process."
+  },
+  {
+    "instruction": "Explain Dispatcher's Jobs:",
+    "output": "1. **Context switch** \u2014 save old process state, load new process state\n2. **Switch to user mode** (if coming from kernel mode)\n3. **Jump to the proper location** in the new process (using PC value)\n\n**Dispatch latency** = time taken to stop one process and start another\n\n- Should be **minimal** (typically microseconds)\n- Pure overhead \u2014 no useful work done\n\n**PYQ Distinction:** Scheduler makes decision, Dispatcher implements it.\n\n---"
+  },
+  {
+    "instruction": "What is Dispatcher's Jobs:?",
+    "output": "1. **Context switch** \u2014 save old process state, load new process state\n2. **Switch to user mode** (if coming from kernel mode)\n3. **Jump to the proper location** in the new process (using PC value)\n\n**Dispatch latency** = time taken to stop one process and start another\n\n- Should be **minimal** (typically microseconds)\n- Pure overhead \u2014 no useful work done\n\n**PYQ Distinction:** Scheduler makes decision, Dispatcher implements it.\n\n---"
+  },
+  {
+    "instruction": "Explain CPU Burst and I/O Burst",
+    "output": "\nBefore scheduling algorithms, you need to understand **CPU burst** and **I/O burst**."
+  },
+  {
+    "instruction": "What is CPU Burst and I/O Burst?",
+    "output": "\nBefore scheduling algorithms, you need to understand **CPU burst** and **I/O burst**."
+  },
+  {
+    "instruction": "Explain CPU Burst",
+    "output": "A period of time when the process is **continuously using the CPU** (executing instructions)."
+  },
+  {
+    "instruction": "What is CPU Burst?",
+    "output": "A period of time when the process is **continuously using the CPU** (executing instructions)."
+  },
+  {
+    "instruction": "Explain I/O Burst",
+    "output": "A period when the process is **waiting for I/O** (not using CPU)."
+  },
+  {
+    "instruction": "What is I/O Burst?",
+    "output": "A period when the process is **waiting for I/O** (not using CPU)."
+  },
+  {
+    "instruction": "Explain Process Execution Cycle",
+    "output": "\n```\nCPU burst \u2192 I/O burst \u2192 CPU burst \u2192 I/O burst \u2192 ... \u2192 CPU burst (final) \u2192 Terminate\n```\n\n**Always starts with CPU burst, always ends with CPU burst.**"
+  },
+  {
+    "instruction": "What is Process Execution Cycle?",
+    "output": "\n```\nCPU burst \u2192 I/O burst \u2192 CPU burst \u2192 I/O burst \u2192 ... \u2192 CPU burst (final) \u2192 Terminate\n```\n\n**Always starts with CPU burst, always ends with CPU burst.**"
+  },
+  {
+    "instruction": "Explain Example:",
+    "output": "```\nProcess A:\n- CPU burst: 5ms\n- I/O burst: 10ms\n- CPU burst: 3ms\n- I/O burst: 8ms\n- CPU burst: 2ms\n- Terminate\n\nThis process has 3 CPU bursts and 2 I/O bursts.\n```"
+  },
+  {
+    "instruction": "What is Example:?",
+    "output": "```\nProcess A:\n- CPU burst: 5ms\n- I/O burst: 10ms\n- CPU burst: 3ms\n- I/O burst: 8ms\n- CPU burst: 2ms\n- Terminate\n\nThis process has 3 CPU bursts and 2 I/O bursts.\n```"
+  },
+  {
+    "instruction": "Explain CPU-Bound vs I/O-Bound (Revisited with Bursts)",
+    "output": "\n**CPU-bound process:**\n- Few, **long CPU bursts**\n- Rare, short I/O bursts\n- Example: Video rendering (CPU burst = 1000ms, I/O burst = 10ms)\n\n**I/O-bound process:**\n- Many, **short CPU bursts**\n- Frequent, long I/O bursts\n- Example: Text editor (CPU burst = 2ms, I/O burst = 100ms waiting for keystroke)\n\n**CPU Burst Distribution (Important for PYQs):**\n- Most processes have **many short CPU bursts** and **few long CPU bursts**\n- This is called a **right-skewed distribution**\n- Histogram looks like this:\n\n```\nFrequency\n    |  \u2588\n    |  \u2588\n    |  \u2588 \u2588\n    |  \u2588 \u2588\n    |  \u2588 \u2588 \u2588\n    |__\u2588_\u2588_\u2588_____\n       Short \u2192 Long (CPU burst duration)\n```\n\nThis distribution affects which scheduling algorithm works best in practice.\n\n---"
+  },
+  {
+    "instruction": "What is CPU-Bound vs I/O-Bound (Revisited with Bursts)?",
+    "output": "\n**CPU-bound process:**\n- Few, **long CPU bursts**\n- Rare, short I/O bursts\n- Example: Video rendering (CPU burst = 1000ms, I/O burst = 10ms)\n\n**I/O-bound process:**\n- Many, **short CPU bursts**\n- Frequent, long I/O bursts\n- Example: Text editor (CPU burst = 2ms, I/O burst = 100ms waiting for keystroke)\n\n**CPU Burst Distribution (Important for PYQs):**\n- Most processes have **many short CPU bursts** and **few long CPU bursts**\n- This is called a **right-skewed distribution**\n- Histogram looks like this:\n\n```\nFrequency\n    |  \u2588\n    |  \u2588\n    |  \u2588 \u2588\n    |  \u2588 \u2588\n    |  \u2588 \u2588 \u2588\n    |__\u2588_\u2588_\u2588_____\n       Short \u2192 Long (CPU burst duration)\n```\n\nThis distribution affects which scheduling algorithm works best in practice.\n\n---"
+  },
+  {
+    "instruction": "Explain Preemptive vs Non-Preemptive (Detailed)",
+    "output": "\nWe covered this briefly earlier. Let's go deeper because it's **critical** for scheduling algorithms."
+  },
+  {
+    "instruction": "What is Preemptive vs Non-Preemptive (Detailed)?",
+    "output": "\nWe covered this briefly earlier. Let's go deeper because it's **critical** for scheduling algorithms."
+  },
+  {
+    "instruction": "Explain Non-Preemptive (Cooperative) Scheduling",
+    "output": "\n**Once a process gets the CPU, it keeps it until:**\n1. Process **terminates**, OR\n2. Process **voluntarily gives up CPU** (e.g., does I/O, calls yield)\n\n**OS cannot forcibly take CPU away.**\n\n**Advantages:**\n- Simple to implement\n- Lower overhead (no forced context switches)\n- Predictable\n\n**Disadvantages:**\n- One process can hog CPU\n- Poor response time for interactive systems\n- Not suitable for time-sharing\n\n**Examples:** FCFS, SJF (non-preemptive), Priority (non-preemptive)\n\n**Used in:** Old systems, some embedded/real-time systems where predictability matters\n\n---"
+  },
+  {
+    "instruction": "What is Non-Preemptive (Cooperative) Scheduling?",
+    "output": "\n**Once a process gets the CPU, it keeps it until:**\n1. Process **terminates**, OR\n2. Process **voluntarily gives up CPU** (e.g., does I/O, calls yield)\n\n**OS cannot forcibly take CPU away.**\n\n**Advantages:**\n- Simple to implement\n- Lower overhead (no forced context switches)\n- Predictable\n\n**Disadvantages:**\n- One process can hog CPU\n- Poor response time for interactive systems\n- Not suitable for time-sharing\n\n**Examples:** FCFS, SJF (non-preemptive), Priority (non-preemptive)\n\n**Used in:** Old systems, some embedded/real-time systems where predictability matters\n\n---"
+  },
+  {
+    "instruction": "Explain Preemptive Scheduling",
+    "output": "\n**OS can forcibly take CPU from a running process when:**\n1. **Time quantum expires** (timer interrupt)\n2. **Higher priority process arrives**\n3. **Process with shorter remaining time arrives** (in SRTF)\n\n**Requires timer interrupt** (hardware support).\n\n**Advantages:**\n- Fair \u2014 no single process can monopolize CPU\n- Better response time\n- Good for time-sharing and interactive systems\n\n**Disadvantages:**\n- More overhead (frequent context switches)\n- More complex to implement\n- **Race conditions** possible (if process was modifying shared data when preempted)\n\n**Examples:** Round Robin, SRTF, Priority (preemptive), Multilevel Queue\n\n**Used in:** All modern general-purpose OSes (Windows, Linux, macOS)\n\n---"
+  },
+  {
+    "instruction": "What is Preemptive Scheduling?",
+    "output": "\n**OS can forcibly take CPU from a running process when:**\n1. **Time quantum expires** (timer interrupt)\n2. **Higher priority process arrives**\n3. **Process with shorter remaining time arrives** (in SRTF)\n\n**Requires timer interrupt** (hardware support).\n\n**Advantages:**\n- Fair \u2014 no single process can monopolize CPU\n- Better response time\n- Good for time-sharing and interactive systems\n\n**Disadvantages:**\n- More overhead (frequent context switches)\n- More complex to implement\n- **Race conditions** possible (if process was modifying shared data when preempted)\n\n**Examples:** Round Robin, SRTF, Priority (preemptive), Multilevel Queue\n\n**Used in:** All modern general-purpose OSes (Windows, Linux, macOS)\n\n---"
+  },
+  {
+    "instruction": "Explain Critical Issue with Preemptive Scheduling",
+    "output": "\n**Race Condition Example:**\n\n```\nProcess A is updating a shared data structure:\n1. Read value X = 10\n2. [PREEMPTED HERE] \u2190 Timer interrupt\n3. Process B runs, modifies X to 20\n4. Process A resumes\n5. Process A writes old value based on X=10 \u2192 Data inconsistency!\n```\n\n**Solution:** Use synchronization mechanisms (semaphores, locks) \u2014 you'll study this in Process Synchronization chapter.\n\n**Kernel Preemption:**\n- Some OSes allow preemption even when process is in **kernel mode** (modern Linux)\n- Others don't (older UNIX) \u2014 process in kernel mode runs to completion\n- Affects responsiveness vs complexity tradeoff\n\n---"
+  },
+  {
+    "instruction": "What is Critical Issue with Preemptive Scheduling?",
+    "output": "\n**Race Condition Example:**\n\n```\nProcess A is updating a shared data structure:\n1. Read value X = 10\n2. [PREEMPTED HERE] \u2190 Timer interrupt\n3. Process B runs, modifies X to 20\n4. Process A resumes\n5. Process A writes old value based on X=10 \u2192 Data inconsistency!\n```\n\n**Solution:** Use synchronization mechanisms (semaphores, locks) \u2014 you'll study this in Process Synchronization chapter.\n\n**Kernel Preemption:**\n- Some OSes allow preemption even when process is in **kernel mode** (modern Linux)\n- Others don't (older UNIX) \u2014 process in kernel mode runs to completion\n- Affects responsiveness vs complexity tradeoff\n\n---"
+  },
+  {
+    "instruction": "Explain When Does Scheduling Happen?",
+    "output": "\nCPU scheduling decisions happen when a process:\n\n1. **Switches from running to waiting** (e.g., I/O request)\n   - **Non-preemptive decision** \u2014 process gave up CPU voluntarily\n\n2. **Switches from running to ready** (e.g., timer interrupt)\n   - **Preemptive decision** \u2014 OS took CPU away\n\n3. **Switches from waiting to ready** (e.g., I/O completion)\n   - **Preemptive decision** if the newly ready process has higher priority\n\n4. **Terminates**\n   - **Non-preemptive decision** \u2014 process gave up CPU\n\n**Cases 1 and 4:** Only non-preemptive scheduling possible\n\n**Cases 2 and 3:** Preemptive scheduling can happen (if system supports it)\n\n---"
+  },
+  {
+    "instruction": "What is When Does Scheduling Happen??",
+    "output": "\nCPU scheduling decisions happen when a process:\n\n1. **Switches from running to waiting** (e.g., I/O request)\n   - **Non-preemptive decision** \u2014 process gave up CPU voluntarily\n\n2. **Switches from running to ready** (e.g., timer interrupt)\n   - **Preemptive decision** \u2014 OS took CPU away\n\n3. **Switches from waiting to ready** (e.g., I/O completion)\n   - **Preemptive decision** if the newly ready process has higher priority\n\n4. **Terminates**\n   - **Non-preemptive decision** \u2014 process gave up CPU\n\n**Cases 1 and 4:** Only non-preemptive scheduling possible\n\n**Cases 2 and 3:** Preemptive scheduling can happen (if system supports it)\n\n---"
+  },
+  {
+    "instruction": "Explain Scheduling Criteria (What Makes a Good Schedule?)",
+    "output": "\nThese are the **metrics** used to evaluate scheduling algorithms:"
+  },
+  {
+    "instruction": "What is Scheduling Criteria (What Makes a Good Schedule?)?",
+    "output": "\nThese are the **metrics** used to evaluate scheduling algorithms:"
+  },
+  {
+    "instruction": "Explain 1. **CPU Utilization**",
+    "output": "- **Goal:** Keep CPU as busy as possible\n- **Ideal:** 100% (practically 40-90% depending on system)\n- Higher is better"
+  },
+  {
+    "instruction": "What is 1. **CPU Utilization**?",
+    "output": "- **Goal:** Keep CPU as busy as possible\n- **Ideal:** 100% (practically 40-90% depending on system)\n- Higher is better"
+  },
+  {
+    "instruction": "Explain 2. **Throughput**",
+    "output": "- **Definition:** Number of processes completed per unit time\n- Example: 10 processes/hour\n- Higher is better"
+  },
+  {
+    "instruction": "What is 2. **Throughput**?",
+    "output": "- **Definition:** Number of processes completed per unit time\n- Example: 10 processes/hour\n- Higher is better"
+  },
+  {
+    "instruction": "Explain 3. **Turnaround Time (TAT)**",
+    "output": "- **Definition:** Total time from process submission to completion\n- TAT = Completion Time - Arrival Time\n- **Includes:** Waiting time + burst time + I/O time\n- Lower is better"
+  },
+  {
+    "instruction": "What is 3. **Turnaround Time (TAT)**?",
+    "output": "- **Definition:** Total time from process submission to completion\n- TAT = Completion Time - Arrival Time\n- **Includes:** Waiting time + burst time + I/O time\n- Lower is better"
+  },
+  {
+    "instruction": "Explain 4. **Waiting Time**",
+    "output": "- **Definition:** Total time process spends in ready queue\n- Waiting Time = Turnaround Time - Burst Time\n- Lower is better"
+  },
+  {
+    "instruction": "What is 4. **Waiting Time**?",
+    "output": "- **Definition:** Total time process spends in ready queue\n- Waiting Time = Turnaround Time - Burst Time\n- Lower is better"
+  },
+  {
+    "instruction": "Explain 5. **Response Time**",
+    "output": "- **Definition:** Time from submission to **first response** (first time CPU is allocated)\n- Important for **interactive systems**\n- Lower is better\n\n**PYQ Focus:** You'll calculate these metrics for different scheduling algorithms. \n\n**Common question format:** \"Calculate average waiting time and turnaround time for the following processes using FCFS/SJF/RR...\"\n\n---"
+  },
+  {
+    "instruction": "What is 5. **Response Time**?",
+    "output": "- **Definition:** Time from submission to **first response** (first time CPU is allocated)\n- Important for **interactive systems**\n- Lower is better\n\n**PYQ Focus:** You'll calculate these metrics for different scheduling algorithms. \n\n**Common question format:** \"Calculate average waiting time and turnaround time for the following processes using FCFS/SJF/RR...\"\n\n---"
+  },
+  {
+    "instruction": "Explain CPU Utilization Formula (For Questions)",
+    "output": "\nIf you know total busy time and total time:\n\n```\nCPU Utilization = (Total CPU busy time / Total time) \u00d7 100%\n```\n\n**Example:**\n- 4 processes with burst times: 5, 3, 8, 2\n- Total burst time = 18 time units\n- If total time elapsed = 20 units (includes idle time of 2)\n- CPU Utilization = (18/20) \u00d7 100% = 90%\n\n---"
+  },
+  {
+    "instruction": "What is CPU Utilization Formula (For Questions)?",
+    "output": "\nIf you know total busy time and total time:\n\n```\nCPU Utilization = (Total CPU busy time / Total time) \u00d7 100%\n```\n\n**Example:**\n- 4 processes with burst times: 5, 3, 8, 2\n- Total burst time = 18 time units\n- If total time elapsed = 20 units (includes idle time of 2)\n- CPU Utilization = (18/20) \u00d7 100% = 90%\n\n---"
+  },
+  {
+    "instruction": "Explain Convoy Effect",
+    "output": "\nImportant concept related to FCFS (you'll see this in scheduling algorithms):\n\n**Scenario:** One big CPU-bound process arrives first, followed by many small I/O-bound processes.\n\n**Problem:** All small processes wait for the big one to finish \u2192 poor average waiting time.\n\nLike a slow-moving truck blocking many fast cars on a single-lane road.\n\n**Which algorithm suffers from this?** FCFS\n\n---"
+  },
+  {
+    "instruction": "What is Convoy Effect?",
+    "output": "\nImportant concept related to FCFS (you'll see this in scheduling algorithms):\n\n**Scenario:** One big CPU-bound process arrives first, followed by many small I/O-bound processes.\n\n**Problem:** All small processes wait for the big one to finish \u2192 poor average waiting time.\n\nLike a slow-moving truck blocking many fast cars on a single-lane road.\n\n**Which algorithm suffers from this?** FCFS\n\n---"
+  },
+  {
+    "instruction": "Explain Summary of This Section",
+    "output": "\n**Three Schedulers:**\n- **Long-term:** New \u2192 Ready (infrequent, controls multiprogramming)\n- **Short-term:** Ready \u2192 Running (very frequent, CPU allocation)\n- **Medium-term:** Memory \u2194 Disk (swapping, memory management)\n\n**Dispatcher:** Implements what scheduler decides (context switch + mode switch + jump)\n\n**CPU/IO Bursts:** Process alternates between CPU bursts and I/O bursts\n\n**Preemptive vs Non-Preemptive:**\n- Non-preemptive: Process keeps CPU until it voluntarily gives up\n- Preemptive: OS can forcibly take CPU away\n\n**Scheduling Criteria:** CPU Utilization\u2191, Throughput\u2191, TAT\u2193, Waiting Time\u2193, Response Time\u2193\n\n**Convoy Effect:** FCFS suffers when long process blocks many short ones\n\n---"
+  },
+  {
+    "instruction": "What is Summary of This Section?",
+    "output": "\n**Three Schedulers:**\n- **Long-term:** New \u2192 Ready (infrequent, controls multiprogramming)\n- **Short-term:** Ready \u2192 Running (very frequent, CPU allocation)\n- **Medium-term:** Memory \u2194 Disk (swapping, memory management)\n\n**Dispatcher:** Implements what scheduler decides (context switch + mode switch + jump)\n\n**CPU/IO Bursts:** Process alternates between CPU bursts and I/O bursts\n\n**Preemptive vs Non-Preemptive:**\n- Non-preemptive: Process keeps CPU until it voluntarily gives up\n- Preemptive: OS can forcibly take CPU away\n\n**Scheduling Criteria:** CPU Utilization\u2191, Throughput\u2191, TAT\u2193, Waiting Time\u2193, Response Time\u2193\n\n**Convoy Effect:** FCFS suffers when long process blocks many short ones\n\n---"
+  },
+  {
+    "instruction": "Explain Now: Complete Revision Before Quiz",
+    "output": "\nLet me give you a **structured summary** of everything we've covered so far:"
+  },
+  {
+    "instruction": "What is Now: Complete Revision Before Quiz?",
+    "output": "\nLet me give you a **structured summary** of everything we've covered so far:"
+  },
+  {
+    "instruction": "Explain Part 1: OS Types & Basics",
+    "output": "- Uniprogramming \u2192 Multiprogramming \u2192 Multitasking\n- Preemptive vs Non-preemptive\n- Batch, Real-time, Distributed OS types"
+  },
+  {
+    "instruction": "What is Part 1: OS Types & Basics?",
+    "output": "- Uniprogramming \u2192 Multiprogramming \u2192 Multitasking\n- Preemptive vs Non-preemptive\n- Batch, Real-time, Distributed OS types"
+  },
+  {
+    "instruction": "Explain Part 2: System Calls & Dual Mode",
+    "output": "- Mode bit: 1=User, 0=Kernel\n- System call flow: trap \u2192 kernel mode \u2192 service \u2192 user mode\n- Trap vs Interrupt\n- Privileged instructions"
+  },
+  {
+    "instruction": "What is Part 2: System Calls & Dual Mode?",
+    "output": "- Mode bit: 1=User, 0=Kernel\n- System call flow: trap \u2192 kernel mode \u2192 service \u2192 user mode\n- Trap vs Interrupt\n- Privileged instructions"
+  },
+  {
+    "instruction": "Explain Part 3: Process Fundamentals",
+    "output": "- **Memory layout:** Text | Data | Heap\u2191 | \u2193Stack\n- **PCB contains:** PID, State, PC, Registers, Memory info, I/O info\n- **5 states:** New, Ready, Running, Waiting, Terminated\n- **7 states:** Add Suspended Ready, Suspended Waiting"
+  },
+  {
+    "instruction": "What is Part 3: Process Fundamentals?",
+    "output": "- **Memory layout:** Text | Data | Heap\u2191 | \u2193Stack\n- **PCB contains:** PID, State, PC, Registers, Memory info, I/O info\n- **5 states:** New, Ready, Running, Waiting, Terminated\n- **7 states:** Add Suspended Ready, Suspended Waiting"
+  },
+  {
+    "instruction": "Explain Part 4: Queues & Schedulers",
+    "output": "- **Queues:** Job queue, Ready queue, Device queues\n- **Long-term scheduler:** New\u2192Ready, controls multiprogramming\n- **Short-term scheduler:** Ready\u2192Running, very frequent\n- **Medium-term scheduler:** Swapping (memory\u2194disk)\n- **Dispatcher:** Implements scheduling decision"
+  },
+  {
+    "instruction": "What is Part 4: Queues & Schedulers?",
+    "output": "- **Queues:** Job queue, Ready queue, Device queues\n- **Long-term scheduler:** New\u2192Ready, controls multiprogramming\n- **Short-term scheduler:** Ready\u2192Running, very frequent\n- **Medium-term scheduler:** Swapping (memory\u2194disk)\n- **Dispatcher:** Implements scheduling decision"
+  },
+  {
+    "instruction": "Explain Part 5: CPU/IO Bursts & Scheduling Prep",
+    "output": "- CPU burst \u2194 I/O burst alternation\n- CPU-bound (long bursts) vs I/O-bound (short bursts)\n- Scheduling criteria: Utilization, Throughput, TAT, Waiting, Response\n- Convoy effect in FCFS\n\n---\n\nReady for the **comprehensive quiz** covering all of this? I'll make it thorough \u2014 mix of conceptual and numerical questions to prepare you for PYQs.\n\n**Alright, got it \u2014 this chat IS your notes now. I'll make sure everything is crystal clear and complete.**\n\n---"
+  },
+  {
+    "instruction": "What is Part 5: CPU/IO Bursts & Scheduling Prep?",
+    "output": "- CPU burst \u2194 I/O burst alternation\n- CPU-bound (long bursts) vs I/O-bound (short bursts)\n- Scheduling criteria: Utilization, Throughput, TAT, Waiting, Response\n- Convoy effect in FCFS\n\n---\n\nReady for the **comprehensive quiz** covering all of this? I'll make it thorough \u2014 mix of conceptual and numerical questions to prepare you for PYQs.\n\n**Alright, got it \u2014 this chat IS your notes now. I'll make sure everything is crystal clear and complete.**\n\n---"
+  },
+  {
+    "instruction": "Explain **Burst Time (BT) / Service Time**",
+    "output": "\n**Definition:** The **total CPU time** a process needs to complete its execution.\n\n**Also called:** Service Time, Execution Time, CPU Time\n\n**Key point:** This is **pure computation time** \u2014 how long the process actually uses the CPU, ignoring all waiting.\n\n**Example:** If a process needs 5ms of CPU to finish its work, Burst Time = 5ms.\n\n**In PYQs:** This is usually **given** to you in the question.\n\n---"
+  },
+  {
+    "instruction": "What is **Burst Time (BT) / Service Time**?",
+    "output": "\n**Definition:** The **total CPU time** a process needs to complete its execution.\n\n**Also called:** Service Time, Execution Time, CPU Time\n\n**Key point:** This is **pure computation time** \u2014 how long the process actually uses the CPU, ignoring all waiting.\n\n**Example:** If a process needs 5ms of CPU to finish its work, Burst Time = 5ms.\n\n**In PYQs:** This is usually **given** to you in the question.\n\n---"
+  },
+  {
+    "instruction": "Explain **Turnaround Time (TAT) / Completion Time**",
+    "output": "\n**Definition:** The **total time** from when a process **arrives** in the ready queue until it **completes**.\n\n**Formula:**\n```\nTurnaround Time (TAT) = Completion Time - Arrival Time\n```\n\n**What it includes:**\n- Burst Time (actual CPU usage)\n- **Waiting Time** (time spent in ready queue)\n- **Any other delays** (context switch overhead if mentioned)\n\n**Key point:** TAT measures the **user's perspective** \u2014 \"I submitted this job, how long until it's done?\"\n\n---"
+  },
+  {
+    "instruction": "What is **Turnaround Time (TAT) / Completion Time**?",
+    "output": "\n**Definition:** The **total time** from when a process **arrives** in the ready queue until it **completes**.\n\n**Formula:**\n```\nTurnaround Time (TAT) = Completion Time - Arrival Time\n```\n\n**What it includes:**\n- Burst Time (actual CPU usage)\n- **Waiting Time** (time spent in ready queue)\n- **Any other delays** (context switch overhead if mentioned)\n\n**Key point:** TAT measures the **user's perspective** \u2014 \"I submitted this job, how long until it's done?\"\n\n---"
+  },
+  {
+    "instruction": "Explain **The Relationship**",
+    "output": "\n```\nTurnaround Time = Waiting Time + Burst Time\n```\n\nRearranging:\n```\nWaiting Time = Turnaround Time - Burst Time\n```\n\n**This is the most important formula for PYQs.**\n\n---"
+  },
+  {
+    "instruction": "What is **The Relationship**?",
+    "output": "\n```\nTurnaround Time = Waiting Time + Burst Time\n```\n\nRearranging:\n```\nWaiting Time = Turnaround Time - Burst Time\n```\n\n**This is the most important formula for PYQs.**\n\n---"
+  },
+  {
+    "instruction": "Explain **Example to Lock It In**",
+    "output": "\n**Process P1:**\n- Arrival Time = 0\n- Burst Time = 5ms\n- Completion Time = 8ms (finished at time 8)\n\n**Calculate:**\n\n**Turnaround Time:**\n```\nTAT = Completion Time - Arrival Time\nTAT = 8 - 0 = 8ms\n```\n\n**Waiting Time:**\n```\nWT = TAT - Burst Time\nWT = 8 - 5 = 3ms\n```\n\n**Interpretation:** Process needed 5ms of CPU, but took 8ms total to complete. The extra 3ms was spent waiting in the ready queue.\n\n---"
+  },
+  {
+    "instruction": "What is **Example to Lock It In**?",
+    "output": "\n**Process P1:**\n- Arrival Time = 0\n- Burst Time = 5ms\n- Completion Time = 8ms (finished at time 8)\n\n**Calculate:**\n\n**Turnaround Time:**\n```\nTAT = Completion Time - Arrival Time\nTAT = 8 - 0 = 8ms\n```\n\n**Waiting Time:**\n```\nWT = TAT - Burst Time\nWT = 8 - 5 = 3ms\n```\n\n**Interpretation:** Process needed 5ms of CPU, but took 8ms total to complete. The extra 3ms was spent waiting in the ready queue.\n\n---"
+  },
+  {
+    "instruction": "Explain **Visual Timeline**",
+    "output": "\n```\nTime:     0    1    2    3    4    5    6    7    8\n          |----WAIT----|---BURST(5ms)---|\n          ^                              ^\n      Arrival(0)                   Completion(8)\n          \n          |<----Turnaround Time = 8---->|\n          |<-WT=3->|<---BT=5--->|\n```\n\n---"
+  },
+  {
+    "instruction": "What is **Visual Timeline**?",
+    "output": "\n```\nTime:     0    1    2    3    4    5    6    7    8\n          |----WAIT----|---BURST(5ms)---|\n          ^                              ^\n      Arrival(0)                   Completion(8)\n          \n          |<----Turnaround Time = 8---->|\n          |<-WT=3->|<---BT=5--->|\n```\n\n---"
+  },
+  {
+    "instruction": "Explain **Another Example with Arrival Time \u2260 0**",
+    "output": "\n**Process P2:**\n- Arrival Time = 2\n- Burst Time = 4ms\n- Completion Time = 10ms\n\n**Calculate:**\n\n**Turnaround Time:**\n```\nTAT = 10 - 2 = 8ms\n```\n\n**Waiting Time:**\n```\nWT = 8 - 4 = 4ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is **Another Example with Arrival Time \u2260 0**?",
+    "output": "\n**Process P2:**\n- Arrival Time = 2\n- Burst Time = 4ms\n- Completion Time = 10ms\n\n**Calculate:**\n\n**Turnaround Time:**\n```\nTAT = 10 - 2 = 8ms\n```\n\n**Waiting Time:**\n```\nWT = 8 - 4 = 4ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain **Common PYQ Trap**",
+    "output": "\n\u274c **Wrong thinking:** \"Burst Time = 5, so Turnaround Time = 5\"\n\n\u2705 **Right thinking:** \"Burst Time = 5, but the process also waited 3ms, so Turnaround Time = 8\"\n\n**Burst Time is constant** (how much CPU the process needs).\n\n**Turnaround Time varies** depending on the scheduling algorithm (how long it had to wait).\n\n---"
+  },
+  {
+    "instruction": "What is **Common PYQ Trap**?",
+    "output": "\n\u274c **Wrong thinking:** \"Burst Time = 5, so Turnaround Time = 5\"\n\n\u2705 **Right thinking:** \"Burst Time = 5, but the process also waited 3ms, so Turnaround Time = 8\"\n\n**Burst Time is constant** (how much CPU the process needs).\n\n**Turnaround Time varies** depending on the scheduling algorithm (how long it had to wait).\n\n---"
+  },
+  {
+    "instruction": "Explain **Response Time (Third Important Metric)**",
+    "output": "\nSince we're here, let me add this:\n\n**Response Time (RT):** Time from **arrival** to **first time the process gets CPU**.\n\n**Formula:**\n```\nResponse Time = Time of First CPU Allocation - Arrival Time\n```\n\n**Example:**\n- Process arrives at time 0\n- Gets CPU for the first time at time 3\n- Response Time = 3 - 0 = 3ms\n\n**Important for:** Interactive systems (you want quick first response)\n\n**Difference from TAT:** \n- **Response Time:** How long until process **starts**\n- **Turnaround Time:** How long until process **finishes**\n\n---"
+  },
+  {
+    "instruction": "What is **Response Time (Third Important Metric)**?",
+    "output": "\nSince we're here, let me add this:\n\n**Response Time (RT):** Time from **arrival** to **first time the process gets CPU**.\n\n**Formula:**\n```\nResponse Time = Time of First CPU Allocation - Arrival Time\n```\n\n**Example:**\n- Process arrives at time 0\n- Gets CPU for the first time at time 3\n- Response Time = 3 - 0 = 3ms\n\n**Important for:** Interactive systems (you want quick first response)\n\n**Difference from TAT:** \n- **Response Time:** How long until process **starts**\n- **Turnaround Time:** How long until process **finishes**\n\n---"
+  },
+  {
+    "instruction": "Explain **All Three Metrics Summary**",
+    "output": "\n| Metric | Formula | What It Measures |\n|--------|---------|------------------|\n| **Burst Time (BT)** | Given in question | CPU time needed (constant) |\n| **Turnaround Time (TAT)** | Completion Time - Arrival Time | Total time in system |\n| **Waiting Time (WT)** | TAT - BT | Time spent waiting |\n| **Response Time (RT)** | First CPU Time - Arrival Time | Time until first response |\n\n---"
+  },
+  {
+    "instruction": "What is **All Three Metrics Summary**?",
+    "output": "\n| Metric | Formula | What It Measures |\n|--------|---------|------------------|\n| **Burst Time (BT)** | Given in question | CPU time needed (constant) |\n| **Turnaround Time (TAT)** | Completion Time - Arrival Time | Total time in system |\n| **Waiting Time (WT)** | TAT - BT | Time spent waiting |\n| **Response Time (RT)** | First CPU Time - Arrival Time | Time until first response |\n\n---"
+  },
+  {
+    "instruction": "Explain **For PYQs, You'll Calculate:**",
+    "output": "\n1. **Individual values** for each process\n2. **Average values** across all processes:\n\n```\nAverage WT = (WT\u2081 + WT\u2082 + ... + WT\u2099) / n\nAverage TAT = (TAT\u2081 + TAT\u2082 + ... + TAT\u2099) / n\n```\n\n**Most PYQs ask for Average Waiting Time and Average Turnaround Time.**\n\n---"
+  },
+  {
+    "instruction": "What is **For PYQs, You'll Calculate:**?",
+    "output": "\n1. **Individual values** for each process\n2. **Average values** across all processes:\n\n```\nAverage WT = (WT\u2081 + WT\u2082 + ... + WT\u2099) / n\nAverage TAT = (TAT\u2081 + TAT\u2082 + ... + TAT\u2099) / n\n```\n\n**Most PYQs ask for Average Waiting Time and Average Turnaround Time.**\n\n---"
+  },
+  {
+    "instruction": "Explain Quick Check Question",
+    "output": "\n**Process P:**\n- Arrival Time = 1\n- Burst Time = 6\n- Completion Time = 12\n\n**What is:**\n1. Turnaround Time?\n2. Waiting Time?\n\n<details>\n<summary>Answer (think first, then click)</summary>\n\n1. TAT = 12 - 1 = **11ms**\n2. WT = 11 - 6 = **5ms**\n\n</details>\n\n---\n\n**Now watch that lecture, and when you're back, we'll build on this with each scheduling algorithm step by step.**\n\n\nPerfect! Let's nail FCFS down completely.\n\n---"
+  },
+  {
+    "instruction": "What is Quick Check Question?",
+    "output": "\n**Process P:**\n- Arrival Time = 1\n- Burst Time = 6\n- Completion Time = 12\n\n**What is:**\n1. Turnaround Time?\n2. Waiting Time?\n\n<details>\n<summary>Answer (think first, then click)</summary>\n\n1. TAT = 12 - 1 = **11ms**\n2. WT = 11 - 6 = **5ms**\n\n</details>\n\n---\n\n**Now watch that lecture, and when you're back, we'll build on this with each scheduling algorithm step by step.**\n\n\nPerfect! Let's nail FCFS down completely.\n\n---"
+  },
+  {
+    "instruction": "Explain What Is It?",
+    "output": "\n**Simplest CPU scheduling algorithm.** The process that arrives **first** gets the CPU first.\n\n**Analogy:** Like a queue at a ticket counter \u2014 whoever comes first gets served first.\n\n---"
+  },
+  {
+    "instruction": "What is What Is It??",
+    "output": "\n**Simplest CPU scheduling algorithm.** The process that arrives **first** gets the CPU first.\n\n**Analogy:** Like a queue at a ticket counter \u2014 whoever comes first gets served first.\n\n---"
+  },
+  {
+    "instruction": "Explain Key Characteristics",
+    "output": "\n\u2705 **Non-preemptive** \u2014 Once a process starts, it runs to completion (no interruption)\n\n\u2705 **Simple to implement** \u2014 Just a FIFO queue\n\n\u2705 **Fair** in the sense that everyone gets served in order\n\n\u274c **Not optimal** \u2014 Can have very poor average waiting time\n\n\u274c **Convoy Effect** \u2014 Short processes stuck behind long ones\n\n---"
+  },
+  {
+    "instruction": "What is Key Characteristics?",
+    "output": "\n\u2705 **Non-preemptive** \u2014 Once a process starts, it runs to completion (no interruption)\n\n\u2705 **Simple to implement** \u2014 Just a FIFO queue\n\n\u2705 **Fair** in the sense that everyone gets served in order\n\n\u274c **Not optimal** \u2014 Can have very poor average waiting time\n\n\u274c **Convoy Effect** \u2014 Short processes stuck behind long ones\n\n---"
+  },
+  {
+    "instruction": "Explain How FCFS Works (Step-by-Step)",
+    "output": "\n1. Processes arrive and join the **ready queue**\n2. CPU picks the process at the **front of the queue**\n3. That process runs **until completion** (non-preemptive)\n4. Next process from queue gets CPU\n5. Repeat until all done\n\n---"
+  },
+  {
+    "instruction": "What is How FCFS Works (Step-by-Step)?",
+    "output": "\n1. Processes arrive and join the **ready queue**\n2. CPU picks the process at the **front of the queue**\n3. That process runs **until completion** (non-preemptive)\n4. Next process from queue gets CPU\n5. Repeat until all done\n\n---"
+  },
+  {
+    "instruction": "Explain Step 2: Draw a **Gantt Chart**",
+    "output": "- First process starts at max(arrival time, 0)\n- Each subsequent process starts when previous one finishes"
+  },
+  {
+    "instruction": "What is Step 2: Draw a **Gantt Chart**?",
+    "output": "- First process starts at max(arrival time, 0)\n- Each subsequent process starts when previous one finishes"
+  },
+  {
+    "instruction": "Explain Step 3: Calculate for each process:",
+    "output": "- **Completion Time (CT):** When the process finishes\n- **Turnaround Time (TAT):** CT - Arrival Time\n- **Waiting Time (WT):** TAT - Burst Time\n- **Response Time (RT):** Same as WT in FCFS (since no preemption)"
+  },
+  {
+    "instruction": "What is Step 3: Calculate for each process:?",
+    "output": "- **Completion Time (CT):** When the process finishes\n- **Turnaround Time (TAT):** CT - Arrival Time\n- **Waiting Time (WT):** TAT - Burst Time\n- **Response Time (RT):** Same as WT in FCFS (since no preemption)"
+  },
+  {
+    "instruction": "Explain Step 4: Calculate averages:",
+    "output": "- Average WT = Sum of all WT / Number of processes\n- Average TAT = Sum of all TAT / Number of processes\n\n---"
+  },
+  {
+    "instruction": "What is Step 4: Calculate averages:?",
+    "output": "- Average WT = Sum of all WT / Number of processes\n- Average TAT = Sum of all TAT / Number of processes\n\n---"
+  },
+  {
+    "instruction": "Explain Example 1: All Arrive at Time 0",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 4          |\n| P2      | 0            | 3          |\n| P3      | 0            | 2          |\n\n**Since all arrive at 0, order is P1 \u2192 P2 \u2192 P3 (as given)**"
+  },
+  {
+    "instruction": "What is Example 1: All Arrive at Time 0?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 4          |\n| P2      | 0            | 3          |\n| P3      | 0            | 2          |\n\n**Since all arrive at 0, order is P1 \u2192 P2 \u2192 P3 (as given)**"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|---P1---|---P2---|--P3--|\n0        4        7      9\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|---P1---|---P2---|--P3--|\n0        4        7      9\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n**P1:**\n- CT = 4\n- TAT = 4 - 0 = 4\n- WT = 4 - 4 = 0\n- RT = 0\n\n**P2:**\n- CT = 7\n- TAT = 7 - 0 = 7\n- WT = 7 - 3 = 4\n- RT = 4\n\n**P3:**\n- CT = 9\n- TAT = 9 - 0 = 9\n- WT = 9 - 2 = 7\n- RT = 7"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n**P1:**\n- CT = 4\n- TAT = 4 - 0 = 4\n- WT = 4 - 4 = 0\n- RT = 0\n\n**P2:**\n- CT = 7\n- TAT = 7 - 0 = 7\n- WT = 7 - 3 = 4\n- RT = 4\n\n**P3:**\n- CT = 9\n- TAT = 9 - 0 = 9\n- WT = 9 - 2 = 7\n- RT = 7"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (0 + 4 + 7) / 3 = 11/3 = 3.67 ms\nAverage TAT = (4 + 7 + 9) / 3 = 20/3 = 6.67 ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (0 + 4 + 7) / 3 = 11/3 = 3.67 ms\nAverage TAT = (4 + 7 + 9) / 3 = 20/3 = 6.67 ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain Example 2: Different Arrival Times (IMPORTANT)",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 5          |\n| P2      | 1            | 3          |\n| P3      | 2            | 2          |\n| P4      | 3            | 1          |\n\n**Order by arrival time:** P1(0) \u2192 P2(1) \u2192 P3(2) \u2192 P4(3)"
+  },
+  {
+    "instruction": "What is Example 2: Different Arrival Times (IMPORTANT)?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 5          |\n| P2      | 1            | 3          |\n| P3      | 2            | 2          |\n| P4      | 3            | 1          |\n\n**Order by arrival time:** P1(0) \u2192 P2(1) \u2192 P3(2) \u2192 P4(3)"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|-----P1-----|---P2---|--P3--|P4|\n0            5        8     10 11\n```\n\n**Step-by-step execution:**\n- Time 0: P1 arrives, gets CPU immediately\n- Time 1: P2 arrives, waits (P1 still running)\n- Time 2: P3 arrives, waits\n- Time 3: P4 arrives, waits\n- Time 5: P1 finishes, P2 gets CPU\n- Time 8: P2 finishes, P3 gets CPU\n- Time 10: P3 finishes, P4 gets CPU\n- Time 11: P4 finishes, all done"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|-----P1-----|---P2---|--P3--|P4|\n0            5        8     10 11\n```\n\n**Step-by-step execution:**\n- Time 0: P1 arrives, gets CPU immediately\n- Time 1: P2 arrives, waits (P1 still running)\n- Time 2: P3 arrives, waits\n- Time 3: P4 arrives, waits\n- Time 5: P1 finishes, P2 gets CPU\n- Time 8: P2 finishes, P3 gets CPU\n- Time 10: P3 finishes, P4 gets CPU\n- Time 11: P4 finishes, all done"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) | RT |\n|---------|----|----|-------|-------------|-------------|-----|\n| P1      | 0  | 5  | 5     | 5           | 0           | 0   |\n| P2      | 1  | 3  | 8     | 7           | 4           | 4   |\n| P3      | 2  | 2  | 10    | 8           | 6           | 6   |\n| P4      | 3  | 1  | 11    | 8           | 7           | 7   |"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) | RT |\n|---------|----|----|-------|-------------|-------------|-----|\n| P1      | 0  | 5  | 5     | 5           | 0           | 0   |\n| P2      | 1  | 3  | 8     | 7           | 4           | 4   |\n| P3      | 2  | 2  | 10    | 8           | 6           | 6   |\n| P4      | 3  | 1  | 11    | 8           | 7           | 7   |"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (0 + 4 + 6 + 7) / 4 = 17/4 = 4.25 ms\nAverage TAT = (5 + 7 + 8 + 8) / 4 = 28/4 = 7 ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (0 + 4 + 6 + 7) / 4 = 17/4 = 4.25 ms\nAverage TAT = (5 + 7 + 8 + 8) / 4 = 28/4 = 7 ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain Example 3: CPU Idle Time (CRITICAL for PYQs)",
+    "output": "\nWhat if a process arrives **after** the CPU becomes idle?\n\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 3          |\n| P2      | 5            | 4          |\n| P3      | 6            | 2          |"
+  },
+  {
+    "instruction": "What is Example 3: CPU Idle Time (CRITICAL for PYQs)?",
+    "output": "\nWhat if a process arrives **after** the CPU becomes idle?\n\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 3          |\n| P2      | 5            | 4          |\n| P3      | 6            | 2          |"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|---P1---|IDLE|----P2----|--P3--|\n0        3    5          9     11\n```\n\n**Notice:** CPU is idle from time 3 to 5 (P1 finished, but P2 hasn't arrived yet)"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|---P1---|IDLE|----P2----|--P3--|\n0        3    5          9     11\n```\n\n**Notice:** CPU is idle from time 3 to 5 (P1 finished, but P2 hasn't arrived yet)"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n**P1:**\n- CT = 3\n- TAT = 3 - 0 = 3\n- WT = 3 - 3 = 0\n\n**P2:**\n- CT = 9\n- TAT = 9 - 5 = 4\n- WT = 4 - 4 = 0\n\n**P3:**\n- CT = 11\n- TAT = 11 - 6 = 5\n- WT = 5 - 2 = 3"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n**P1:**\n- CT = 3\n- TAT = 3 - 0 = 3\n- WT = 3 - 3 = 0\n\n**P2:**\n- CT = 9\n- TAT = 9 - 5 = 4\n- WT = 4 - 4 = 0\n\n**P3:**\n- CT = 11\n- TAT = 11 - 6 = 5\n- WT = 5 - 2 = 3"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (0 + 0 + 3) / 3 = 1 ms\nAverage TAT = (3 + 4 + 5) / 3 = 4 ms\n```\n\n**PYQ Trap:** Don't forget to account for idle time in your Gantt chart!\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (0 + 0 + 3) / 3 = 1 ms\nAverage TAT = (3 + 4 + 5) / 3 = 4 ms\n```\n\n**PYQ Trap:** Don't forget to account for idle time in your Gantt chart!\n\n---"
+  },
+  {
+    "instruction": "Explain The Convoy Effect (FCFS's Biggest Problem)",
+    "output": "\n**Scenario:** One long process arrives first, followed by many short processes.\n\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 20         |\n| P2      | 1            | 2          |\n| P3      | 2            | 3          |\n| P4      | 3            | 1          |"
+  },
+  {
+    "instruction": "What is The Convoy Effect (FCFS's Biggest Problem)?",
+    "output": "\n**Scenario:** One long process arrives first, followed by many short processes.\n\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 20         |\n| P2      | 1            | 2          |\n| P3      | 2            | 3          |\n| P4      | 3            | 1          |"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|----------P1----------|P2|--P3--|P4|\n0                     20 22    25 26\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|----------P1----------|P2|--P3--|P4|\n0                     20 22    25 26\n```"
+  },
+  {
+    "instruction": "Explain Waiting Times:",
+    "output": "- P1: WT = 0\n- P2: WT = 19 (arrived at 1, got CPU at 20)\n- P3: WT = 20 (arrived at 2, got CPU at 22)\n- P4: WT = 22 (arrived at 3, got CPU at 25)\n\n```\nAverage WT = (0 + 19 + 20 + 22) / 4 = 61/4 = 15.25 ms\n```\n\n**If we had run short processes first:**\n\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P4      | 3            | 1          |\n| P2      | 1            | 2          |\n| P3      | 2            | 3          |\n| P1      | 0            | 20         |\n\nAverage WT would be **much lower** (around 5 ms).\n\n**This is the convoy effect** \u2014 short processes get stuck behind a long one like cars behind a slow truck on a highway.\n\n---"
+  },
+  {
+    "instruction": "What is Waiting Times:?",
+    "output": "- P1: WT = 0\n- P2: WT = 19 (arrived at 1, got CPU at 20)\n- P3: WT = 20 (arrived at 2, got CPU at 22)\n- P4: WT = 22 (arrived at 3, got CPU at 25)\n\n```\nAverage WT = (0 + 19 + 20 + 22) / 4 = 61/4 = 15.25 ms\n```\n\n**If we had run short processes first:**\n\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P4      | 3            | 1          |\n| P2      | 1            | 2          |\n| P3      | 2            | 3          |\n| P1      | 0            | 20         |\n\nAverage WT would be **much lower** (around 5 ms).\n\n**This is the convoy effect** \u2014 short processes get stuck behind a long one like cars behind a slow truck on a highway.\n\n---"
+  },
+  {
+    "instruction": "Explain \u2705 Advantages:",
+    "output": "1. **Simple** to understand and implement\n2. **No starvation** \u2014 every process eventually gets CPU\n3. **Fair** in arrival order sense"
+  },
+  {
+    "instruction": "What is \u2705 Advantages:?",
+    "output": "1. **Simple** to understand and implement\n2. **No starvation** \u2014 every process eventually gets CPU\n3. **Fair** in arrival order sense"
+  },
+  {
+    "instruction": "Explain \u274c Disadvantages:",
+    "output": "1. **Poor average waiting time** (convoy effect)\n2. **Not suitable for time-sharing** systems\n3. **No prioritization** \u2014 urgent tasks wait like everyone else\n4. **CPU and I/O devices underutilized** (in mixed CPU/IO workloads)\n\n---"
+  },
+  {
+    "instruction": "What is \u274c Disadvantages:?",
+    "output": "1. **Poor average waiting time** (convoy effect)\n2. **Not suitable for time-sharing** systems\n3. **No prioritization** \u2014 urgent tasks wait like everyone else\n4. **CPU and I/O devices underutilized** (in mixed CPU/IO workloads)\n\n---"
+  },
+  {
+    "instruction": "Explain Important FCFS Formulas (Your Cheat Sheet)",
+    "output": "\n```\nCompletion Time (CT):\n- First process: CT = Arrival Time + Burst Time\n- Other processes: CT = max(Previous CT, Current Arrival Time) + Burst Time\n\nTurnaround Time (TAT):\nTAT = Completion Time - Arrival Time\n\nWaiting Time (WT):\nWT = Turnaround Time - Burst Time\nOR\nWT = Start Time - Arrival Time\n\nResponse Time (RT):\nRT = Start Time - Arrival Time\n(In FCFS, RT = WT because process runs without interruption)\n\nAverage Waiting Time:\nAvg WT = (Sum of all WT) / Number of processes\n\nAverage Turnaround Time:\nAvg TAT = (Sum of all TAT) / Number of processes\n```\n\n---"
+  },
+  {
+    "instruction": "What is Important FCFS Formulas (Your Cheat Sheet)?",
+    "output": "\n```\nCompletion Time (CT):\n- First process: CT = Arrival Time + Burst Time\n- Other processes: CT = max(Previous CT, Current Arrival Time) + Burst Time\n\nTurnaround Time (TAT):\nTAT = Completion Time - Arrival Time\n\nWaiting Time (WT):\nWT = Turnaround Time - Burst Time\nOR\nWT = Start Time - Arrival Time\n\nResponse Time (RT):\nRT = Start Time - Arrival Time\n(In FCFS, RT = WT because process runs without interruption)\n\nAverage Waiting Time:\nAvg WT = (Sum of all WT) / Number of processes\n\nAverage Turnaround Time:\nAvg TAT = (Sum of all TAT) / Number of processes\n```\n\n---"
+  },
+  {
+    "instruction": "Explain PYQ Pattern Recognition",
+    "output": "\n**Type 1:** \"Calculate average WT and TAT for FCFS\"\n\u2192 Draw Gantt chart, calculate, average\n\n**Type 2:** \"Process with different arrival times\"\n\u2192 Watch for CPU idle time\n\n**Type 3:** \"Compare FCFS with other algorithms\"\n\u2192 FCFS usually has highest average WT\n\n**Type 4:** \"What is convoy effect? Explain with example\"\n\u2192 Long process blocks short ones\n\n---"
+  },
+  {
+    "instruction": "What is PYQ Pattern Recognition?",
+    "output": "\n**Type 1:** \"Calculate average WT and TAT for FCFS\"\n\u2192 Draw Gantt chart, calculate, average\n\n**Type 2:** \"Process with different arrival times\"\n\u2192 Watch for CPU idle time\n\n**Type 3:** \"Compare FCFS with other algorithms\"\n\u2192 FCFS usually has highest average WT\n\n**Type 4:** \"What is convoy effect? Explain with example\"\n\u2192 Long process blocks short ones\n\n---"
+  },
+  {
+    "instruction": "Explain Quick Practice Problem",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 2            | 4          |\n| P2      | 0            | 3          |\n| P3      | 4            | 2          |\n\n**Try it yourself:**\n1. What's the execution order?\n2. Draw the Gantt chart\n3. Calculate Average WT and Average TAT\n\n<details>\n<summary>Solution (try first!)</summary>\n\n**Order by arrival:** P2(0) \u2192 P1(2) \u2192 P3(4)\n\n**Gantt Chart:**\n```\n|---P2---|----P1----|--P3--|\n0        3          7      9\n```\n\n**Calculations:**\n\n| Process | AT | BT | CT | TAT | WT |\n|---------|----|----|----|----|-----|\n| P2      | 0  | 3  | 3  | 3  | 0   |\n| P1      | 2  | 4  | 7  | 5  | 1   |\n| P3      | 4  | 2  | 9  | 5  | 3   |\n\n**Average WT:** (0 + 1 + 3) / 3 = **1.33 ms**\n\n**Average TAT:** (3 + 5 + 5) / 3 = **4.33 ms**\n\n</details>\n\n---\n\n**You solid on FCFS now? Ready to move to SJF (Shortest Job First)?**"
+  },
+  {
+    "instruction": "What is Quick Practice Problem?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 2            | 4          |\n| P2      | 0            | 3          |\n| P3      | 4            | 2          |\n\n**Try it yourself:**\n1. What's the execution order?\n2. Draw the Gantt chart\n3. Calculate Average WT and Average TAT\n\n<details>\n<summary>Solution (try first!)</summary>\n\n**Order by arrival:** P2(0) \u2192 P1(2) \u2192 P3(4)\n\n**Gantt Chart:**\n```\n|---P2---|----P1----|--P3--|\n0        3          7      9\n```\n\n**Calculations:**\n\n| Process | AT | BT | CT | TAT | WT |\n|---------|----|----|----|----|-----|\n| P2      | 0  | 3  | 3  | 3  | 0   |\n| P1      | 2  | 4  | 7  | 5  | 1   |\n| P3      | 4  | 2  | 9  | 5  | 3   |\n\n**Average WT:** (0 + 1 + 3) / 3 = **1.33 ms**\n\n**Average TAT:** (3 + 5 + 5) / 3 = **4.33 ms**\n\n</details>\n\n---\n\n**You solid on FCFS now? Ready to move to SJF (Shortest Job First)?**"
+  },
+  {
+    "instruction": "Explain What Is It?",
+    "output": "\n**The algorithm that picks the process with the **smallest burst time** first.**\n\n**Goal:** Minimize average waiting time (it's actually **optimal** for this!)\n\n**Two versions:**\n1. **Non-preemptive SJF** \u2014 Once started, runs to completion\n2. **Preemptive SJF (SRTF)** \u2014 Can be interrupted if a shorter job arrives\n\nWe'll do both.\n\n---"
+  },
+  {
+    "instruction": "What is What Is It??",
+    "output": "\n**The algorithm that picks the process with the **smallest burst time** first.**\n\n**Goal:** Minimize average waiting time (it's actually **optimal** for this!)\n\n**Two versions:**\n1. **Non-preemptive SJF** \u2014 Once started, runs to completion\n2. **Preemptive SJF (SRTF)** \u2014 Can be interrupted if a shorter job arrives\n\nWe'll do both.\n\n---"
+  },
+  {
+    "instruction": "Explain How It Works",
+    "output": "\n1. Look at all processes in the **ready queue**\n2. Pick the one with the **shortest burst time**\n3. Let it run to **completion** (no interruption)\n4. Repeat\n\n**Important:** Only considers processes that have **already arrived**.\n\n---"
+  },
+  {
+    "instruction": "What is How It Works?",
+    "output": "\n1. Look at all processes in the **ready queue**\n2. Pick the one with the **shortest burst time**\n3. Let it run to **completion** (no interruption)\n4. Repeat\n\n**Important:** Only considers processes that have **already arrived**.\n\n---"
+  },
+  {
+    "instruction": "Explain Example 1: All Arrive at Time 0",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 6          |\n| P2      | 0            | 2          |\n| P3      | 0            | 8          |\n| P4      | 0            | 3          |\n\n**Order by burst time (since all arrived at 0):** P2(2) \u2192 P4(3) \u2192 P1(6) \u2192 P3(8)"
+  },
+  {
+    "instruction": "What is Example 1: All Arrive at Time 0?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 6          |\n| P2      | 0            | 2          |\n| P3      | 0            | 8          |\n| P4      | 0            | 3          |\n\n**Order by burst time (since all arrived at 0):** P2(2) \u2192 P4(3) \u2192 P1(6) \u2192 P3(8)"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|--P2--|---P4---|------P1------|--------P3--------|\n0      2        5             11                  19\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|--P2--|---P4---|------P1------|--------P3--------|\n0      2        5             11                  19\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) |\n|---------|----|----|-------|-------------|-------------|\n| P2      | 0  | 2  | 2     | 2           | 0           |\n| P4      | 0  | 3  | 5     | 5           | 2           |\n| P1      | 0  | 6  | 11    | 11          | 5           |\n| P3      | 0  | 8  | 19    | 19          | 11          |"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) |\n|---------|----|----|-------|-------------|-------------|\n| P2      | 0  | 2  | 2     | 2           | 0           |\n| P4      | 0  | 3  | 5     | 5           | 2           |\n| P1      | 0  | 6  | 11    | 11          | 5           |\n| P3      | 0  | 8  | 19    | 19          | 11          |"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (0 + 2 + 5 + 11) / 4 = 18/4 = 4.5 ms\nAverage TAT = (2 + 5 + 11 + 19) / 4 = 37/4 = 9.25 ms\n```\n\n**Compare with FCFS (order P1\u2192P2\u2192P3\u2192P4):**\n- FCFS Average WT would be: (0 + 6 + 8 + 16)/4 = **7.5 ms**\n- SJF Average WT: **4.5 ms** \u2705 Better!\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (0 + 2 + 5 + 11) / 4 = 18/4 = 4.5 ms\nAverage TAT = (2 + 5 + 11 + 19) / 4 = 37/4 = 9.25 ms\n```\n\n**Compare with FCFS (order P1\u2192P2\u2192P3\u2192P4):**\n- FCFS Average WT would be: (0 + 6 + 8 + 16)/4 = **7.5 ms**\n- SJF Average WT: **4.5 ms** \u2705 Better!\n\n---"
+  },
+  {
+    "instruction": "Explain Example 2: Different Arrival Times (CRITICAL!)",
+    "output": "\nThis is where SJF gets tricky in PYQs.\n\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 7          |\n| P2      | 2            | 4          |\n| P3      | 4            | 1          |\n| P4      | 5            | 4          |\n\n**Step-by-step decision making:**\n\n**Time 0:**\n- Available: P1\n- Pick: P1 (only option)\n- P1 runs from 0 to 7\n\n**Time 7:**\n- P1 finished\n- Available in queue: P2(BT=4, arrived at 2), P3(BT=1, arrived at 4), P4(BT=4, arrived at 5)\n- Pick: **P3** (shortest BT = 1)\n- P3 runs from 7 to 8\n\n**Time 8:**\n- P3 finished\n- Available: P2(BT=4), P4(BT=4)\n- Pick: **P2** (tie, so FCFS tiebreaker \u2014 P2 arrived first at time 2)\n- P2 runs from 8 to 12\n\n**Time 12:**\n- P2 finished\n- Available: P4\n- Pick: P4\n- P4 runs from 12 to 16"
+  },
+  {
+    "instruction": "What is Example 2: Different Arrival Times (CRITICAL!)?",
+    "output": "\nThis is where SJF gets tricky in PYQs.\n\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 7          |\n| P2      | 2            | 4          |\n| P3      | 4            | 1          |\n| P4      | 5            | 4          |\n\n**Step-by-step decision making:**\n\n**Time 0:**\n- Available: P1\n- Pick: P1 (only option)\n- P1 runs from 0 to 7\n\n**Time 7:**\n- P1 finished\n- Available in queue: P2(BT=4, arrived at 2), P3(BT=1, arrived at 4), P4(BT=4, arrived at 5)\n- Pick: **P3** (shortest BT = 1)\n- P3 runs from 7 to 8\n\n**Time 8:**\n- P3 finished\n- Available: P2(BT=4), P4(BT=4)\n- Pick: **P2** (tie, so FCFS tiebreaker \u2014 P2 arrived first at time 2)\n- P2 runs from 8 to 12\n\n**Time 12:**\n- P2 finished\n- Available: P4\n- Pick: P4\n- P4 runs from 12 to 16"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|-------P1-------|P3|----P2----|----P4----|\n0                7  8         12         16\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|-------P1-------|P3|----P2----|----P4----|\n0                7  8         12         16\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) |\n|---------|----|----|-------|-------------|-------------|\n| P1      | 0  | 7  | 7     | 7           | 0           |\n| P2      | 2  | 4  | 12    | 10          | 6           |\n| P3      | 4  | 1  | 8     | 4           | 3           |\n| P4      | 5  | 4  | 16    | 11          | 7           |"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) |\n|---------|----|----|-------|-------------|-------------|\n| P1      | 0  | 7  | 7     | 7           | 0           |\n| P2      | 2  | 4  | 12    | 10          | 6           |\n| P3      | 4  | 1  | 8     | 4           | 3           |\n| P4      | 5  | 4  | 16    | 11          | 7           |"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (0 + 6 + 3 + 7) / 4 = 16/4 = 4 ms\nAverage TAT = (7 + 10 + 4 + 11) / 4 = 32/4 = 8 ms\n```\n\n**Key Point:** At each decision point, you only consider processes that have **already arrived**.\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (0 + 6 + 3 + 7) / 4 = 16/4 = 4 ms\nAverage TAT = (7 + 10 + 4 + 11) / 4 = 32/4 = 8 ms\n```\n\n**Key Point:** At each decision point, you only consider processes that have **already arrived**.\n\n---"
+  },
+  {
+    "instruction": "Explain Example 3: CPU Idle Time in SJF",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 2          |\n| P2      | 5            | 3          |\n| P3      | 6            | 1          |\n\n**Time 0:**\n- Available: P1\n- Pick: P1\n- P1 runs from 0 to 2\n\n**Time 2:**\n- P1 finished\n- Available: None! (P2 arrives at 5, P3 at 6)\n- **CPU IDLE** from 2 to 5\n\n**Time 5:**\n- P2 arrives\n- Pick: P2 (only option)\n- P2 runs from 5 to 8\n\n**Time 8:**\n- P2 finished\n- Available: P3 (arrived at 6)\n- Pick: P3\n- P3 runs from 8 to 9"
+  },
+  {
+    "instruction": "What is Example 3: CPU Idle Time in SJF?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 2          |\n| P2      | 5            | 3          |\n| P3      | 6            | 1          |\n\n**Time 0:**\n- Available: P1\n- Pick: P1\n- P1 runs from 0 to 2\n\n**Time 2:**\n- P1 finished\n- Available: None! (P2 arrives at 5, P3 at 6)\n- **CPU IDLE** from 2 to 5\n\n**Time 5:**\n- P2 arrives\n- Pick: P2 (only option)\n- P2 runs from 5 to 8\n\n**Time 8:**\n- P2 finished\n- Available: P3 (arrived at 6)\n- Pick: P3\n- P3 runs from 8 to 9"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|--P1--|IDLE|---P2---|P3|\n0      2    5        8  9\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|--P1--|IDLE|---P2---|P3|\n0      2    5        8  9\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n| Process | AT | BT | CT | TAT | WT |\n|---------|----|----|----|----|-----|\n| P1      | 0  | 2  | 2  | 2  | 0   |\n| P2      | 5  | 3  | 8  | 3  | 0   |\n| P3      | 6  | 1  | 9  | 3  | 2   |\n\n```\nAverage WT = (0 + 0 + 2) / 3 = 0.67 ms\nAverage TAT = (2 + 3 + 3) / 3 = 2.67 ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n| Process | AT | BT | CT | TAT | WT |\n|---------|----|----|----|----|-----|\n| P1      | 0  | 2  | 2  | 2  | 0   |\n| P2      | 5  | 3  | 8  | 3  | 0   |\n| P3      | 6  | 1  | 9  | 3  | 2   |\n\n```\nAverage WT = (0 + 0 + 2) / 3 = 0.67 ms\nAverage TAT = (2 + 3 + 3) / 3 = 2.67 ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain SJF Algorithm (Non-Preemptive) - The Decision Process",
+    "output": "\n**At each decision point (when CPU becomes free):**\n\n```\n1. List all processes that have arrived by current time\n2. Among them, pick the one with minimum burst time\n3. If tie, use FCFS (pick earliest arrival)\n4. Run that process to completion\n5. Update current time to completion time\n6. Repeat until all processes done\n```\n\n---"
+  },
+  {
+    "instruction": "What is SJF Algorithm (Non-Preemptive) - The Decision Process?",
+    "output": "\n**At each decision point (when CPU becomes free):**\n\n```\n1. List all processes that have arrived by current time\n2. Among them, pick the one with minimum burst time\n3. If tie, use FCFS (pick earliest arrival)\n4. Run that process to completion\n5. Update current time to completion time\n6. Repeat until all processes done\n```\n\n---"
+  },
+  {
+    "instruction": "Explain The Big Difference",
+    "output": "\n**Non-preemptive SJF:** Once started, runs to completion\n\n**Preemptive SJF (SRTF):** If a new process arrives with burst time **shorter than the remaining time** of the currently running process, **preempt** the current process.\n\n**Also called:** SRTF (Shortest Remaining Time First)\n\n---"
+  },
+  {
+    "instruction": "What is The Big Difference?",
+    "output": "\n**Non-preemptive SJF:** Once started, runs to completion\n\n**Preemptive SJF (SRTF):** If a new process arrives with burst time **shorter than the remaining time** of the currently running process, **preempt** the current process.\n\n**Also called:** SRTF (Shortest Remaining Time First)\n\n---"
+  },
+  {
+    "instruction": "Explain SRTF Example",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 8          |\n| P2      | 1            | 4          |\n| P3      | 2            | 2          |\n| P4      | 3            | 1          |\n\n**Step-by-step execution:**\n\n**Time 0:**\n- Available: P1\n- Running: P1 (remaining = 8)\n\n**Time 1:** (P2 arrives)\n- P1 has run for 1 unit, remaining = 7\n- P2 arrives with BT = 4\n- Compare: P1(remaining=7) vs P2(BT=4)\n- **Preempt P1**, run P2 (P2 is shorter)\n\n**Time 2:** (P3 arrives)\n- P2 has run for 1 unit, remaining = 3\n- P3 arrives with BT = 2\n- Compare: P2(remaining=3) vs P3(BT=2)\n- **Preempt P2**, run P3 (P3 is shorter)\n\n**Time 3:** (P4 arrives)\n- P3 has run for 1 unit, remaining = 1\n- P4 arrives with BT = 1\n- Compare: P3(remaining=1) vs P4(BT=1)\n- **Tie!** Continue P3 (already running)\n\n**Time 4:**\n- P3 finishes (ran from 2-4)\n- Available: P1(remaining=7), P2(remaining=3), P4(BT=1)\n- Pick: **P4** (shortest = 1)\n\n**Time 5:**\n- P4 finishes\n- Avai"
+  },
+  {
+    "instruction": "What is SRTF Example?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 8          |\n| P2      | 1            | 4          |\n| P3      | 2            | 2          |\n| P4      | 3            | 1          |\n\n**Step-by-step execution:**\n\n**Time 0:**\n- Available: P1\n- Running: P1 (remaining = 8)\n\n**Time 1:** (P2 arrives)\n- P1 has run for 1 unit, remaining = 7\n- P2 arrives with BT = 4\n- Compare: P1(remaining=7) vs P2(BT=4)\n- **Preempt P1**, run P2 (P2 is shorter)\n\n**Time 2:** (P3 arrives)\n- P2 has run for 1 unit, remaining = 3\n- P3 arrives with BT = 2\n- Compare: P2(remaining=3) vs P3(BT=2)\n- **Preempt P2**, run P3 (P3 is shorter)\n\n**Time 3:** (P4 arrives)\n- P3 has run for 1 unit, remaining = 1\n- P4 arrives with BT = 1\n- Compare: P3(remaining=1) vs P4(BT=1)\n- **Tie!** Continue P3 (already running)\n\n**Time 4:**\n- P3 finishes (ran from 2-4)\n- Available: P1(remaining=7), P2(remaining=3), P4(BT=1)\n- Pick: **P4** (shortest = 1)\n\n**Time 5:**\n- P4 finishes\n- Avai"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|P1|--P2--|--P3--|P4|---P2---|-------P1-------|\n0  1      2      4  5        8               15\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|P1|--P2--|--P3--|P4|---P2---|-------P1-------|\n0  1      2      4  5        8               15\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n**P1:**\n- Completion Time = 15\n- TAT = 15 - 0 = 15\n- WT = 15 - 8 = 7\n\n**P2:**\n- Completion Time = 8\n- TAT = 8 - 1 = 7\n- WT = 7 - 4 = 3\n\n**P3:**\n- Completion Time = 4\n- TAT = 4 - 2 = 2\n- WT = 2 - 2 = 0\n\n**P4:**\n- Completion Time = 5\n- TAT = 5 - 3 = 2\n- WT = 2 - 1 = 1"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n**P1:**\n- Completion Time = 15\n- TAT = 15 - 0 = 15\n- WT = 15 - 8 = 7\n\n**P2:**\n- Completion Time = 8\n- TAT = 8 - 1 = 7\n- WT = 7 - 4 = 3\n\n**P3:**\n- Completion Time = 4\n- TAT = 4 - 2 = 2\n- WT = 2 - 2 = 0\n\n**P4:**\n- Completion Time = 5\n- TAT = 5 - 3 = 2\n- WT = 2 - 1 = 1"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (7 + 3 + 0 + 1) / 4 = 11/4 = 2.75 ms\nAverage TAT = (15 + 7 + 2 + 2) / 4 = 26/4 = 6.5 ms\n```\n\n**Compare with Non-Preemptive SJF on same data:**\n- Non-preemptive would give higher average WT\n- SRTF gives **minimum possible average WT** (optimal!)\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (7 + 3 + 0 + 1) / 4 = 11/4 = 2.75 ms\nAverage TAT = (15 + 7 + 2 + 2) / 4 = 26/4 = 6.5 ms\n```\n\n**Compare with Non-Preemptive SJF on same data:**\n- Non-preemptive would give higher average WT\n- SRTF gives **minimum possible average WT** (optimal!)\n\n---"
+  },
+  {
+    "instruction": "Explain SRTF Decision Algorithm",
+    "output": "\n**At every arrival of a new process:**\n\n```\n1. Check remaining time of currently running process\n2. Check burst time of newly arrived process\n3. If new process BT < current process remaining time:\n   \u2192 Preempt current process\n   \u2192 Start new process\n4. Else:\n   \u2192 Continue current process\n```\n\n**When a process completes:**\n```\n1. Look at all processes in ready queue\n2. Pick the one with shortest remaining time\n3. Run it\n```\n\n---"
+  },
+  {
+    "instruction": "What is SRTF Decision Algorithm?",
+    "output": "\n**At every arrival of a new process:**\n\n```\n1. Check remaining time of currently running process\n2. Check burst time of newly arrived process\n3. If new process BT < current process remaining time:\n   \u2192 Preempt current process\n   \u2192 Start new process\n4. Else:\n   \u2192 Continue current process\n```\n\n**When a process completes:**\n```\n1. Look at all processes in ready queue\n2. Pick the one with shortest remaining time\n3. Run it\n```\n\n---"
+  },
+  {
+    "instruction": "Explain SJF vs SRTF: Quick Comparison",
+    "output": "\n| Feature | Non-Preemptive SJF | Preemptive SJF (SRTF) |\n|---------|-------------------|----------------------|\n| **Preemption** | No | Yes |\n| **Decision time** | Only when CPU is free | Every arrival + completion |\n| **Average WT** | Lower than FCFS | Lowest possible (optimal) |\n| **Context switches** | Fewer | More |\n| **Implementation** | Simpler | More complex |\n| **Starvation** | Possible | Possible (worse) |\n\n---"
+  },
+  {
+    "instruction": "What is SJF vs SRTF: Quick Comparison?",
+    "output": "\n| Feature | Non-Preemptive SJF | Preemptive SJF (SRTF) |\n|---------|-------------------|----------------------|\n| **Preemption** | No | Yes |\n| **Decision time** | Only when CPU is free | Every arrival + completion |\n| **Average WT** | Lower than FCFS | Lowest possible (optimal) |\n| **Context switches** | Fewer | More |\n| **Implementation** | Simpler | More complex |\n| **Starvation** | Possible | Possible (worse) |\n\n---"
+  },
+  {
+    "instruction": "Explain The Starvation Problem",
+    "output": "\n**Big disadvantage of SJF/SRTF:**\n\nIf short processes keep arriving, a **long process may never get CPU**.\n\n**Example:**\n- P1 has BT = 100 (arrives at 0)\n- Every 5 time units, a new process with BT = 1 arrives\n- P1 will **starve** \u2014 never gets to run!\n\n**Solution:** Aging (increase priority of waiting processes over time) \u2014 used in Priority Scheduling.\n\n---"
+  },
+  {
+    "instruction": "What is The Starvation Problem?",
+    "output": "\n**Big disadvantage of SJF/SRTF:**\n\nIf short processes keep arriving, a **long process may never get CPU**.\n\n**Example:**\n- P1 has BT = 100 (arrives at 0)\n- Every 5 time units, a new process with BT = 1 arrives\n- P1 will **starve** \u2014 never gets to run!\n\n**Solution:** Aging (increase priority of waiting processes over time) \u2014 used in Priority Scheduling.\n\n---"
+  },
+  {
+    "instruction": "Explain \u2705 Advantages:",
+    "output": "1. **Optimal** \u2014 gives minimum average waiting time\n2. **Better than FCFS** for throughput\n3. **Good for batch systems** where burst times are known"
+  },
+  {
+    "instruction": "What is \u2705 Advantages:?",
+    "output": "1. **Optimal** \u2014 gives minimum average waiting time\n2. **Better than FCFS** for throughput\n3. **Good for batch systems** where burst times are known"
+  },
+  {
+    "instruction": "Explain \u274c Disadvantages:",
+    "output": "1. **Starvation** \u2014 long processes may never run\n2. **Burst time prediction problem** \u2014 How do you know BT in advance?\n3. **Not suitable for interactive systems** (can't predict user behavior)\n4. **Preemptive version has overhead** (frequent context switches)\n\n---"
+  },
+  {
+    "instruction": "What is \u274c Disadvantages:?",
+    "output": "1. **Starvation** \u2014 long processes may never run\n2. **Burst time prediction problem** \u2014 How do you know BT in advance?\n3. **Not suitable for interactive systems** (can't predict user behavior)\n4. **Preemptive version has overhead** (frequent context switches)\n\n---"
+  },
+  {
+    "instruction": "Explain Predicting Burst Time (For Real Systems)",
+    "output": "\nIn practice, you don't know exact burst time. You **estimate** using past behavior:\n\n**Exponential Averaging Formula:**\n\n```\n\u03c4\u2099\u208a\u2081 = \u03b1 \u00d7 t\u2099 + (1 - \u03b1) \u00d7 \u03c4\u2099\n\nWhere:\n\u03c4\u2099\u208a\u2081 = predicted burst time for next CPU burst\nt\u2099 = actual length of nth CPU burst\n\u03c4\u2099 = predicted value for nth burst\n\u03b1 = weight (0 \u2264 \u03b1 \u2264 1)\n```\n\n**Common value:** \u03b1 = 0.5\n\n**PYQ Alert:** You might get a question asking you to calculate predicted burst time using this formula.\n\n---"
+  },
+  {
+    "instruction": "What is Predicting Burst Time (For Real Systems)?",
+    "output": "\nIn practice, you don't know exact burst time. You **estimate** using past behavior:\n\n**Exponential Averaging Formula:**\n\n```\n\u03c4\u2099\u208a\u2081 = \u03b1 \u00d7 t\u2099 + (1 - \u03b1) \u00d7 \u03c4\u2099\n\nWhere:\n\u03c4\u2099\u208a\u2081 = predicted burst time for next CPU burst\nt\u2099 = actual length of nth CPU burst\n\u03c4\u2099 = predicted value for nth burst\n\u03b1 = weight (0 \u2264 \u03b1 \u2264 1)\n```\n\n**Common value:** \u03b1 = 0.5\n\n**PYQ Alert:** You might get a question asking you to calculate predicted burst time using this formula.\n\n---"
+  },
+  {
+    "instruction": "Explain Important Formulas Summary",
+    "output": "\n**Non-Preemptive SJF:**\n```\nAt each decision:\n- Pick process with min(Burst Time) among arrived processes\n- Run to completion\n```\n\n**Preemptive SJF (SRTF):**\n```\nAt each arrival:\n- If new_process.BT < running_process.remaining_time:\n    Preempt and switch\n    \nAt each completion:\n- Pick process with min(Remaining Time) from ready queue\n```\n\n**Standard calculations:**\n```\nTAT = CT - AT\nWT = TAT - BT\nAvg WT = \u03a3(WT) / n\nAvg TAT = \u03a3(TAT) / n\n```\n\n---"
+  },
+  {
+    "instruction": "What is Important Formulas Summary?",
+    "output": "\n**Non-Preemptive SJF:**\n```\nAt each decision:\n- Pick process with min(Burst Time) among arrived processes\n- Run to completion\n```\n\n**Preemptive SJF (SRTF):**\n```\nAt each arrival:\n- If new_process.BT < running_process.remaining_time:\n    Preempt and switch\n    \nAt each completion:\n- Pick process with min(Remaining Time) from ready queue\n```\n\n**Standard calculations:**\n```\nTAT = CT - AT\nWT = TAT - BT\nAvg WT = \u03a3(WT) / n\nAvg TAT = \u03a3(TAT) / n\n```\n\n---"
+  },
+  {
+    "instruction": "Explain PYQ Pattern Recognition",
+    "output": "\n**Type 1:** \"Calculate avg WT for SJF\" (all arrive at 0)\n\u2192 Sort by BT, draw Gantt, calculate\n\n**Type 2:** \"SJF with different arrival times\"\n\u2192 At each step, pick shortest among **arrived** processes\n\n**Type 3:** \"Compare FCFS vs SJF\"\n\u2192 SJF always has lower or equal avg WT\n\n**Type 4:** \"Is SJF optimal? Explain\"\n\u2192 Yes, gives minimum avg WT (prove with example)\n\n**Type 5:** \"What is starvation in SJF?\"\n\u2192 Long processes wait forever if short ones keep coming\n\n**Type 6:** \"SRTF problem\" (preemptive)\n\u2192 Check at every arrival for preemption\n\n---"
+  },
+  {
+    "instruction": "What is PYQ Pattern Recognition?",
+    "output": "\n**Type 1:** \"Calculate avg WT for SJF\" (all arrive at 0)\n\u2192 Sort by BT, draw Gantt, calculate\n\n**Type 2:** \"SJF with different arrival times\"\n\u2192 At each step, pick shortest among **arrived** processes\n\n**Type 3:** \"Compare FCFS vs SJF\"\n\u2192 SJF always has lower or equal avg WT\n\n**Type 4:** \"Is SJF optimal? Explain\"\n\u2192 Yes, gives minimum avg WT (prove with example)\n\n**Type 5:** \"What is starvation in SJF?\"\n\u2192 Long processes wait forever if short ones keep coming\n\n**Type 6:** \"SRTF problem\" (preemptive)\n\u2192 Check at every arrival for preemption\n\n---"
+  },
+  {
+    "instruction": "Explain Quick Practice Problem",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 5          |\n| P2      | 1            | 3          |\n| P3      | 2            | 1          |\n| P4      | 4            | 2          |\n\n**Part A:** Solve using **Non-Preemptive SJF**\n\n**Part B:** Solve using **Preemptive SJF (SRTF)**\n\n<details>\n<summary>Solution Part A (Non-Preemptive SJF)</summary>\n\n**Time 0:** Pick P1 (only available), runs 0\u21925\n\n**Time 5:** Available: P2(BT=3), P3(BT=1), P4(BT=2)\nPick P3 (shortest), runs 5\u21926\n\n**Time 6:** Available: P2(BT=3), P4(BT=2)\nPick P4 (shortest), runs 6\u21928\n\n**Time 8:** Available: P2(BT=3)\nPick P2, runs 8\u219211\n\n**Gantt Chart:**\n```\n|-----P1-----|P3|--P4--|---P2---|\n0            5  6      8       11\n```\n\n| Process | AT | BT | CT | TAT | WT |\n|---------|----|----|----|----|-----|\n| P1      | 0  | 5  | 5  | 5  | 0   |\n| P2      | 1  | 3  | 11 | 10 | 7   |\n| P3      | 2  | 1  | 6  | 4  | 3   |\n| P4      | 4  | 2  | 8  | 4  | 2   |\n\n**Avg WT = (0+7"
+  },
+  {
+    "instruction": "What is Quick Practice Problem?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 5          |\n| P2      | 1            | 3          |\n| P3      | 2            | 1          |\n| P4      | 4            | 2          |\n\n**Part A:** Solve using **Non-Preemptive SJF**\n\n**Part B:** Solve using **Preemptive SJF (SRTF)**\n\n<details>\n<summary>Solution Part A (Non-Preemptive SJF)</summary>\n\n**Time 0:** Pick P1 (only available), runs 0\u21925\n\n**Time 5:** Available: P2(BT=3), P3(BT=1), P4(BT=2)\nPick P3 (shortest), runs 5\u21926\n\n**Time 6:** Available: P2(BT=3), P4(BT=2)\nPick P4 (shortest), runs 6\u21928\n\n**Time 8:** Available: P2(BT=3)\nPick P2, runs 8\u219211\n\n**Gantt Chart:**\n```\n|-----P1-----|P3|--P4--|---P2---|\n0            5  6      8       11\n```\n\n| Process | AT | BT | CT | TAT | WT |\n|---------|----|----|----|----|-----|\n| P1      | 0  | 5  | 5  | 5  | 0   |\n| P2      | 1  | 3  | 11 | 10 | 7   |\n| P3      | 2  | 1  | 6  | 4  | 3   |\n| P4      | 4  | 2  | 8  | 4  | 2   |\n\n**Avg WT = (0+7"
+  },
+  {
+    "instruction": "Explain What Is It?",
+    "output": "\n**Each process is assigned a priority number. The CPU is allocated to the process with the **highest priority**.**\n\n**Key concept:** Priority can be defined in two ways:\n- **Lower number = Higher priority** (most common in textbooks and PYQs)\n- **Higher number = Higher priority** (some systems)\n\n**Always check the question!** We'll use **lower number = higher priority** (standard convention).\n\n---"
+  },
+  {
+    "instruction": "What is What Is It??",
+    "output": "\n**Each process is assigned a priority number. The CPU is allocated to the process with the **highest priority**.**\n\n**Key concept:** Priority can be defined in two ways:\n- **Lower number = Higher priority** (most common in textbooks and PYQs)\n- **Higher number = Higher priority** (some systems)\n\n**Always check the question!** We'll use **lower number = higher priority** (standard convention).\n\n---"
+  },
+  {
+    "instruction": "Explain Two Types",
+    "output": "\n1. **Non-Preemptive Priority Scheduling**\n   - Once a process starts, runs to completion\n   \n2. **Preemptive Priority Scheduling**\n   - If a higher priority process arrives, current process is preempted\n\n---"
+  },
+  {
+    "instruction": "What is Two Types?",
+    "output": "\n1. **Non-Preemptive Priority Scheduling**\n   - Once a process starts, runs to completion\n   \n2. **Preemptive Priority Scheduling**\n   - If a higher priority process arrives, current process is preempted\n\n---"
+  },
+  {
+    "instruction": "Explain How It Works",
+    "output": "\n1. Look at all processes in ready queue\n2. Pick the one with **highest priority** (lowest priority number)\n3. Run it to **completion**\n4. Repeat\n\n---"
+  },
+  {
+    "instruction": "What is How It Works?",
+    "output": "\n1. Look at all processes in ready queue\n2. Pick the one with **highest priority** (lowest priority number)\n3. Run it to **completion**\n4. Repeat\n\n---"
+  },
+  {
+    "instruction": "Explain Example 1: All Arrive at Time 0",
+    "output": "\n| Process | Arrival Time | Burst Time | Priority |\n|---------|--------------|------------|----------|\n| P1      | 0            | 4          | 2        |\n| P2      | 0            | 3          | 1        |\n| P3      | 0            | 1          | 4        |\n| P4      | 0            | 5          | 3        |\n\n**Lower number = higher priority**\n\n**Order by priority:** P2(1) \u2192 P1(2) \u2192 P4(3) \u2192 P3(4)"
+  },
+  {
+    "instruction": "What is Example 1: All Arrive at Time 0?",
+    "output": "\n| Process | Arrival Time | Burst Time | Priority |\n|---------|--------------|------------|----------|\n| P1      | 0            | 4          | 2        |\n| P2      | 0            | 3          | 1        |\n| P3      | 0            | 1          | 4        |\n| P4      | 0            | 5          | 3        |\n\n**Lower number = higher priority**\n\n**Order by priority:** P2(1) \u2192 P1(2) \u2192 P4(3) \u2192 P3(4)"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|---P2---|----P1----|-----P4-----|P3|\n0        3          7           12 13\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|---P2---|----P1----|-----P4-----|P3|\n0        3          7           12 13\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n| Process | AT | BT | Priority | CT | TAT (CT-AT) | WT (TAT-BT) |\n|---------|----|----|----------|-------|-------------|-------------|\n| P2      | 0  | 3  | 1        | 3     | 3           | 0           |\n| P1      | 0  | 4  | 2        | 7     | 7           | 3           |\n| P4      | 0  | 5  | 3        | 12    | 12          | 7           |\n| P3      | 0  | 1  | 4        | 13    | 13          | 12          |"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n| Process | AT | BT | Priority | CT | TAT (CT-AT) | WT (TAT-BT) |\n|---------|----|----|----------|-------|-------------|-------------|\n| P2      | 0  | 3  | 1        | 3     | 3           | 0           |\n| P1      | 0  | 4  | 2        | 7     | 7           | 3           |\n| P4      | 0  | 5  | 3        | 12    | 12          | 7           |\n| P3      | 0  | 1  | 4        | 13    | 13          | 12          |"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (0 + 3 + 7 + 12) / 4 = 22/4 = 5.5 ms\nAverage TAT = (3 + 7 + 12 + 13) / 4 = 35/4 = 8.75 ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (0 + 3 + 7 + 12) / 4 = 22/4 = 5.5 ms\nAverage TAT = (3 + 7 + 12 + 13) / 4 = 35/4 = 8.75 ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain Example 2: Different Arrival Times (CRITICAL!)",
+    "output": "\n| Process | Arrival Time | Burst Time | Priority |\n|---------|--------------|------------|----------|\n| P1      | 0            | 6          | 3        |\n| P2      | 2            | 2          | 1        |\n| P3      | 3            | 4          | 2        |\n| P4      | 5            | 3          | 4        |\n\n**Step-by-step decision:**\n\n**Time 0:**\n- Available: P1\n- Pick: P1 (only option)\n- P1 runs from 0 to 6 (non-preemptive, runs to completion)\n\n**Time 6:**\n- P1 finished\n- Available in queue: P2(priority=1, arrived at 2), P3(priority=2, arrived at 3), P4(priority=4, arrived at 5)\n- Pick: **P2** (highest priority = 1)\n- P2 runs from 6 to 8\n\n**Time 8:**\n- P2 finished\n- Available: P3(priority=2), P4(priority=4)\n- Pick: **P3** (priority 2 > 4)\n- P3 runs from 8 to 12\n\n**Time 12:**\n- P3 finished\n- Available: P4\n- Pick: P4\n- P4 runs from 12 to 15"
+  },
+  {
+    "instruction": "What is Example 2: Different Arrival Times (CRITICAL!)?",
+    "output": "\n| Process | Arrival Time | Burst Time | Priority |\n|---------|--------------|------------|----------|\n| P1      | 0            | 6          | 3        |\n| P2      | 2            | 2          | 1        |\n| P3      | 3            | 4          | 2        |\n| P4      | 5            | 3          | 4        |\n\n**Step-by-step decision:**\n\n**Time 0:**\n- Available: P1\n- Pick: P1 (only option)\n- P1 runs from 0 to 6 (non-preemptive, runs to completion)\n\n**Time 6:**\n- P1 finished\n- Available in queue: P2(priority=1, arrived at 2), P3(priority=2, arrived at 3), P4(priority=4, arrived at 5)\n- Pick: **P2** (highest priority = 1)\n- P2 runs from 6 to 8\n\n**Time 8:**\n- P2 finished\n- Available: P3(priority=2), P4(priority=4)\n- Pick: **P3** (priority 2 > 4)\n- P3 runs from 8 to 12\n\n**Time 12:**\n- P3 finished\n- Available: P4\n- Pick: P4\n- P4 runs from 12 to 15"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|------P1------|--P2--|----P3----|---P4---|\n0              6      8         12       15\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|------P1------|--P2--|----P3----|---P4---|\n0              6      8         12       15\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n| Process | AT | BT | Priority | CT | TAT | WT |\n|---------|----|----|----------|----|----|-----|\n| P1      | 0  | 6  | 3        | 6  | 6  | 0   |\n| P2      | 2  | 2  | 1        | 8  | 6  | 4   |\n| P3      | 3  | 4  | 2        | 12 | 9  | 5   |\n| P4      | 5  | 3  | 4        | 15 | 10 | 7   |"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n| Process | AT | BT | Priority | CT | TAT | WT |\n|---------|----|----|----------|----|----|-----|\n| P1      | 0  | 6  | 3        | 6  | 6  | 0   |\n| P2      | 2  | 2  | 1        | 8  | 6  | 4   |\n| P3      | 3  | 4  | 2        | 12 | 9  | 5   |\n| P4      | 5  | 3  | 4        | 15 | 10 | 7   |"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (0 + 4 + 5 + 7) / 4 = 16/4 = 4 ms\nAverage TAT = (6 + 6 + 9 + 10) / 4 = 31/4 = 7.75 ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (0 + 4 + 5 + 7) / 4 = 16/4 = 4 ms\nAverage TAT = (6 + 6 + 9 + 10) / 4 = 31/4 = 7.75 ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain The Key Difference",
+    "output": "\nIf a **higher priority process arrives** while another process is running, **preempt** the running process immediately.\n\n---"
+  },
+  {
+    "instruction": "What is The Key Difference?",
+    "output": "\nIf a **higher priority process arrives** while another process is running, **preempt** the running process immediately.\n\n---"
+  },
+  {
+    "instruction": "Explain Preemptive Priority Example",
+    "output": "\n| Process | Arrival Time | Burst Time | Priority |\n|---------|--------------|------------|----------|\n| P1      | 0            | 4          | 3        |\n| P2      | 1            | 2          | 1        |\n| P3      | 2            | 3          | 2        |\n| P4      | 3            | 2          | 4        |\n\n**Lower number = higher priority**\n\n**Step-by-step execution:**\n\n**Time 0:**\n- Available: P1\n- Running: P1 (priority=3, remaining=4)\n\n**Time 1:** (P2 arrives)\n- P1 has run for 1 unit, remaining = 3\n- P2 arrives with priority = 1\n- Compare: P1(priority=3) vs P2(priority=1)\n- P2 has **higher priority** (1 < 3)\n- **Preempt P1**, run P2\n\n**Time 2:** (P3 arrives)\n- P2 has run for 1 unit, remaining = 1\n- P3 arrives with priority = 2\n- Compare: P2(priority=1) vs P3(priority=2)\n- P2 has **higher priority** (1 < 2)\n- **Continue P2** (no preemption)\n\n**Time 3:** (P4 arrives)\n- P2 finishes (ran from 1 to 3, BT=2)\n- P4 arrives with priority = 4\n- Available: P1(priority=3, rem=3), P3(priority=2, "
+  },
+  {
+    "instruction": "What is Preemptive Priority Example?",
+    "output": "\n| Process | Arrival Time | Burst Time | Priority |\n|---------|--------------|------------|----------|\n| P1      | 0            | 4          | 3        |\n| P2      | 1            | 2          | 1        |\n| P3      | 2            | 3          | 2        |\n| P4      | 3            | 2          | 4        |\n\n**Lower number = higher priority**\n\n**Step-by-step execution:**\n\n**Time 0:**\n- Available: P1\n- Running: P1 (priority=3, remaining=4)\n\n**Time 1:** (P2 arrives)\n- P1 has run for 1 unit, remaining = 3\n- P2 arrives with priority = 1\n- Compare: P1(priority=3) vs P2(priority=1)\n- P2 has **higher priority** (1 < 3)\n- **Preempt P1**, run P2\n\n**Time 2:** (P3 arrives)\n- P2 has run for 1 unit, remaining = 1\n- P3 arrives with priority = 2\n- Compare: P2(priority=1) vs P3(priority=2)\n- P2 has **higher priority** (1 < 2)\n- **Continue P2** (no preemption)\n\n**Time 3:** (P4 arrives)\n- P2 finishes (ran from 1 to 3, BT=2)\n- P4 arrives with priority = 4\n- Available: P1(priority=3, rem=3), P3(priority=2, "
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|P1|--P2--|----P3----|---P1---|--P4--|\n0  1      3          6        9    11\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|P1|--P2--|----P3----|---P1---|--P4--|\n0  1      3          6        9    11\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n**P1:**\n- Runs: 0\u21921, 6\u21929\n- Completion Time = 9\n- TAT = 9 - 0 = 9\n- WT = 9 - 4 = 5\n\n**P2:**\n- Runs: 1\u21923\n- Completion Time = 3\n- TAT = 3 - 1 = 2\n- WT = 2 - 2 = 0\n\n**P3:**\n- Runs: 3\u21926\n- Completion Time = 6\n- TAT = 6 - 2 = 4\n- WT = 4 - 3 = 1\n\n**P4:**\n- Runs: 9\u219211\n- Completion Time = 11\n- TAT = 11 - 3 = 8\n- WT = 8 - 2 = 6"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n**P1:**\n- Runs: 0\u21921, 6\u21929\n- Completion Time = 9\n- TAT = 9 - 0 = 9\n- WT = 9 - 4 = 5\n\n**P2:**\n- Runs: 1\u21923\n- Completion Time = 3\n- TAT = 3 - 1 = 2\n- WT = 2 - 2 = 0\n\n**P3:**\n- Runs: 3\u21926\n- Completion Time = 6\n- TAT = 6 - 2 = 4\n- WT = 4 - 3 = 1\n\n**P4:**\n- Runs: 9\u219211\n- Completion Time = 11\n- TAT = 11 - 3 = 8\n- WT = 8 - 2 = 6"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (5 + 0 + 1 + 6) / 4 = 12/4 = 3 ms\nAverage TAT = (9 + 2 + 4 + 8) / 4 = 23/4 = 5.75 ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (5 + 0 + 1 + 6) / 4 = 12/4 = 3 ms\nAverage TAT = (9 + 2 + 4 + 8) / 4 = 23/4 = 5.75 ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain Preemptive Priority Algorithm",
+    "output": "\n**At every arrival of a new process:**\n\n```\n1. Compare priority of newly arrived process with running process\n2. If new_process.priority < running_process.priority:\n   \u2192 Preempt running process\n   \u2192 Start new process\n3. Else:\n   \u2192 Continue running process\n```\n\n**When a process completes:**\n```\n1. Look at all processes in ready queue\n2. Pick the one with highest priority (lowest number)\n3. Run it\n```\n\n---"
+  },
+  {
+    "instruction": "What is Preemptive Priority Algorithm?",
+    "output": "\n**At every arrival of a new process:**\n\n```\n1. Compare priority of newly arrived process with running process\n2. If new_process.priority < running_process.priority:\n   \u2192 Preempt running process\n   \u2192 Start new process\n3. Else:\n   \u2192 Continue running process\n```\n\n**When a process completes:**\n```\n1. Look at all processes in ready queue\n2. Pick the one with highest priority (lowest number)\n3. Run it\n```\n\n---"
+  },
+  {
+    "instruction": "Explain The Starvation Problem (MAJOR Issue)",
+    "output": "\n**Biggest problem with Priority Scheduling: Low priority processes may **never** execute.**\n\n**Example:**\n\n- P1 has priority = 10 (very low)\n- High priority processes (priority 1, 2, 3) keep arriving\n- P1 will **starve** \u2014 waits forever in ready queue\n\n**This is worse than SJF starvation!**\n\n---"
+  },
+  {
+    "instruction": "What is The Starvation Problem (MAJOR Issue)?",
+    "output": "\n**Biggest problem with Priority Scheduling: Low priority processes may **never** execute.**\n\n**Example:**\n\n- P1 has priority = 10 (very low)\n- High priority processes (priority 1, 2, 3) keep arriving\n- P1 will **starve** \u2014 waits forever in ready queue\n\n**This is worse than SJF starvation!**\n\n---"
+  },
+  {
+    "instruction": "Explain Solution to Starvation: Aging",
+    "output": "\n**Aging:** Gradually **increase the priority** of processes that wait in the queue for a long time.\n\n**How it works:**\n\n```\nEvery T time units a process waits:\n    Decrease priority number by 1 (increase priority)\n    \nExample:\n- P1 arrives with priority = 10\n- After waiting 5 minutes, priority becomes 9\n- After waiting 10 minutes, priority becomes 8\n- Eventually, priority becomes high enough to execute\n```\n\n**Result:** No process starves indefinitely.\n\n**PYQ Alert:** \"How to prevent starvation in Priority Scheduling?\" \u2192 **Aging**\n\n---"
+  },
+  {
+    "instruction": "What is Solution to Starvation: Aging?",
+    "output": "\n**Aging:** Gradually **increase the priority** of processes that wait in the queue for a long time.\n\n**How it works:**\n\n```\nEvery T time units a process waits:\n    Decrease priority number by 1 (increase priority)\n    \nExample:\n- P1 arrives with priority = 10\n- After waiting 5 minutes, priority becomes 9\n- After waiting 10 minutes, priority becomes 8\n- Eventually, priority becomes high enough to execute\n```\n\n**Result:** No process starves indefinitely.\n\n**PYQ Alert:** \"How to prevent starvation in Priority Scheduling?\" \u2192 **Aging**\n\n---"
+  },
+  {
+    "instruction": "Explain External Priority",
+    "output": "- Assigned **externally** (by user, OS policy, payment, etc.)\n- Examples:\n  - Paid users get higher priority\n  - System processes > user processes\n  - Admin tasks > regular tasks"
+  },
+  {
+    "instruction": "What is External Priority?",
+    "output": "- Assigned **externally** (by user, OS policy, payment, etc.)\n- Examples:\n  - Paid users get higher priority\n  - System processes > user processes\n  - Admin tasks > regular tasks"
+  },
+  {
+    "instruction": "Explain Internal Priority",
+    "output": "- Assigned **internally by OS** based on measurable criteria\n- Examples:\n  - Time limits\n  - Memory requirements\n  - Number of open files\n  - Ratio of I/O to CPU burst (I/O-bound processes get higher priority)\n\n**Most systems use a combination of both.**\n\n---"
+  },
+  {
+    "instruction": "What is Internal Priority?",
+    "output": "- Assigned **internally by OS** based on measurable criteria\n- Examples:\n  - Time limits\n  - Memory requirements\n  - Number of open files\n  - Ratio of I/O to CPU burst (I/O-bound processes get higher priority)\n\n**Most systems use a combination of both.**\n\n---"
+  },
+  {
+    "instruction": "Explain Priority Assignment Strategies",
+    "output": "\nCommon ways to determine priority:\n\n1. **Static Priority**\n   - Priority assigned at process creation\n   - Never changes during execution\n   - Simple but can cause starvation\n\n2. **Dynamic Priority**\n   - Priority changes during execution\n   - Based on behavior (aging, waiting time, CPU usage)\n   - More complex but fairer\n\n---"
+  },
+  {
+    "instruction": "What is Priority Assignment Strategies?",
+    "output": "\nCommon ways to determine priority:\n\n1. **Static Priority**\n   - Priority assigned at process creation\n   - Never changes during execution\n   - Simple but can cause starvation\n\n2. **Dynamic Priority**\n   - Priority changes during execution\n   - Based on behavior (aging, waiting time, CPU usage)\n   - More complex but fairer\n\n---"
+  },
+  {
+    "instruction": "Explain Priority + Round Robin",
+    "output": "- Processes with **same priority** are scheduled using **Round Robin**\n- Called **Multilevel Queue Scheduling** (we'll cover this next)\n\n**Example:**\n- P1, P2, P3 all have priority = 1\n- They get CPU in round-robin fashion with time quantum\n\n---"
+  },
+  {
+    "instruction": "What is Priority + Round Robin?",
+    "output": "- Processes with **same priority** are scheduled using **Round Robin**\n- Called **Multilevel Queue Scheduling** (we'll cover this next)\n\n**Example:**\n- P1, P2, P3 all have priority = 1\n- They get CPU in round-robin fashion with time quantum\n\n---"
+  },
+  {
+    "instruction": "Explain \u2705 Advantages:",
+    "output": "1. **Flexible** \u2014 can implement any policy by adjusting priorities\n2. **Good for real-time systems** \u2014 urgent tasks get immediate attention\n3. **Simple concept** \u2014 easy to understand\n4. **Can optimize for specific goals** (throughput, response time, etc.)"
+  },
+  {
+    "instruction": "What is \u2705 Advantages:?",
+    "output": "1. **Flexible** \u2014 can implement any policy by adjusting priorities\n2. **Good for real-time systems** \u2014 urgent tasks get immediate attention\n3. **Simple concept** \u2014 easy to understand\n4. **Can optimize for specific goals** (throughput, response time, etc.)"
+  },
+  {
+    "instruction": "Explain \u274c Disadvantages:",
+    "output": "1. **Starvation** \u2014 low priority processes may never run\n2. **Priority inversion** \u2014 low priority process holding resource needed by high priority\n3. **Overhead** \u2014 maintaining and updating priorities (if dynamic)\n4. **Difficult to choose priorities** \u2014 what's the \"right\" priority?\n\n---"
+  },
+  {
+    "instruction": "What is \u274c Disadvantages:?",
+    "output": "1. **Starvation** \u2014 low priority processes may never run\n2. **Priority inversion** \u2014 low priority process holding resource needed by high priority\n3. **Overhead** \u2014 maintaining and updating priorities (if dynamic)\n4. **Difficult to choose priorities** \u2014 what's the \"right\" priority?\n\n---"
+  },
+  {
+    "instruction": "Explain Priority Inversion Problem (Advanced Concept)",
+    "output": "\n**Scenario:**\n\n1. Low priority process P3 holds a **lock** on resource R\n2. High priority process P1 needs resource R\n3. P1 must **wait** for P3 to release R\n4. Medium priority process P2 preempts P3\n5. Result: **High priority P1 waits** while **medium priority P2 runs**!\n\n**This is priority inversion** \u2014 effective priority is inverted.\n\n**Solution:** Priority Inheritance Protocol\n- Temporarily boost P3's priority to P1's level\n- P3 finishes, releases R\n- P1 can now proceed\n\n**Famous Example:** Mars Pathfinder mission failure (1997) was caused by priority inversion!\n\n**PYQ possibility:** Explain priority inversion with example.\n\n---"
+  },
+  {
+    "instruction": "What is Priority Inversion Problem (Advanced Concept)?",
+    "output": "\n**Scenario:**\n\n1. Low priority process P3 holds a **lock** on resource R\n2. High priority process P1 needs resource R\n3. P1 must **wait** for P3 to release R\n4. Medium priority process P2 preempts P3\n5. Result: **High priority P1 waits** while **medium priority P2 runs**!\n\n**This is priority inversion** \u2014 effective priority is inverted.\n\n**Solution:** Priority Inheritance Protocol\n- Temporarily boost P3's priority to P1's level\n- P3 finishes, releases R\n- P1 can now proceed\n\n**Famous Example:** Mars Pathfinder mission failure (1997) was caused by priority inversion!\n\n**PYQ possibility:** Explain priority inversion with example.\n\n---"
+  },
+  {
+    "instruction": "Explain Non-Preemptive vs Preemptive Priority: Comparison",
+    "output": "\n| Feature | Non-Preemptive | Preemptive |\n|---------|---------------|------------|\n| **Preemption** | No | Yes |\n| **When to check** | Only at completion | Every arrival |\n| **Context switches** | Fewer | More |\n| **Response time** | Higher | Lower |\n| **Starvation** | Possible | More possible |\n| **Implementation** | Simpler | More complex |\n| **Best for** | Batch systems | Real-time systems |\n\n---"
+  },
+  {
+    "instruction": "What is Non-Preemptive vs Preemptive Priority: Comparison?",
+    "output": "\n| Feature | Non-Preemptive | Preemptive |\n|---------|---------------|------------|\n| **Preemption** | No | Yes |\n| **When to check** | Only at completion | Every arrival |\n| **Context switches** | Fewer | More |\n| **Response time** | Higher | Lower |\n| **Starvation** | Possible | More possible |\n| **Implementation** | Simpler | More complex |\n| **Best for** | Batch systems | Real-time systems |\n\n---"
+  },
+  {
+    "instruction": "Explain Important Formulas Summary",
+    "output": "\n**Non-Preemptive Priority:**\n```\nAt each decision:\n- Pick process with highest priority (lowest number) among arrived processes\n- Run to completion\n```\n\n**Preemptive Priority:**\n```\nAt each arrival:\n- If new_process.priority < running_process.priority:\n    Preempt and switch\n    \nAt each completion:\n- Pick process with highest priority from ready queue\n```\n\n**Standard calculations (same as always):**\n```\nTAT = CT - AT\nWT = TAT - BT\nAvg WT = \u03a3(WT) / n\nAvg TAT = \u03a3(TAT) / n\n```\n\n---"
+  },
+  {
+    "instruction": "What is Important Formulas Summary?",
+    "output": "\n**Non-Preemptive Priority:**\n```\nAt each decision:\n- Pick process with highest priority (lowest number) among arrived processes\n- Run to completion\n```\n\n**Preemptive Priority:**\n```\nAt each arrival:\n- If new_process.priority < running_process.priority:\n    Preempt and switch\n    \nAt each completion:\n- Pick process with highest priority from ready queue\n```\n\n**Standard calculations (same as always):**\n```\nTAT = CT - AT\nWT = TAT - BT\nAvg WT = \u03a3(WT) / n\nAvg TAT = \u03a3(TAT) / n\n```\n\n---"
+  },
+  {
+    "instruction": "Explain PYQ Pattern Recognition",
+    "output": "\n**Type 1:** \"Calculate avg WT for Priority Scheduling\"\n\u2192 Check if preemptive or non-preemptive\n\u2192 Apply appropriate algorithm\n\n**Type 2:** \"What is starvation? How to prevent it?\"\n\u2192 Low priority processes wait forever\n\u2192 Solution: Aging\n\n**Type 3:** \"Explain priority inversion\"\n\u2192 High priority waits for low priority due to resource lock\n\u2192 Solution: Priority inheritance\n\n**Type 4:** \"Compare priority scheduling variants\"\n\u2192 Preemptive vs non-preemptive trade-offs\n\n**Type 5:** \"Higher number = higher priority or lower?\"\n\u2192 **READ THE QUESTION CAREFULLY!** Convention varies.\n\n---"
+  },
+  {
+    "instruction": "What is PYQ Pattern Recognition?",
+    "output": "\n**Type 1:** \"Calculate avg WT for Priority Scheduling\"\n\u2192 Check if preemptive or non-preemptive\n\u2192 Apply appropriate algorithm\n\n**Type 2:** \"What is starvation? How to prevent it?\"\n\u2192 Low priority processes wait forever\n\u2192 Solution: Aging\n\n**Type 3:** \"Explain priority inversion\"\n\u2192 High priority waits for low priority due to resource lock\n\u2192 Solution: Priority inheritance\n\n**Type 4:** \"Compare priority scheduling variants\"\n\u2192 Preemptive vs non-preemptive trade-offs\n\n**Type 5:** \"Higher number = higher priority or lower?\"\n\u2192 **READ THE QUESTION CAREFULLY!** Convention varies.\n\n---"
+  },
+  {
+    "instruction": "Explain Quick Practice Problem",
+    "output": "\n| Process | Arrival Time | Burst Time | Priority |\n|---------|--------------|------------|----------|\n| P1      | 0            | 3          | 2        |\n| P2      | 1            | 5          | 1        |\n| P3      | 2            | 2          | 3        |\n| P4      | 3            | 4          | 2        |\n\n**Lower number = higher priority**\n\n**Part A:** Solve using **Non-Preemptive Priority Scheduling**\n\n**Part B:** Solve using **Preemptive Priority Scheduling**\n\n<details>\n<summary>Solution Part A (Non-Preemptive)</summary>\n\n**Time 0:** P1 starts (only available), runs 0\u21923\n\n**Time 3:** P1 finishes\nAvailable: P2(pri=1, arr=1), P3(pri=3, arr=2), P4(pri=2, arr=3)\nPick P2 (highest priority = 1), runs 3\u21928\n\n**Time 8:** P2 finishes\nAvailable: P3(pri=3), P4(pri=2)\nPick P4 (priority 2 > 3), runs 8\u219212\n\n**Time 12:** P4 finishes\nPick P3, runs 12\u219214\n\n**Gantt Chart:**\n```\n|---P1---|-----P2-----|----P4----|--P3--|\n0        3           8         12     14\n```\n\n| Process | AT | BT | Pri | CT | TAT | WT"
+  },
+  {
+    "instruction": "What is Quick Practice Problem?",
+    "output": "\n| Process | Arrival Time | Burst Time | Priority |\n|---------|--------------|------------|----------|\n| P1      | 0            | 3          | 2        |\n| P2      | 1            | 5          | 1        |\n| P3      | 2            | 2          | 3        |\n| P4      | 3            | 4          | 2        |\n\n**Lower number = higher priority**\n\n**Part A:** Solve using **Non-Preemptive Priority Scheduling**\n\n**Part B:** Solve using **Preemptive Priority Scheduling**\n\n<details>\n<summary>Solution Part A (Non-Preemptive)</summary>\n\n**Time 0:** P1 starts (only available), runs 0\u21923\n\n**Time 3:** P1 finishes\nAvailable: P2(pri=1, arr=1), P3(pri=3, arr=2), P4(pri=2, arr=3)\nPick P2 (highest priority = 1), runs 3\u21928\n\n**Time 8:** P2 finishes\nAvailable: P3(pri=3), P4(pri=2)\nPick P4 (priority 2 > 3), runs 8\u219212\n\n**Time 12:** P4 finishes\nPick P3, runs 12\u219214\n\n**Gantt Chart:**\n```\n|---P1---|-----P2-----|----P4----|--P3--|\n0        3           8         12     14\n```\n\n| Process | AT | BT | Pri | CT | TAT | WT"
+  },
+  {
+    "instruction": "Explain What Is It?",
+    "output": "\n**The fairest scheduling algorithm.** Each process gets a **small unit of CPU time** (time quantum/time slice), then CPU moves to the next process in the queue.\n\n**Key concept:** **Preemptive** + **Circular queue** (FIFO with wraparound)\n\n**Also called:** Time-slicing\n\n---"
+  },
+  {
+    "instruction": "What is What Is It??",
+    "output": "\n**The fairest scheduling algorithm.** Each process gets a **small unit of CPU time** (time quantum/time slice), then CPU moves to the next process in the queue.\n\n**Key concept:** **Preemptive** + **Circular queue** (FIFO with wraparound)\n\n**Also called:** Time-slicing\n\n---"
+  },
+  {
+    "instruction": "Explain Core Concept: Time Quantum",
+    "output": "\n**Time Quantum (q):** Fixed time slice allocated to each process.\n\n**What happens:**\n- Process gets CPU for **at most q time units**\n- If process finishes before q expires \u2192 moves to terminated state\n- If process still needs CPU after q expires \u2192 **preempted**, goes to back of ready queue\n\n**PYQ Alert:** The value of time quantum is **critical** \u2014 too small or too large both cause problems.\n\n---"
+  },
+  {
+    "instruction": "What is Core Concept: Time Quantum?",
+    "output": "\n**Time Quantum (q):** Fixed time slice allocated to each process.\n\n**What happens:**\n- Process gets CPU for **at most q time units**\n- If process finishes before q expires \u2192 moves to terminated state\n- If process still needs CPU after q expires \u2192 **preempted**, goes to back of ready queue\n\n**PYQ Alert:** The value of time quantum is **critical** \u2014 too small or too large both cause problems.\n\n---"
+  },
+  {
+    "instruction": "Explain How Round Robin Works",
+    "output": "\n1. Ready queue is a **circular FIFO queue**\n2. Scheduler picks first process from queue\n3. Process runs for **min(remaining time, time quantum)**\n4. If process finishes \u2192 remove from queue\n5. If time quantum expires \u2192 process goes to **end of queue**\n6. Pick next process from queue\n7. Repeat\n\n**It's like a circular conveyor belt** \u2014 everyone gets their turn repeatedly.\n\n---"
+  },
+  {
+    "instruction": "What is How Round Robin Works?",
+    "output": "\n1. Ready queue is a **circular FIFO queue**\n2. Scheduler picks first process from queue\n3. Process runs for **min(remaining time, time quantum)**\n4. If process finishes \u2192 remove from queue\n5. If time quantum expires \u2192 process goes to **end of queue**\n6. Pick next process from queue\n7. Repeat\n\n**It's like a circular conveyor belt** \u2014 everyone gets their turn repeatedly.\n\n---"
+  },
+  {
+    "instruction": "Explain Example 1: Basic Round Robin (All arrive at 0)",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 5          |\n| P2      | 0            | 3          |\n| P3      | 0            | 1          |\n| P4      | 0            | 2          |\n\n**Time Quantum (q) = 2**\n\n**Execution:**\n\n**Round 1:**\n- **P1:** runs for 2 (quantum expires), remaining = 3, goes to back\n- **P2:** runs for 2 (quantum expires), remaining = 1, goes to back\n- **P3:** runs for 1 (finishes before quantum), removed from queue \u2713\n- **P4:** runs for 2 (finishes), removed from queue \u2713\n\n**Round 2:**\n- **P1:** runs for 2 (quantum expires), remaining = 1, goes to back\n- **P2:** runs for 1 (finishes), removed from queue \u2713\n\n**Round 3:**\n- **P1:** runs for 1 (finishes), removed from queue \u2713"
+  },
+  {
+    "instruction": "What is Example 1: Basic Round Robin (All arrive at 0)?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 5          |\n| P2      | 0            | 3          |\n| P3      | 0            | 1          |\n| P4      | 0            | 2          |\n\n**Time Quantum (q) = 2**\n\n**Execution:**\n\n**Round 1:**\n- **P1:** runs for 2 (quantum expires), remaining = 3, goes to back\n- **P2:** runs for 2 (quantum expires), remaining = 1, goes to back\n- **P3:** runs for 1 (finishes before quantum), removed from queue \u2713\n- **P4:** runs for 2 (finishes), removed from queue \u2713\n\n**Round 2:**\n- **P1:** runs for 2 (quantum expires), remaining = 1, goes to back\n- **P2:** runs for 1 (finishes), removed from queue \u2713\n\n**Round 3:**\n- **P1:** runs for 1 (finishes), removed from queue \u2713"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|--P1--|--P2--|P3|--P4--|--P1--|P2|P1|\n0      2      4  5      7      9 10 11\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|--P1--|--P2--|P3|--P4--|--P1--|P2|P1|\n0      2      4  5      7      9 10 11\n```"
+  },
+  {
+    "instruction": "Explain Detailed Timeline:",
+    "output": "\n**Time 0-2:** P1 runs (5\u21923 remaining)\n**Time 2-4:** P2 runs (3\u21921 remaining)\n**Time 4-5:** P3 runs (1\u21920, finishes)\n**Time 5-7:** P4 runs (2\u21920, finishes)\n**Time 7-9:** P1 runs (3\u21921 remaining)\n**Time 9-10:** P2 runs (1\u21920, finishes)\n**Time 10-11:** P1 runs (1\u21920, finishes)"
+  },
+  {
+    "instruction": "What is Detailed Timeline:?",
+    "output": "\n**Time 0-2:** P1 runs (5\u21923 remaining)\n**Time 2-4:** P2 runs (3\u21921 remaining)\n**Time 4-5:** P3 runs (1\u21920, finishes)\n**Time 5-7:** P4 runs (2\u21920, finishes)\n**Time 7-9:** P1 runs (3\u21921 remaining)\n**Time 9-10:** P2 runs (1\u21920, finishes)\n**Time 10-11:** P1 runs (1\u21920, finishes)"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) | RT (First CPU - AT) |\n|---------|----|----|-------|-------------|-------------|---------------------|\n| P1      | 0  | 5  | 11    | 11          | 6           | 0                   |\n| P2      | 0  | 3  | 10    | 10          | 7           | 2                   |\n| P3      | 0  | 1  | 5     | 5           | 4           | 4                   |\n| P4      | 0  | 2  | 7     | 7           | 5           | 5                   |"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n| Process | AT | BT | CT | TAT (CT-AT) | WT (TAT-BT) | RT (First CPU - AT) |\n|---------|----|----|-------|-------------|-------------|---------------------|\n| P1      | 0  | 5  | 11    | 11          | 6           | 0                   |\n| P2      | 0  | 3  | 10    | 10          | 7           | 2                   |\n| P3      | 0  | 1  | 5     | 5           | 4           | 4                   |\n| P4      | 0  | 2  | 7     | 7           | 5           | 5                   |"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (6 + 7 + 4 + 5) / 4 = 22/4 = 5.5 ms\nAverage TAT = (11 + 10 + 5 + 7) / 4 = 33/4 = 8.25 ms\nAverage RT = (0 + 2 + 4 + 5) / 4 = 11/4 = 2.75 ms\n```\n\n**Notice:** Response time is much better than FCFS/SJF \u2014 everyone gets CPU quickly!\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (6 + 7 + 4 + 5) / 4 = 22/4 = 5.5 ms\nAverage TAT = (11 + 10 + 5 + 7) / 4 = 33/4 = 8.25 ms\nAverage RT = (0 + 2 + 4 + 5) / 4 = 11/4 = 2.75 ms\n```\n\n**Notice:** Response time is much better than FCFS/SJF \u2014 everyone gets CPU quickly!\n\n---"
+  },
+  {
+    "instruction": "Explain Example 2: Different Arrival Times (IMPORTANT!)",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 4          |\n| P2      | 1            | 5          |\n| P3      | 2            | 2          |\n| P4      | 3            | 1          |\n\n**Time Quantum (q) = 2**\n\n**Ready Queue evolves like this:**\n\n**Time 0:** Queue = [P1]\n- P1 runs 0\u21922 (4\u21922 remaining)\n\n**Time 2:** Queue = [P2, P1] (P2 arrived at 1, P1 re-queued)\n- P2 runs 2\u21924 (5\u21923 remaining)\n\n**Time 4:** Queue = [P1, P3, P2] (P3 arrived at 2, P2 re-queued, P4 will arrive at 3)\n- P1 runs 4\u21926 (2\u21920, finishes) \u2713\n\n**Time 6:** Queue = [P3, P4, P2] (P4 arrived at 3)\n- P3 runs 6\u21928 (2\u21920, finishes) \u2713\n\n**Time 8:** Queue = [P4, P2]\n- P4 runs 8\u21929 (1\u21920, finishes) \u2713\n\n**Time 9:** Queue = [P2]\n- P2 runs 9\u219211 (3\u21921 remaining)\n\n**Time 11:** Queue = [P2]\n- P2 runs 11\u219212 (1\u21920, finishes) \u2713"
+  },
+  {
+    "instruction": "What is Example 2: Different Arrival Times (IMPORTANT!)?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 4          |\n| P2      | 1            | 5          |\n| P3      | 2            | 2          |\n| P4      | 3            | 1          |\n\n**Time Quantum (q) = 2**\n\n**Ready Queue evolves like this:**\n\n**Time 0:** Queue = [P1]\n- P1 runs 0\u21922 (4\u21922 remaining)\n\n**Time 2:** Queue = [P2, P1] (P2 arrived at 1, P1 re-queued)\n- P2 runs 2\u21924 (5\u21923 remaining)\n\n**Time 4:** Queue = [P1, P3, P2] (P3 arrived at 2, P2 re-queued, P4 will arrive at 3)\n- P1 runs 4\u21926 (2\u21920, finishes) \u2713\n\n**Time 6:** Queue = [P3, P4, P2] (P4 arrived at 3)\n- P3 runs 6\u21928 (2\u21920, finishes) \u2713\n\n**Time 8:** Queue = [P4, P2]\n- P4 runs 8\u21929 (1\u21920, finishes) \u2713\n\n**Time 9:** Queue = [P2]\n- P2 runs 9\u219211 (3\u21921 remaining)\n\n**Time 11:** Queue = [P2]\n- P2 runs 11\u219212 (1\u21920, finishes) \u2713"
+  },
+  {
+    "instruction": "Explain Gantt Chart:",
+    "output": "```\n|--P1--|--P2--|--P1--|--P3--|P4|--P2--|P2|\n0      2      4      6      8  9     11 12\n```"
+  },
+  {
+    "instruction": "What is Gantt Chart:?",
+    "output": "```\n|--P1--|--P2--|--P1--|--P3--|P4|--P2--|P2|\n0      2      4      6      8  9     11 12\n```"
+  },
+  {
+    "instruction": "Explain Calculations:",
+    "output": "\n| Process | AT | BT | CT | TAT | WT | RT |\n|---------|----|----|----|----|-----|-----|\n| P1      | 0  | 4  | 6  | 6  | 2   | 0   |\n| P2      | 1  | 5  | 12 | 11 | 6   | 1   |\n| P3      | 2  | 2  | 8  | 6  | 4   | 4   |\n| P4      | 3  | 1  | 9  | 6  | 5   | 5   |"
+  },
+  {
+    "instruction": "What is Calculations:?",
+    "output": "\n| Process | AT | BT | CT | TAT | WT | RT |\n|---------|----|----|----|----|-----|-----|\n| P1      | 0  | 4  | 6  | 6  | 2   | 0   |\n| P2      | 1  | 5  | 12 | 11 | 6   | 1   |\n| P3      | 2  | 2  | 8  | 6  | 4   | 4   |\n| P4      | 3  | 1  | 9  | 6  | 5   | 5   |"
+  },
+  {
+    "instruction": "Explain Averages:",
+    "output": "```\nAverage WT = (2 + 6 + 4 + 5) / 4 = 17/4 = 4.25 ms\nAverage TAT = (6 + 11 + 6 + 6) / 4 = 29/4 = 7.25 ms\nAverage RT = (0 + 1 + 4 + 5) / 4 = 10/4 = 2.5 ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is Averages:?",
+    "output": "```\nAverage WT = (2 + 6 + 4 + 5) / 4 = 17/4 = 4.25 ms\nAverage TAT = (6 + 11 + 6 + 6) / 4 = 29/4 = 7.25 ms\nAverage RT = (0 + 1 + 4 + 5) / 4 = 10/4 = 2.5 ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain The Ready Queue Evolution (Critical Understanding)",
+    "output": "\n**When does a process enter/re-enter the ready queue?**\n\n1. **At arrival time** (initially)\n2. **After time quantum expires** (goes to back of queue)\n3. **After I/O completion** (in systems with I/O, not in basic PYQs)\n\n**Order in queue matters!** FIFO within each round.\n\n---"
+  },
+  {
+    "instruction": "What is The Ready Queue Evolution (Critical Understanding)?",
+    "output": "\n**When does a process enter/re-enter the ready queue?**\n\n1. **At arrival time** (initially)\n2. **After time quantum expires** (goes to back of queue)\n3. **After I/O completion** (in systems with I/O, not in basic PYQs)\n\n**Order in queue matters!** FIFO within each round.\n\n---"
+  },
+  {
+    "instruction": "Explain Effect of Time Quantum (q)",
+    "output": "\nThis is **extremely important** for PYQs and conceptual understanding."
+  },
+  {
+    "instruction": "What is Effect of Time Quantum (q)?",
+    "output": "\nThis is **extremely important** for PYQs and conceptual understanding."
+  },
+  {
+    "instruction": "Explain Case 1: q \u2192 \u221e (Very Large)",
+    "output": "- Each process runs to completion before next gets CPU\n- **Round Robin becomes FCFS**\n- Poor response time"
+  },
+  {
+    "instruction": "What is Case 1: q \u2192 \u221e (Very Large)?",
+    "output": "- Each process runs to completion before next gets CPU\n- **Round Robin becomes FCFS**\n- Poor response time"
+  },
+  {
+    "instruction": "Explain Case 2: q \u2192 0 (Very Small)",
+    "output": "- Too many context switches\n- **Pure overhead**, no useful work\n- System spends all time switching, not executing\n- Called **processor sharing** (theoretical limit)"
+  },
+  {
+    "instruction": "What is Case 2: q \u2192 0 (Very Small)?",
+    "output": "- Too many context switches\n- **Pure overhead**, no useful work\n- System spends all time switching, not executing\n- Called **processor sharing** (theoretical limit)"
+  },
+  {
+    "instruction": "Explain Case 3: q = Optimal (Sweet Spot)",
+    "output": "- Balance between:\n  - **Good response time** (small q)\n  - **Low context switch overhead** (large q)\n\n**Rule of Thumb:** \n- q should be **larger than 80% of CPU bursts**\n- Typical values: **10-100 milliseconds**\n\n---"
+  },
+  {
+    "instruction": "What is Case 3: q = Optimal (Sweet Spot)?",
+    "output": "- Balance between:\n  - **Good response time** (small q)\n  - **Low context switch overhead** (large q)\n\n**Rule of Thumb:** \n- q should be **larger than 80% of CPU bursts**\n- Typical values: **10-100 milliseconds**\n\n---"
+  },
+  {
+    "instruction": "Explain Context Switch Overhead in Round Robin",
+    "output": "\n**Important formula:**\n\n```\nContext Switch Overhead % = (Context Switch Time / Time Quantum) \u00d7 100\n```\n\n**Example:**\n- Context switch time = 1 ms\n- Time quantum = 10 ms\n- Overhead = (1/10) \u00d7 100 = **10%**\n\n**If q = 2 ms:**\n- Overhead = (1/2) \u00d7 100 = **50%** \u26a0\ufe0f Too high!\n\n**PYQ Question Type:** \"If context switch time is 0.5ms and we want overhead < 5%, what should minimum time quantum be?\"\n\n**Solution:**\n```\n0.5 / q < 0.05\nq > 0.5 / 0.05\nq > 10 ms\n```\n\n---"
+  },
+  {
+    "instruction": "What is Context Switch Overhead in Round Robin?",
+    "output": "\n**Important formula:**\n\n```\nContext Switch Overhead % = (Context Switch Time / Time Quantum) \u00d7 100\n```\n\n**Example:**\n- Context switch time = 1 ms\n- Time quantum = 10 ms\n- Overhead = (1/10) \u00d7 100 = **10%**\n\n**If q = 2 ms:**\n- Overhead = (1/2) \u00d7 100 = **50%** \u26a0\ufe0f Too high!\n\n**PYQ Question Type:** \"If context switch time is 0.5ms and we want overhead < 5%, what should minimum time quantum be?\"\n\n**Solution:**\n```\n0.5 / q < 0.05\nq > 0.5 / 0.05\nq > 10 ms\n```\n\n---"
+  },
+  {
+    "instruction": "Explain vs FCFS:",
+    "output": "- **RR:** Better response time, fairer\n- **FCFS:** Lower overhead (fewer context switches)"
+  },
+  {
+    "instruction": "What is vs FCFS:?",
+    "output": "- **RR:** Better response time, fairer\n- **FCFS:** Lower overhead (fewer context switches)"
+  },
+  {
+    "instruction": "Explain vs SJF:",
+    "output": "- **RR:** Fairer, no starvation\n- **SJF:** Lower average waiting time"
+  },
+  {
+    "instruction": "What is vs SJF:?",
+    "output": "- **RR:** Fairer, no starvation\n- **SJF:** Lower average waiting time"
+  },
+  {
+    "instruction": "Explain vs Priority:",
+    "output": "- **RR:** No starvation, simpler\n- **Priority:** Can prioritize important tasks\n\n---"
+  },
+  {
+    "instruction": "What is vs Priority:?",
+    "output": "- **RR:** No starvation, simpler\n- **Priority:** Can prioritize important tasks\n\n---"
+  },
+  {
+    "instruction": "Explain \u2705 Advantages:",
+    "output": "1. **Fair** \u2014 every process gets equal CPU share\n2. **No starvation** \u2014 everyone gets turn eventually\n3. **Good response time** \u2014 quick first response\n4. **Best for time-sharing** systems\n5. **Simple to implement**"
+  },
+  {
+    "instruction": "What is \u2705 Advantages:?",
+    "output": "1. **Fair** \u2014 every process gets equal CPU share\n2. **No starvation** \u2014 everyone gets turn eventually\n3. **Good response time** \u2014 quick first response\n4. **Best for time-sharing** systems\n5. **Simple to implement**"
+  },
+  {
+    "instruction": "Explain \u274c Disadvantages:",
+    "output": "1. **Higher average waiting time** than SJF\n2. **Context switch overhead** (if q too small)\n3. **Not optimal** for average WT or TAT\n4. **Choosing q is tricky** \u2014 system-dependent\n\n---"
+  },
+  {
+    "instruction": "What is \u274c Disadvantages:?",
+    "output": "1. **Higher average waiting time** than SJF\n2. **Context switch overhead** (if q too small)\n3. **Not optimal** for average WT or TAT\n4. **Choosing q is tricky** \u2014 system-dependent\n\n---"
+  },
+  {
+    "instruction": "Explain Case 1: All processes have same burst time",
+    "output": "\n| Process | Burst Time |\n|---------|------------|\n| P1      | 5          |\n| P2      | 5          |\n| P3      | 5          |\n\n**With q = 2:**\n- All finish at similar times\n- Very fair distribution"
+  },
+  {
+    "instruction": "What is Case 1: All processes have same burst time?",
+    "output": "\n| Process | Burst Time |\n|---------|------------|\n| P1      | 5          |\n| P2      | 5          |\n| P3      | 5          |\n\n**With q = 2:**\n- All finish at similar times\n- Very fair distribution"
+  },
+  {
+    "instruction": "Explain Case 2: One process much longer than others",
+    "output": "\n| Process | Burst Time |\n|---------|------------|\n| P1      | 20         |\n| P2      | 2          |\n| P3      | 2          |\n\n- Short processes (P2, P3) finish quickly\n- Long process (P1) takes many rounds\n- Still fair \u2014 P1 doesn't block others\n\n---"
+  },
+  {
+    "instruction": "What is Case 2: One process much longer than others?",
+    "output": "\n| Process | Burst Time |\n|---------|------------|\n| P1      | 20         |\n| P2      | 2          |\n| P3      | 2          |\n\n- Short processes (P2, P3) finish quickly\n- Long process (P1) takes many rounds\n- Still fair \u2014 P1 doesn't block others\n\n---"
+  },
+  {
+    "instruction": "Explain Round Robin Algorithm (Step-by-Step)",
+    "output": "\n```\nInitialize:\n    ready_queue = []\n    current_time = 0\n    \nWhile processes remain:\n    \n    1. Add all processes that arrived by current_time to ready_queue\n    \n    2. If ready_queue is empty:\n        current_time = next arrival time\n        continue\n    \n    3. Pick first process P from ready_queue\n    \n    4. Execute P for min(P.remaining_time, time_quantum)\n    \n    5. Update:\n        current_time += execution_time\n        P.remaining_time -= execution_time\n    \n    6. Add any processes that arrived during execution to ready_queue\n    \n    7. If P.remaining_time > 0:\n        Add P to back of ready_queue\n       Else:\n        P is finished\n```\n\n---"
+  },
+  {
+    "instruction": "What is Round Robin Algorithm (Step-by-Step)?",
+    "output": "\n```\nInitialize:\n    ready_queue = []\n    current_time = 0\n    \nWhile processes remain:\n    \n    1. Add all processes that arrived by current_time to ready_queue\n    \n    2. If ready_queue is empty:\n        current_time = next arrival time\n        continue\n    \n    3. Pick first process P from ready_queue\n    \n    4. Execute P for min(P.remaining_time, time_quantum)\n    \n    5. Update:\n        current_time += execution_time\n        P.remaining_time -= execution_time\n    \n    6. Add any processes that arrived during execution to ready_queue\n    \n    7. If P.remaining_time > 0:\n        Add P to back of ready_queue\n       Else:\n        P is finished\n```\n\n---"
+  },
+  {
+    "instruction": "Explain Important Formulas",
+    "output": "\n**Standard calculations (same as all algorithms):**\n```\nTAT = Completion Time - Arrival Time\nWT = TAT - Burst Time\nRT = First CPU Time - Arrival Time\n\nAverage WT = \u03a3(WT) / n\nAverage TAT = \u03a3(TAT) / n\nAverage RT = \u03a3(RT) / n\n```\n\n**Context Switch Overhead:**\n```\nOverhead % = (CS Time / Time Quantum) \u00d7 100\n```\n\n**Number of Context Switches:**\n```\nApproximately = Total Burst Time / Time Quantum\n(depends on process burst times and arrival patterns)\n```\n\n---"
+  },
+  {
+    "instruction": "What is Important Formulas?",
+    "output": "\n**Standard calculations (same as all algorithms):**\n```\nTAT = Completion Time - Arrival Time\nWT = TAT - Burst Time\nRT = First CPU Time - Arrival Time\n\nAverage WT = \u03a3(WT) / n\nAverage TAT = \u03a3(TAT) / n\nAverage RT = \u03a3(RT) / n\n```\n\n**Context Switch Overhead:**\n```\nOverhead % = (CS Time / Time Quantum) \u00d7 100\n```\n\n**Number of Context Switches:**\n```\nApproximately = Total Burst Time / Time Quantum\n(depends on process burst times and arrival patterns)\n```\n\n---"
+  },
+  {
+    "instruction": "Explain PYQ Pattern Recognition",
+    "output": "\n**Type 1:** \"Calculate avg WT/TAT for RR with q = X\"\n\u2192 Draw Gantt chart carefully, track queue evolution\n\n**Type 2:** \"What happens if q \u2192 \u221e in RR?\"\n\u2192 Becomes FCFS\n\n**Type 3:** \"What happens if q \u2192 0 in RR?\"\n\u2192 Processor sharing, pure overhead\n\n**Type 4:** \"Calculate minimum q for overhead < X%\"\n\u2192 Use: CS_time / q < overhead%\n\n**Type 5:** \"Compare RR with FCFS/SJF\"\n\u2192 Response time vs waiting time tradeoff\n\n**Type 6:** \"Why is RR good for time-sharing?\"\n\u2192 Fair, good response time, no starvation\n\n---"
+  },
+  {
+    "instruction": "What is PYQ Pattern Recognition?",
+    "output": "\n**Type 1:** \"Calculate avg WT/TAT for RR with q = X\"\n\u2192 Draw Gantt chart carefully, track queue evolution\n\n**Type 2:** \"What happens if q \u2192 \u221e in RR?\"\n\u2192 Becomes FCFS\n\n**Type 3:** \"What happens if q \u2192 0 in RR?\"\n\u2192 Processor sharing, pure overhead\n\n**Type 4:** \"Calculate minimum q for overhead < X%\"\n\u2192 Use: CS_time / q < overhead%\n\n**Type 5:** \"Compare RR with FCFS/SJF\"\n\u2192 Response time vs waiting time tradeoff\n\n**Type 6:** \"Why is RR good for time-sharing?\"\n\u2192 Fair, good response time, no starvation\n\n---"
+  },
+  {
+    "instruction": "Explain Quick Practice Problem",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 6          |\n| P2      | 1            | 4          |\n| P3      | 2            | 3          |\n\n**Time Quantum = 3**\n\n**Calculate:**\n1. Draw Gantt chart\n2. Completion time for each process\n3. Average WT and Average TAT\n\n<details>\n<summary>Solution (try first!)</summary>\n\n**Queue evolution:**\n\n**Time 0:** Queue = [P1]\nP1 runs 0\u21923 (6\u21923 remaining)\n\n**Time 3:** Queue = [P2, P3, P1] (P2 arrived at 1, P3 at 2, P1 re-queued)\nP2 runs 3\u21926 (4\u21921 remaining)\n\n**Time 6:** Queue = [P3, P1, P2]\nP3 runs 6\u21929 (3\u21920, finishes) \u2713\n\n**Time 9:** Queue = [P1, P2]\nP1 runs 9\u219212 (3\u21920, finishes) \u2713\n\n**Time 12:** Queue = [P2]\nP2 runs 12\u219213 (1\u21920, finishes) \u2713\n\n**Gantt Chart:**\n```\n|---P1---|---P2---|---P3---|---P1---|P2|\n0        3        6        9       12 13\n```\n\n**Calculations:**\n\n| Process | AT | BT | CT | TAT | WT | RT |\n|---------|----|----|----|----|-----|-----|\n| P1      | 0  | 6  | 12 | 12 | 6   | 0   |\n|"
+  },
+  {
+    "instruction": "What is Quick Practice Problem?",
+    "output": "\n| Process | Arrival Time | Burst Time |\n|---------|--------------|------------|\n| P1      | 0            | 6          |\n| P2      | 1            | 4          |\n| P3      | 2            | 3          |\n\n**Time Quantum = 3**\n\n**Calculate:**\n1. Draw Gantt chart\n2. Completion time for each process\n3. Average WT and Average TAT\n\n<details>\n<summary>Solution (try first!)</summary>\n\n**Queue evolution:**\n\n**Time 0:** Queue = [P1]\nP1 runs 0\u21923 (6\u21923 remaining)\n\n**Time 3:** Queue = [P2, P3, P1] (P2 arrived at 1, P3 at 2, P1 re-queued)\nP2 runs 3\u21926 (4\u21921 remaining)\n\n**Time 6:** Queue = [P3, P1, P2]\nP3 runs 6\u21929 (3\u21920, finishes) \u2713\n\n**Time 9:** Queue = [P1, P2]\nP1 runs 9\u219212 (3\u21920, finishes) \u2713\n\n**Time 12:** Queue = [P2]\nP2 runs 12\u219213 (1\u21920, finishes) \u2713\n\n**Gantt Chart:**\n```\n|---P1---|---P2---|---P3---|---P1---|P2|\n0        3        6        9       12 13\n```\n\n**Calculations:**\n\n| Process | AT | BT | CT | TAT | WT | RT |\n|---------|----|----|----|----|-----|-----|\n| P1      | 0  | 6  | 12 | 12 | 6   | 0   |\n|"
+  },
+  {
+    "instruction": "Explain Summary: All Scheduling Algorithms So Far",
+    "output": "\n| Algorithm | Type | Avg WT | Starvation | Best For |\n|-----------|------|--------|-----------|----------|\n| **FCFS** | Non-preemptive | High (convoy effect) | No | Simple batch systems |\n| **SJF** | Non-preemptive | **Optimal (lowest)** | Yes | Batch with known burst times |\n| **SRTF** | Preemptive | **Optimal (lowest)** | Yes | Minimize avg WT |\n| **Priority (NP)** | Non-preemptive | Medium | Yes | Prioritized tasks |\n| **Priority (P)** | Preemptive | Medium | Yes (worse) | Real-time systems |\n| **Round Robin** | Preemptive | Higher | **No** | **Time-sharing systems** |\n\n---\n\n**You solid on Round Robin? Want to do a comprehensive quiz on all CPU scheduling algorithms before moving to the next topic (Multilevel Queue)?**\n\n\n\nthese are the things i have studied till now i wanna use this"
+  },
+  {
+    "instruction": "What is Summary: All Scheduling Algorithms So Far?",
+    "output": "\n| Algorithm | Type | Avg WT | Starvation | Best For |\n|-----------|------|--------|-----------|----------|\n| **FCFS** | Non-preemptive | High (convoy effect) | No | Simple batch systems |\n| **SJF** | Non-preemptive | **Optimal (lowest)** | Yes | Batch with known burst times |\n| **SRTF** | Preemptive | **Optimal (lowest)** | Yes | Minimize avg WT |\n| **Priority (NP)** | Non-preemptive | Medium | Yes | Prioritized tasks |\n| **Priority (P)** | Preemptive | Medium | Yes (worse) | Real-time systems |\n| **Round Robin** | Preemptive | Higher | **No** | **Time-sharing systems** |\n\n---\n\n**You solid on Round Robin? Want to do a comprehensive quiz on all CPU scheduling algorithms before moving to the next topic (Multilevel Queue)?**\n\n\n\nthese are the things i have studied till now i wanna use this"
+  }
+]
