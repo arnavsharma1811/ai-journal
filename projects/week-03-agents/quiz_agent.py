@@ -5,8 +5,9 @@ import chromadb
 import json
 import re
 from sentence_transformers import SentenceTransformer
+from duckduckgo_search import DDGS
 
-print("🎯 QUIZ MODE ACTIVATED")
+print("🤖 AI AGENT WITH WEB SEARCH + QUIZ MODE")
 print("="*60)
 
 # ============================================
@@ -41,6 +42,25 @@ def show_score():
     return "No quizzes taken yet"
 
 # ============================================
+# TOOL DESCRIPTIONS
+# ============================================
+tool_descriptions = """
+You have access to these tools. Call them by writing TOOL: tool_name("input") on a NEW LINE.
+
+1. search_web("query") - Use this for ANY question about future events, current news, dates, or anything not in Arnav's notes. Examples: "when is GATE 2027", "latest AI news", "what is today's date"
+
+2. search_notes("query") - Use this ONLY for OS concepts from Arnav's notes. Examples: "FCFS scheduling", "priority inversion"
+
+3. calculate("expression") - Use for math calculations. Example: calculate("5 + 3 * 2")
+
+4. get_current_time() - Use ONLY when user asks for current time. Example: "what time is it"
+
+5. run_python_code("code") - Use to run Python code
+
+IMPORTANT: For event dates, future exams, or anything NOT in Arnav's notes, ALWAYS use search_web first.
+"""
+
+# ============================================
 # TOOLS
 # ============================================
 def search_notes(query):
@@ -49,6 +69,47 @@ def search_notes(query):
     if results['documents'][0]:
         return "\n\n---\n\n".join(results['documents'][0])
     return "No relevant notes found."
+
+def search_web(query):
+    """Search the web for current information"""
+    try:
+        with DDGS() as ddgs:
+            results = list(ddgs.text(query, max_results=3))
+            if results:
+                return "\n\n---\n\n".join([r['body'] for r in results])
+            return "No results found."
+    except Exception as e:
+        return f"Search error: {e}"
+
+def calculate(expression):
+    """Evaluates a mathematical expression safely"""
+    try:
+        allowed_names = {"abs": abs, "round": round, "min": min, "max": max}
+        result = eval(expression, {"__builtins__": {}}, allowed_names)
+        return f"Result: {result}"
+    except Exception as e:
+        return f"Error: {e}"
+
+def get_current_time():
+    """Returns current date and time"""
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+def run_python_code(code):
+    """Executes Python code and returns output"""
+    try:
+        result = subprocess.run(
+            ["python", "-c", code],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        if result.stdout:
+            return result.stdout
+        elif result.stderr:
+            return f"Error: {result.stderr}"
+        return "Code executed (no output)"
+    except subprocess.TimeoutExpired:
+        return "Error: Code timed out"
 
 def ask_llama(prompt):
     response = requests.post('http://localhost:11434/api/generate',
@@ -61,28 +122,41 @@ def ask_llama(prompt):
     return response.json()['response']
 
 # ============================================
+# TOOL CALL PARSING
+# ============================================
+def extract_tool_calls(response):
+    """Extract all TOOL: lines from Llama's response"""
+    tool_calls = []
+    lines = response.split('\n')
+    for line in lines:
+        if line.strip().startswith("TOOL:"):
+            tool_line = line.strip()[5:].strip()
+            if "(" in tool_line and ")" in tool_line:
+                tool_name = tool_line.split("(")[0].strip()
+                tool_input = tool_line.split("(")[1].split(")")[0].strip().strip('"').strip("'")
+                
+                # Skip malformed calls
+                if tool_name == "calculate" and (not tool_input or tool_input == "expression"):
+                    continue
+                    
+                tool_calls.append((tool_name, tool_input))
+    return tool_calls
+
+# ============================================
 # QUIZ FUNCTIONS
 # ============================================
 def get_random_notes():
     """Get random notes from your database instead of top matches"""
     import random
-    
-    # Get total count of notes
     total_notes = collection.count()
-    
-    # Pick 3 random indices
     random_ids = [random.randint(0, total_notes - 1) for _ in range(3)]
-    
-    # ChromaDB doesn't support random get by index directly, so we use a trick
-    # Get all documents (or use a metadata field)
     all_docs = collection.get()['documents']
-    
     random_notes = []
     for idx in random_ids:
         if idx < len(all_docs):
             random_notes.append(all_docs[idx])
-    
     return "\n\n---\n\n".join(random_notes)
+
 def generate_question(topic=None):
     global current_question, current_answer, current_topic, quiz_active
     
@@ -103,10 +177,7 @@ EXPLANATION: [why it's correct]
 
 Make it challenging but fair."""
     else:
-        # FIX: Get random notes instead of same ones every time
         import random
-        
-        # Get random notes from your collection
         all_docs = collection.get()['documents']
         random_notes_list = random.sample(all_docs, min(3, len(all_docs)))
         random_notes_text = "\n\n---\n\n".join(random_notes_list)
@@ -162,6 +233,7 @@ EXPLANATION: [why it's correct]"""
     for opt in options:
         print(f"   {opt}")
     print(f"\n(Type your answer (A/B/C/D) or 'skip' to see answer, 'end' to stop quiz)")
+
 def check_answer(user_answer):
     global quiz_active, current_question, current_answer, current_topic
     
@@ -192,14 +264,71 @@ def show_weak_topics():
             print(f"   • {topic}: {count} incorrect attempts")
 
 # ============================================
-# MAIN AGENT
+# MAIN AGENT WITH TOOLS
 # ============================================
 def regular_chat(user_input):
-    prompt = f"""You are Arnav's GATE assistant.
+    # Step 1: Ask LLM if it needs tools
+    prompt = f"""You are Arnav's GATE assistant. You have tools and his personal notes.
+
+{tool_descriptions}
+
+User: {user_input}
+
+First, decide what tools you need. Output TOOL: lines for EACH tool you need, one per line.
+If no tools needed, just answer directly.
+"""
     
+    response = ask_llama(prompt)
+    
+    # Step 2: Extract tool calls
+    tool_calls = extract_tool_calls(response)
+    
+    if not tool_calls:
+        # No tools needed, answer directly
+        final_prompt = f"""You are Arnav's GATE assistant.
 User: {user_input}
 Answer directly and concisely."""
-    return ask_llama(prompt)
+        return ask_llama(final_prompt)
+    
+    # Step 3: Execute tools
+    print(f"\n🔧 Executing {len(tool_calls)} tools...")
+    tool_results = []
+    for tool_name, tool_input in tool_calls:
+        print(f"   • {tool_name}('{tool_input}')")
+        
+        if tool_name == "search_notes":
+            output = search_notes(tool_input)
+        elif tool_name == "search_web":
+            output = search_web(tool_input)
+        elif tool_name == "calculate":
+            output = calculate(tool_input)
+        elif tool_name == "get_current_time":
+            output = get_current_time()
+        elif tool_name == "run_python_code":
+            output = run_python_code(tool_input)
+        else:
+            output = f"Unknown tool: {tool_name}"
+        
+        tool_results.append((tool_name, tool_input, output))
+        print(f"     → {output[:100]}...")
+    
+    # Step 4: Build results summary
+    results_text = ""
+    for tool_name, tool_input, output in tool_results:
+        results_text += f"\n{tool_name}('{tool_input}') returned:\n{output}\n"
+    
+    # Step 5: Get final answer
+    final_prompt = f"""You are Arnav's GATE assistant.
+
+User asked: {user_input}
+
+Tool results:
+{results_text}
+
+Now provide a complete, natural answer based on the tool results above.
+"""
+    
+    return ask_llama(final_prompt)
 
 def run_agent(user_input):
     global quiz_active
@@ -225,9 +354,7 @@ def run_agent(user_input):
         current_answer = ""
         return "Quiz ended. Returning to normal mode."
     
-    # FIXED: Handles "B", "b", "B)", "b)", "B.", "b.", " B ", etc.
     elif quiz_active:
-        # Extract first letter that is A, B, C, or D
         match = re.search(r'[A-D]', user_input.upper())
         if match:
             check_answer(match.group(0))
@@ -246,14 +373,14 @@ def run_agent(user_input):
 # ============================================
 # MAIN LOOP
 # ============================================
-print("\n🎯 QUIZ MODE READY")
+print("\n🎯 AI AGENT READY")
 print("Commands:")
 print("   • 'quiz me' - Random question from your notes")
 print("   • 'quiz me on paging' - Question on specific topic")
 print("   • 'skip' - Show answer")
 print("   • 'weak topics' - Show what you're struggling with")
 print("   • 'score' - Show your quiz stats")
-print("   • Or just ask any OS question\n")
+print("   • Or just ask any question (uses web search + tools)\n")
 
 while True:
     user_input = input("You: ")
