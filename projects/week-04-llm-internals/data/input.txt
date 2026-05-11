@@ -1,0 +1,1 @@
+hello world this is a simple training text for my mini gpt model it will learn to predict the next character based on previous ones this is how language models work they look at context and predict what comes next
