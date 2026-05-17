@@ -1,0 +1,23 @@
+[
+  {
+    "question": "What is FCFS scheduling?",
+    "ground_truth": "FCFS (First-Come-First-Served) is a non-preemptive scheduling algorithm where processes are executed in the order they arrive in the ready queue.",
+    "contexts": [
+      "FCFS is the simplest CPU scheduling algorithm. The process that requests the CPU first is allocated the CPU first."
+    ]
+  },
+  {
+    "question": "What is priority inversion?",
+    "ground_truth": "Priority inversion occurs when a high-priority process is forced to wait for a low-priority process that holds a shared resource.",
+    "contexts": [
+      "In priority inversion, a medium-priority process can preempt a low-priority process that holds a lock needed by a high-priority process."
+    ]
+  },
+  {
+    "question": "What is paging?",
+    "ground_truth": "Paging is a memory management scheme that eliminates external fragmentation by dividing physical memory into fixed-size frames and logical memory into pages.",
+    "contexts": [
+      "Paging divides memory into fixed-size blocks called frames. Processes are divided into same-size pages. The page table maps pages to frames."
+    ]
+  }
+]
